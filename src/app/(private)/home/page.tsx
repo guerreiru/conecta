@@ -5,7 +5,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { Profile } from "@/types/Profile";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 const profileMap = {
   client: "Usuário",

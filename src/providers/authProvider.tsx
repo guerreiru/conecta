@@ -49,7 +49,7 @@ export function AuthProvider({
       setUser(null);
       setActiveProfile(null);
       toast.success("Logout realizado com sucesso!");
-    } catch (error: any) {
+    } catch {
       toast.error("Erro ao realizar logout");
     }
   }

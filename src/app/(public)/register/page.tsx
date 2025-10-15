@@ -53,7 +53,7 @@ const Register: React.FC = () => {
     <div className="flex items-center justify-center pt-6">
       <div className="w-full max-w-md p-6">
         <h1 className="text-3xl font-bold text-center">Cadastro</h1>
-        <div className="mt-3 mb-6 text-xs font-semibold text-zinc-500 dark:text-white flex justify-center gap-1.5">
+        <div className="mt-3 mb-6 font-semibold text-zinc-500 dark:text-white flex justify-center gap-1.5">
           <p>Já possui conta?</p>
           <Link href="login" className="text-blue-500 cursor-pointer">
             Entrar

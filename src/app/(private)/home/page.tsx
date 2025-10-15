@@ -18,7 +18,7 @@ export default function Home() {
 
   function handleShowProfile(profile: Profile) {
     handleSetActiveProfile(profile);
-    router.push("/profile");
+    setTimeout(() => { router.push("/profile") }, 0)
   }
 
   return (

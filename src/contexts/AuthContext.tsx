@@ -9,15 +9,15 @@ type AuthContextType = {
   handleSetActiveProfile: (profile: Profile) => void;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ message: string }>;
-  logout: () => Promise<{ message: string }>;
+  logout: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  handleUpdateUser: () => {},
+  handleUpdateUser: () => { },
   activeProfile: null,
-  handleSetActiveProfile: () => {},
+  handleSetActiveProfile: () => { },
   loading: true,
   login: async () => ({ message: "" }),
-  logout: async () => ({ message: "" }),
+  logout: async () => { },
 });

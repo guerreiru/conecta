@@ -13,15 +13,17 @@ export async function POST() {
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
       credentials: "include",
     }
   );
 
-  if (!res.ok) {
+  const data = await res.json();
+
+  if (!data.accessToken) {
     return new Response("Falha ao renovar", { status: 403 });
   }
 
-  const data = await res.json();
   const newAccessToken = data.accessToken;
 
   cookieStore.set("accessToken", newAccessToken, {
@@ -32,5 +34,5 @@ export async function POST() {
     maxAge: 15 * 60,
   });
 
-  return Response.json({ success: true });
+  return Response.json(data);
 }

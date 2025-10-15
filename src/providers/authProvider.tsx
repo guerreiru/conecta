@@ -1,10 +1,10 @@
 "use client";
 
 import { AuthContext } from "@/contexts/AuthContext";
-import { LoginResponse } from "@/types/LoginResponse";
+import { api } from "@/services/api";
 import { Profile } from "@/types/Profile";
 import { User } from "@/types/User";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export function AuthProvider({
@@ -29,21 +29,29 @@ export function AuthProvider({
     const data = await res.json();
 
     if (data.user) {
-      const { user } = data as LoginResponse;
+
+      const { user } = data;
       setUser(user);
       setActiveProfile(user.profiles[0]);
+      toast.success("Login realizado com sucesso!");
       return { message: "success" };
     }
 
     toast.error(data.message || "Erro desconhecido");
+    setLoading(true);
+
     return { message: data.message };
   }
 
   async function logout() {
-    setUser(null);
-    document.cookie = "accessToken=; Max-Age=0; path=/;";
-    document.cookie = "refreshToken=; Max-Age=0; path=/;";
-    return { message: "success" };
+    try {
+      await api.post("/auth/logout");
+      setUser(null);
+      setActiveProfile(null);
+      toast.success("Logout realizado com sucesso!");
+    } catch (error: any) {
+      toast.error("Erro ao realizar logout");
+    }
   }
 
   function handleUpdateUser(profile: Profile) {
@@ -58,6 +66,32 @@ export function AuthProvider({
   function handleSetActiveProfile(profile: Profile) {
     setActiveProfile(profile);
   }
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        setLoading(true)
+        const res = await fetch("/api/refresh", {
+          method: "POST",
+          credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (data.user) {
+          setUser(data.user);
+          setActiveProfile(data.user.profiles[0]);
+        }
+      } catch (error) {
+        setUser(null);
+        setActiveProfile(null);
+      } finally {
+        setLoading(false)
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   return (
     <AuthContext.Provider

@@ -1,5 +1,4 @@
 import { Header } from "@/components/header";
-import { NavBar } from "@/components/navBar";
 import { AuthProvider } from "@/providers/authProvider";
 import { CategoriesProvider } from "@/providers/categoriesProvider";
 import type { Metadata } from "next";
@@ -30,7 +29,6 @@ export default async function RootLayout({
             <Header />
             {children}
             <ToastContainer />
-            <NavBar />
           </CategoriesProvider>
         </AuthProvider>
       </body>

@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Profile } from "@/types/Profile";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const profileMap = {
   client: "Usuário",
@@ -21,10 +22,15 @@ export default function Home() {
     setTimeout(() => { router.push("/profile") }, 0)
   }
 
+  if (!user) {
+    return <div className="grid gap-4 py-4 max-w-3xl mx-auto">
+      Carregando...
+    </div>
+  }
   return (
     <div className="grid gap-4 py-4 max-w-3xl mx-auto">
       <Link href="/worker-profile-register">Cadastrar perfil de trabalho</Link>
-      {user && user.profiles.length > 0 && (
+      {user && user.profiles && user.profiles.length > 0 && (
         <div className="grid md:grid-cols-2 gap-2">
           {user.profiles.map((profile) => (
             <div

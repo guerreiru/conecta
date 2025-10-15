@@ -79,7 +79,7 @@ export function ServiceCard({
               })}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-2 rounded-lg font-bold font-sans text-black-200 active:shadow-none transition cursor-pointer bg-lime-400"
+              className="px-3 py-2  min-h-12 grid place-content-center rounded-lg font-bold font-sans text-black-200 active:shadow-none transition cursor-pointer bg-lime-400"
             >
               Solicitar
             </Link>

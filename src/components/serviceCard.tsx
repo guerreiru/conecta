@@ -71,19 +71,18 @@ export function ServiceCard({
             <Button onClick={handleClick}>Ver perfil</Button>
           )}
           {owner?.phone && (
-            <Button>
-              <Link
-                href={whatsAppMessage({
-                  ownerPhone: owner.phone,
-                  ownerName,
-                  serviceTitle: service.title,
-                })}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Solicitar
-              </Link>
-            </Button>
+            <Link
+              href={whatsAppMessage({
+                ownerPhone: owner.phone,
+                ownerName,
+                serviceTitle: service.title,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-2 rounded-lg font-bold font-sans text-black-200 active:shadow-none transition cursor-pointer bg-lime-400"
+            >
+              Solicitar
+            </Link>
           )}
         </div>
       </footer>

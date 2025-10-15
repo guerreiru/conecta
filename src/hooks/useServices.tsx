@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { api } from "@/services/api";
 import { Service } from "@/types/Service";
+import { isAxiosError } from "axios";
+import { toast } from "react-toastify";
 
 interface FetchServicesParams {
   stateId: string;
@@ -19,10 +21,25 @@ export function useServices() {
     categoryId,
   }: FetchServicesParams) => {
     if (stateId && cityId) {
-      const res = await api(
-        `/services/search?stateId=${stateId}&cityId=${cityId}&searchTerm=${searchTerm}&categoryId=${categoryId}`
-      );
-      setServices(res.data?.data ?? res.data ?? []);
+      try {
+        const res = await api(
+          `/services/search?stateId=${stateId}&cityId=${cityId}&searchTerm=${searchTerm}&categoryId=${categoryId}`
+        );
+
+        setServices(res.data?.data ?? res.data ?? []);
+      } catch (error) {
+        if (isAxiosError(error)) {
+          const message =
+            error.response?.data.message ||
+            "Erro ao buscar serviços, tente novamente mais tarde ou entre em contado com o suporte";
+          toast.error(message);
+          return;
+        }
+
+        toast.error(
+          "Erro ao buscar serviços, tente novamente mais tarde ou entre em contado com o suporte"
+        );
+      }
     }
   };
 

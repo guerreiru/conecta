@@ -14,7 +14,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "p-3.5 rounded-lg font-bold font-sans text-black-200 active:shadow-none transition cursor-pointer";
+    "px-3 py-2 rounded-lg font-bold font-sans text-black-200 active:shadow-none transition cursor-pointer";
 
   const variantStyles: Record<ButtonVariant, string> = {
     primary: "bg-lime-400",

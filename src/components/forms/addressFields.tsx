@@ -37,7 +37,7 @@ export function AddressFields({
   const { cities, loading: citiesLoading } = useCitiesByState(selectedState);
 
   return (
-    <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-3 py-2">
       <legend className="mb-2 font-semibold">Endereço</legend>
 
       <Input

@@ -27,7 +27,7 @@ export default function Profile() {
 
         <header
           id="profile-header"
-          className="grid place-items-center gap-3.5 relative -top-[30%]"
+          className="grid place-items-center gapx-3 py-2 relative -top-[30%]"
         >
           <figure className="size-28 border border-lime-400 bg-zinc-500 rounded-full"></figure>
 
@@ -55,12 +55,12 @@ export default function Profile() {
           className="p-4 bg-white rounded-lg shadow grid gap-y-3"
         >
           <ul className="grid gap-y-3">
-            <li className="flex items-center gap-3">
+            <li className="flex items-center gapx-3 py-2">
               <ArticleIcon size={24} aria-hidden />
               <span>Editar informações</span>
             </li>
 
-            <li className="flex items-center gap-3">
+            <li className="flex items-center gapx-3 py-2">
               <BellIcon size={24} aria-hidden />
               <span>Notificações</span>
             </li>
@@ -72,17 +72,17 @@ export default function Profile() {
           className="p-4 bg-white rounded-lg shadow grid gap-y-3"
         >
           <ul className="grid gap-y-3">
-            <li className="flex items-center gap-3">
+            <li className="flex items-center gapx-3 py-2">
               <UserListIcon size={24} aria-hidden />
               <span>Ajuda e Suporte</span>
             </li>
 
-            <li className="flex items-center gap-3">
+            <li className="flex items-center gapx-3 py-2">
               <ChatTextIcon size={24} aria-hidden />
               <span>Contatos</span>
             </li>
 
-            <li className="flex items-center gap-3">
+            <li className="flex items-center gapx-3 py-2">
               <LockIcon size={24} aria-hidden />
               <span>Política de Privacidade</span>
             </li>

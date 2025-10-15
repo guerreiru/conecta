@@ -55,18 +55,18 @@ export function ServiceCard({
   }
 
   return (
-    <div className="p-3.5 bg-black-200 rounded-xl grid gap-3 text-white">
+    <div className="p-3 py-4 bg-black-200 rounded-xl grid gap-1 text-white">
       <header>
-        <p className="font-medium">
+        <p>
           {ownerName && `${ownerName} - `} {title}
         </p>
       </header>
 
       <div className="text-zinc-400 text-sm">{description}</div>
 
-      <footer className="flex items-center justify-between">
+      <footer className="grid sm:grid-cols-2 gap-y-2 items-center sm:justify-between">
         <p className="font-bold">{formatToBRL(price)}{typeOfChange ? `/${typeOfChange}` : ''}</p>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center w-full justify-end gap-2">
           {id && showSeeProfile && (
             <Button onClick={handleClick}>Ver perfil</Button>
           )}

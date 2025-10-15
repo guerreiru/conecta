@@ -1,11 +1,10 @@
 import { Header } from "@/components/header";
-import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { NavBar } from "@/components/navBar";
 import { AuthProvider } from "@/providers/authProvider";
 import { CategoriesProvider } from "@/providers/categoriesProvider";
-import { User } from "@/types/User";
 import type { Metadata } from "next";
-import { ToastContainer } from "react-toastify";
 import { Manrope } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,23 +21,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let user: User | null = null;
-
-  try {
-    const res = await fetchWithAuth("/auth/me");
-    if (res.ok) user = await res.json();
-  } catch (e) {
-    console.error("Erro ao buscar usuário no servidor:", e);
-  }
 
   return (
     <html lang="pt-br">
-      <body className={`antialiased ${manrope.className} px-4`}>
-        <AuthProvider initialUser={user}>
+      <body className={`antialiased ${manrope.className} px-4 relative pb-20 lg:pb-0`}>
+        <AuthProvider>
           <CategoriesProvider>
             <Header />
             {children}
             <ToastContainer />
+            <NavBar />
           </CategoriesProvider>
         </AuthProvider>
       </body>

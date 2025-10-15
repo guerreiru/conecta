@@ -11,7 +11,7 @@ export default async function ProviderProfile({ params }: Props) {
   const provider: Provider = await res.json();
 
   if (!provider.id) {
-    return <p>Nenhuma empresa foi encontrada para esse perfil</p>
+    return <p>Nenhum profissional foi encontrado para esse perfil</p>
   }
 
   const name = provider.providerName ?? provider.profile.user?.name ?? "";

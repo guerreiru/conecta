@@ -35,7 +35,7 @@ export function ServiceOwnerProfile({ owner, ownerName }: Props) {
         <header className="bg-white rounded-3xl pb-4 relative shadow">
           <div className="bg-black-200 h-20 rounded-t-3xl"></div>
 
-          <section className="flex mx-2.5 items-center gapx-3 py-2 relative -top-4">
+          <section className="flex mx-2.5 items-center gap-x-3 py-2 relative -top-4">
             <div className="size-20 bg-white border-[2px] border-lime-400 rounded-full"></div>
             <div className="grid gap-1">
               <h1 className="font-bold text-xl text-black">{ownerName}</h1>
@@ -73,7 +73,7 @@ export function ServiceOwnerProfile({ owner, ownerName }: Props) {
         <section className="bg-lime-400 rounded-3xl p-4 pb-7 grid gap-2">
           <h2 className="text-black font-bold">Serviços oferecidos</h2>
 
-          <div className="grid gapx-3 py-2">
+          <div className="grid gap-3 py-2">
             {owner.services?.length > 0 &&
               owner.services.map((service) => (
                 <ServiceCard

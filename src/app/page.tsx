@@ -1,32 +1,44 @@
-'use client'
+"use client";
 
 import { CategoryItem } from "@/components/categoryItem";
+import { HowItWorksCard } from "@/components/howItWorksCard";
+import { LocationModal } from "@/components/locationModal";
 import { ServiceCard } from "@/components/serviceCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { useCategories } from "@/hooks/useCategories";
 import { useCitiesByState } from "@/hooks/useCitiesByState";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useServices } from "@/hooks/useServices";
 import { Category } from "@/types/Category";
-import { states } from "@/utils/states/states";
+import { MapPinIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 
 export default function Start() {
   const { categories } = useCategories();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
 
-  const [selectedState, setSelectedState] = useLocalStorage("selectedState", "");
+  const [selectedState, setSelectedState] = useLocalStorage(
+    "selectedState",
+    ""
+  );
   const [selectedCity, setSelectedCity] = useLocalStorage("selectedCity", "");
-  const { cities, loading: citiesLoading } = useCitiesByState(selectedState);
-
   const { services, fetchServices } = useServices();
+  const { cities, loading } = useCitiesByState(selectedState);
+  const [cityName, setCityName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSearch = async (categoryParam?: Category | null) => {
     const categoryId = categoryParam?.id ?? selectedCategory?.id ?? null;
-    fetchServices({ stateId: selectedState, cityId: selectedCity, searchTerm, categoryId });
+    fetchServices({
+      stateId: selectedState,
+      cityId: selectedCity,
+      searchTerm,
+      categoryId,
+    });
   };
 
   useEffect(() => {
@@ -37,41 +49,33 @@ export default function Start() {
     handleSearch();
   }, [selectedCity]);
 
+  useEffect(() => {
+    if (selectedCity) {
+      const city = cities.find(
+        (c) => c.id === selectedCity
+      );
+
+      if (city) {
+        setCityName(city.name);
+      }
+    }
+  }, [cities, selectedCity]);
+
+  useEffect(() => {
+    if (!selectedState && !selectedCity) {
+      setIsModalOpen(true);
+    }
+  }, [selectedState, selectedCity]);
+
+  function handleChangeLocation() {
+    setSelectedCity("");
+    setSelectedState("");
+    setCityName("");
+    setIsModalOpen(true);
+  }
+
   return (
     <div className="py-4 grid gap-y-6 max-w-3xl mx-auto">
-      <div className="grid md:grid-cols-2 gap-2">
-        <Select
-          id="state"
-          name="state"
-          label="Estado"
-          value={selectedState}
-          onChange={(e) => {
-            setSelectedState(e.target.value);
-            setSelectedCity("");
-          }}
-          defaultValue="Selecione o Estado"
-          options={states.map((state) => ({
-            label: state.name,
-            value: state.id,
-          }))}
-        />
-
-        <Select
-          id="city"
-          name="city"
-          label="Cidade"
-          value={selectedCity}
-          onChange={(e) => setSelectedCity(e.target.value)}
-          defaultValue={
-            citiesLoading ? "Carregando cidades..." : "Selecione a Cidade"
-          }
-          options={cities.map((city) => ({
-            label: city.name,
-            value: city.id,
-          }))}
-        />
-      </div>
-
       <h1 className="font-semibold text-2xl">Categorias</h1>
       <ul className="flex overflow-x-auto pb-2 whitespace-nowrap gap-2 custom-scrollbar">
         <li
@@ -113,6 +117,16 @@ export default function Start() {
         </Button>
       </div>
 
+      <HowItWorksCard />
+
+      <div className="flex items-center justify-between">
+        <p className="font-bold text-2xl">Mostrando serviços em: {cityName}</p>
+        <button className="flex items-center gap-2 border border-lime-400 py-3.5 px-6 rounded-xl hover:brightness-90 bg-white dark:bg-black-200" onClick={handleChangeLocation}>
+          <MapPinIcon size={18} />
+          Alterar localização
+        </button>
+      </div>
+
       {services.length > 0 ? (
         <div className="grid gap-2.5">
           {services.map((service) => (
@@ -129,6 +143,17 @@ export default function Start() {
       ) : (
         <p>Nenhum serviço encontrado</p>
       )}
+
+      <LocationModal
+        isOpen={isModalOpen}
+        setIsOpen={setIsModalOpen}
+        selectedState={selectedState}
+        selectedCity={selectedCity}
+        setSelectedCity={setSelectedCity}
+        setSelectedState={setSelectedState}
+        cities={cities}
+        loading={loading}
+      />
     </div>
   );
 }

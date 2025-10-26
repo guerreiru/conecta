@@ -14,7 +14,7 @@ export function middleware(req: NextRequest) {
 
   if (authRoutes.some((path) => req.nextUrl.pathname.startsWith(path))) {
     if (accessToken) {
-      return NextResponse.redirect(new URL("/home", req.url));
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 

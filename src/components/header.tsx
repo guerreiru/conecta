@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { NavHeader } from "./navHeader";
 
 async function handleLogout() {
   "use server";
@@ -18,35 +18,9 @@ export async function Header() {
   const accessToken = cookieStore.get("accessToken")?.value;
 
   return (
-    <header className="flex items-center justify-end ">
-      <nav>
-        <ul className="flex items-center gap-2.5">
-          {!accessToken ? (
-            <>
-              <li>
-                <Link href="/login">Entrar</Link>
-              </li>
-              <li>
-                <Link href="/register">Cadastrar-se</Link>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <Link href="/home">Home</Link>
-              </li>
-              <li>
-                <Link href="/">Buscar Serviço</Link>
-              </li>
-              <li>
-                <form action={handleLogout}>
-                  <button type="submit">Sair</button>
-                </form>
-              </li>
-            </>
-          )}
-        </ul>
-      </nav>
+    <header className="items-center justify-between hidden md:flex py-4">
+      <p className="text-black font-bold text-xl">ProMatch</p>
+      <NavHeader accessToken={accessToken} handleLogout={handleLogout} />
     </header>
   );
 }

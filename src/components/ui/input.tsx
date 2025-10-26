@@ -17,7 +17,7 @@ export function Input({ label, error, id, name, ...props }: InputProps) {
         {...props}
         id={id || name}
         name={name || id}
-        className={`px-3 py-2 min-h-12 bg-white dark:bg-black-200 rounded-lg disabled:bg-gray-300/70 ${error ? "border-red-500" : ""
+        className={`px-3 py-2 min-h-12 bg-white dark:bg-black-200 rounded-lg disabled:bg-gray-300/70 border ${error ? "border-red-500" : "border-gray-200"
           }`}
       />
 

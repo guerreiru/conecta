@@ -10,7 +10,9 @@ import z from "zod";
 import { Select } from "../ui/select";
 
 const address = z.object({
-  companyName: z.string().optional(),
+  name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
+  email: z.email("E-mail inválido"),
+  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
   specialty: z.string().optional(),
   bio: z.string().optional(),
   address: addressSchema,

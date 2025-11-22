@@ -8,15 +8,12 @@ export async function POST() {
     return new Response("Sem refresh token", { status: 401 });
   }
 
-  const res = await fetch(
-    "https://conecta-api-l0kh.onrender.com/auth/refresh",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-      credentials: "include",
-    }
-  );
+  const res = await fetch("http://localhost:3001/auth/refresh", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ refreshToken }),
+    credentials: "include",
+  });
 
   const data = await res.json();
 

@@ -1,0 +1,107 @@
+import { api } from "@/services/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import z from "zod";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { useAuth } from "@/hooks/useAuth";
+
+const clientSchema = z.object({
+  name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
+  email: z.email("E-mail inválido"),
+  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+});
+
+type ClientFormData = z.infer<typeof clientSchema>;
+
+
+type ClientFormProps = {
+  mode: "create" | "edit";
+  defaultValues?: Partial<ClientFormData> & { id?: string };
+};
+
+export function ClientForm({ mode, defaultValues }: ClientFormProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<ClientFormData>({
+    resolver: zodResolver(clientSchema),
+    defaultValues,
+  });
+
+  const { handleSetUser } = useAuth()
+
+
+  async function onSubmit(data: ClientFormData) {
+
+    try {
+      if (mode === "create") {
+        const res = await api.post("/users", data);
+
+        if (res.data.id) {
+          toast.success("Usuário cadastrado com sucesso!");
+          reset()
+        }
+      } else {
+        const res = await api.put(`/users/${defaultValues?.id}`, data);
+        const updatedUser = res.data;
+        if (updatedUser.id) {
+          handleSetUser(updatedUser);
+        }
+
+        toast.success("Usuário atualizado com sucesso!");
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const message =
+          error.response?.data.message || "Erro ao processar, tente mais tarde";
+        toast.error(message);
+        return;
+      }
+
+      toast.error("Erro inesperado, tente novamente");
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Input
+        id="name"
+        type="text"
+        label="Nome"
+        {...register("name")}
+        error={errors.name?.message}
+      />
+
+      <Input
+        id="email"
+        type="email"
+        label="E-mail"
+        {...register("email")}
+        error={errors.email?.message}
+      />
+
+      <Input
+        id="password"
+        type="password"
+        label="Senha"
+        {...register("password")}
+        error={errors.password?.message}
+      />
+
+      <Button type="submit" disabled={isSubmitting} className="w-full">
+        {isSubmitting
+          ? mode === "create"
+            ? "Cadastrando..."
+            : "Salvando..."
+          : mode === "create"
+            ? "Cadastrar"
+            : "Salvar alterações"}
+      </Button>
+    </form>
+  );
+}

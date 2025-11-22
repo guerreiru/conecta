@@ -6,6 +6,7 @@ import { LocationModal } from "@/components/locationModal";
 import { ServiceCard } from "@/components/serviceCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/useAuth";
 import { useCategories } from "@/hooks/useCategories";
 import { useCitiesByState } from "@/hooks/useCitiesByState";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -30,6 +31,7 @@ export default function Start() {
   const { cities, loading } = useCitiesByState(selectedState);
   const [cityName, setCityName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user } = useAuth()
 
   const handleSearch = async (categoryParam?: Category | null) => {
     const categoryId = categoryParam?.id ?? selectedCategory?.id ?? null;
@@ -43,11 +45,7 @@ export default function Start() {
 
   useEffect(() => {
     handleSearch();
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    handleSearch();
-  }, [selectedCity]);
+  }, [selectedCategory, selectedCity]);
 
   useEffect(() => {
     if (selectedCity) {
@@ -75,74 +73,78 @@ export default function Start() {
   }
 
   return (
-    <div className="py-4 grid gap-y-6 max-w-3xl mx-auto">
-      <h1 className="font-semibold text-2xl">Categorias</h1>
-      <ul className="flex overflow-x-auto pb-2 whitespace-nowrap gap-2 custom-scrollbar">
-        <li
-          className="cursor-pointer block"
-          onClick={() => {
-            setSelectedCategory(null);
-          }}
-        >
-          <CategoryItem name="Todas" active={!selectedCategory} />
-        </li>
-        {categories.map((category) => (
+    <>
+      <div className="bg-white dark:bg-black-200 grid gap-y-6 px-4 md:px-6 pb-6">
+        {user?.name && <div>
+          <p className="font-bold text-2xl mt-4">Olá, {user.name}</p>
+        </div>}
+
+        <div className="grid md:grid-cols-[1fr_auto] gap-y-1 gap-x-2 items-end mt-3">
+          <Input
+            label="Termo de Busca:"
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Digite o nome do serviço"
+            className="w-full"
+          />
+          <Button className="mt-2" onClick={() => handleSearch()}>
+            Buscar
+          </Button>
+        </div>
+
+        <ul className="flex overflow-x-auto pb-2 whitespace-nowrap gap-2 custom-scrollbar">
           <li
-            key={category.id}
-            className="cursor-pointer"
+            className="cursor-pointer block"
             onClick={() => {
-              setSelectedCategory(category);
+              setSelectedCategory(null);
             }}
           >
-            <CategoryItem
-              name={category.name}
-              description={category.description}
-              active={selectedCategory?.name === category.name}
-            />
+            <CategoryItem name="Todas" active={!selectedCategory} />
           </li>
-        ))}
-      </ul>
-
-      <div className="grid md:grid-cols-[1fr_auto] gap-y-1 gap-x-2 items-end">
-        <Input
-          label="Termo de Busca:"
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Digite o nome do serviço"
-          className="w-full"
-        />
-        <Button className="mt-2" onClick={() => handleSearch()}>
-          Buscar
-        </Button>
-      </div>
-
-      <HowItWorksCard />
-
-      <div className="flex items-center justify-between">
-        <p className="font-bold text-2xl">Mostrando serviços em: {cityName}</p>
-        <button className="flex items-center gap-2 border border-lime-400 py-3.5 px-6 rounded-xl hover:brightness-90 bg-white dark:bg-black-200" onClick={handleChangeLocation}>
-          <MapPinIcon size={18} />
-          Alterar localização
-        </button>
-      </div>
-
-      {services.length > 0 ? (
-        <div className="grid gap-2.5">
-          {services.map((service) => (
-            <ServiceCard
-              key={service.id}
-              service={service}
-              ownerName={
-                service.company?.companyName ||
-                service.provider?.profile.user?.name
-              }
-            />
+          {categories.map((category) => (
+            <li
+              key={category.id}
+              className="cursor-pointer"
+              onClick={() => {
+                setSelectedCategory(category);
+              }}
+            >
+              <CategoryItem
+                name={category.name}
+                description={category.description}
+                active={selectedCategory?.name === category.name}
+              />
+            </li>
           ))}
+        </ul>
+      </div>
+
+      <div className="px-4 md:px-6 py-4 grid gap-y-6">
+        <HowItWorksCard />
+
+        <div className="flex items-center justify-between flex-wrap gap-y-2 w-full max-w-2xl mx-auto">
+          <p className="font-bold text-xl md:text-2xl">Mostrando serviços em: {cityName}</p>
+          <button className="flex items-center gap-2 border border-lime-400 py-3.5 px-6 rounded-xl hover:brightness-90 bg-white dark:bg-black-200" onClick={handleChangeLocation}>
+            <MapPinIcon size={18} />
+            Alterar localização
+          </button>
         </div>
-      ) : (
-        <p>Nenhum serviço encontrado</p>
-      )}
+
+        {services.length > 0 ? (
+          <div className="grid gap-2.5 w-full max-w-2xl mx-auto">
+            {services.map((service) => (
+              <ServiceCard
+                key={service.id}
+                service={service}
+                owner={service.user}
+              />
+            ))}
+          </div>
+        ) : (
+          <p>Nenhum serviço encontrado</p>
+        )}
+      </div>
 
       <LocationModal
         isOpen={isModalOpen}
@@ -154,6 +156,6 @@ export default function Start() {
         cities={cities}
         loading={loading}
       />
-    </div>
+    </>
   );
 }

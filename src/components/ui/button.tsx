@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ButtonHTMLAttributes } from "react";
 
-type ButtonVariant = "primary" | "accent";
+type ButtonVariant = "primary" | "accent" | "black" | "danger";
 
 type ButtonProps = {
   variant?: ButtonVariant;
@@ -14,11 +14,14 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "px-3 py-2  min-h-12 rounded-lg font-bold font-sans text-black-200 active:shadow-none transition cursor-pointer";
+    "px-3 py-2  min-h-12 rounded-lg font-bold font-sans text-black-200 active:shadow-none transition cursor-pointer hover:brightness-90";
 
   const variantStyles: Record<ButtonVariant, string> = {
     primary: "bg-lime-400",
     accent: "bg-white",
+    black: "bg-black-200 text-white",
+    danger: "bg-red-600 text-white",
+
   };
 
   return (

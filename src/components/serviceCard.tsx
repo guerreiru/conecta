@@ -1,91 +1,100 @@
 "use client";
 
 import { Service } from "@/types/Service";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
-import { whatsAppMessage } from "@/utils/whatsAppMessage";
+import { User } from "@/types/User";
 import { formatToBRL } from "@/utils/formatToBRL";
+import { whatsAppMessage } from "@/utils/whatsAppMessage";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { PencilIcon, TrashIcon } from "@phosphor-icons/react";
 
 type ServiceCardProps = {
   service: Service;
-  showSeeProfile?: boolean;
-  ownerName?: string;
+  owner: User;
+  onEdit?: (service: Service) => void;
+  onDelete?: (serviceId: string) => void;
 };
 
-function getOwner(service: Service) {
-  const { company, provider } = service;
-
-  if (company) {
-    return {
-      id: company.id,
-      type: "company" as const,
-      phone: company.address.phone,
-    };
-  }
-
-  if (provider) {
-    return {
-      id: provider.id,
-      type: "provider" as const,
-      phone: provider.address.phone,
-    };
-  }
-}
-
-export function ServiceCard({
-  service,
-  showSeeProfile = true,
-  ownerName,
-}: ServiceCardProps) {
+export function ServiceCard({ service, owner, onEdit, onDelete }: ServiceCardProps) {
   const { title, description, price, id, typeOfChange } = service;
+  const { user } = useAuth();
+  const pathname = usePathname();
 
-  const owner = getOwner(service);
-
-  const router = useRouter();
-
-  function handleClick() {
-    if (owner?.type === "company") {
-      router.push(`company/${owner.id}`);
-    }
-
-    if (owner?.type === "provider") {
-      router.push(`provider/${owner.id}`);
-    }
-  }
+  const showSeeProfile = user?.id !== owner.id;
 
   return (
-    <div className="p-3 py-4 bg-black-200 rounded-xl grid gap-1 text-white">
-      <header>
-        <p>
-          {ownerName && `${ownerName} - `} {title}
-        </p>
+    <article className="p-4 bg-white dark:bg-black-200 rounded-xl grid gap-3 border border-gray-200 dark:border-gray-700 shadow-md">
+
+      <header className="flex items-start justify-between">
+        <div>
+          <span className="text-xs text-gray-500 dark:text-gray-400">{owner.name}</span>
+          <h3 className="font-semibold text-black dark:text-white leading-snug">
+            {title}
+          </h3>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {onEdit && (
+            <button
+              className="bg-gray-100 dark:bg-gray-800 rounded-lg p-2 text-black dark:text-white"
+              aria-label={`Editar serviço ${service.title}`}
+              onClick={() => onEdit(service)}
+            >
+              <PencilIcon aria-hidden="true" role="img" focusable="false" />
+            </button>
+          )}
+
+          {onDelete && (
+            <button
+              className="bg-red-100 dark:bg-red-900 rounded-lg p-2 text-red-600 dark:text-red-300"
+              aria-label={`Excluir serviço ${service.title}`}
+              onClick={() => onDelete(service.id)}
+            >
+              <TrashIcon aria-hidden="true" role="img" focusable="false" />
+            </button>
+          )}
+        </div>
       </header>
 
-      <div className="text-zinc-400 text-sm">{description}</div>
+      {description && (
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          {description}
+        </p>
+      )}
 
-      <footer className="grid sm:grid-cols-2 gap-y-2 items-center sm:justify-between">
-        <p className="font-bold">{formatToBRL(price)}{typeOfChange ? `/${typeOfChange}` : ''}</p>
-        <div className="flex items-center w-full justify-end gap-2">
-          {id && showSeeProfile && (
-            <Button onClick={handleClick}>Ver perfil</Button>
+      <footer className="flex items-center justify-between flex-wrap gap-2">
+        <p className="font-bold text-black dark:text-white">
+          {formatToBRL(price)}
+          {typeOfChange ? `/${typeOfChange}` : ""}
+        </p>
+
+        <div className="flex items-center gap-2">
+          {id && showSeeProfile && pathname !== `/provider/${owner.id}` && (
+            <Link
+              href={`/provider/${owner.id}`}
+              className="px-3 py-2 rounded-lg bg-gray-100 text-black"
+            >
+              Ver perfil
+            </Link>
           )}
-          {owner?.phone && (
+
+          {owner?.address?.phone && showSeeProfile && (
             <Link
               href={whatsAppMessage({
-                ownerPhone: owner.phone,
-                ownerName,
+                ownerPhone: owner.address.phone,
+                ownerName: owner.name,
                 serviceTitle: service.title,
               })}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-2  min-h-12 grid place-content-center rounded-lg font-bold font-sans text-black-200 active:shadow-none transition cursor-pointer bg-lime-400"
+              className="px-3 py-2 rounded-lg bg-lime-400 text-black dark:text-black"
             >
               Solicitar
             </Link>
           )}
         </div>
       </footer>
-    </div>
+    </article>
   );
 }

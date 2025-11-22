@@ -2,8 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const api = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_API_URL || "https://conecta-api-l0kh.onrender.com",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
   withCredentials: true,
 });
 

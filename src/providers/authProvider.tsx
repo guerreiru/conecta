@@ -2,21 +2,17 @@
 
 import { AuthContext } from "@/contexts/AuthContext";
 import { api } from "@/services/api";
-import { Profile } from "@/types/Profile";
 import { User } from "@/types/User";
 import { ReactNode, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export function AuthProvider({
   children,
-  initialUser,
 }: {
   children: ReactNode;
-  initialUser?: null | User;
 }) {
-  const [user, setUser] = useState(initialUser || null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeProfile, setActiveProfile] = useState<Profile | null>(null);
 
   async function login(email: string, password: string) {
     setLoading(true);
@@ -29,11 +25,9 @@ export function AuthProvider({
     const data = await res.json();
 
     if (data.user) {
-
-      const { user } = data;
+      const user: User = data.user;
       setUser(user);
-      setActiveProfile(user.profiles[0]);
-      toast.success("Login realizado com sucesso!");
+      toast.success(`Olá ${user.name || ''}!`);
       return { message: "success" };
     }
 
@@ -45,26 +39,12 @@ export function AuthProvider({
 
   async function logout() {
     try {
-      await api.post("/auth/logout");
       setUser(null);
-      setActiveProfile(null);
-      toast.success("Logout realizado com sucesso!");
+      await api.post("/auth/logout");
+      toast.success("Até mais!");
     } catch {
       toast.error("Erro ao realizar logout");
     }
-  }
-
-  function handleUpdateUser(profile: Profile) {
-    setUser((user) => {
-      if (user?.id) {
-        return { ...user, profiles: [...user.profiles, profile] };
-      }
-      return null;
-    });
-  }
-
-  function handleSetActiveProfile(profile: Profile) {
-    setActiveProfile(profile);
   }
 
   useEffect(() => {
@@ -80,11 +60,9 @@ export function AuthProvider({
 
         if (data.user) {
           setUser(data.user);
-          setActiveProfile(data.user.profiles[0]);
         }
       } catch (error) {
         setUser(null);
-        setActiveProfile(null);
       } finally {
         setLoading(false)
       }
@@ -93,16 +71,18 @@ export function AuthProvider({
     checkAuth();
   }, []);
 
+  function handleSetUser(user: User) {
+    setUser(user);
+  }
+
   return (
     <AuthContext.Provider
       value={{
         user,
+        handleSetUser,
         loading,
         login,
         logout,
-        handleUpdateUser,
-        activeProfile,
-        handleSetActiveProfile,
       }}
     >
       {children}

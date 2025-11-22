@@ -3,6 +3,7 @@ import { api } from "@/services/api";
 import { Service } from "@/types/Service";
 import { isAxiosError } from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "./useAuth";
 
 interface FetchServicesParams {
   stateId: string;
@@ -13,6 +14,7 @@ interface FetchServicesParams {
 
 export function useServices() {
   const [services, setServices] = useState<Service[]>([]);
+  const { user } = useAuth()
 
   const fetchServices = async ({
     stateId,
@@ -25,8 +27,9 @@ export function useServices() {
         const res = await api(
           `/services/search?stateId=${stateId}&cityId=${cityId}&searchTerm=${searchTerm}&categoryId=${categoryId}`
         );
+        const services: Service[] = res.data?.data ?? res.data ?? []
 
-        setServices(res.data?.data ?? res.data ?? []);
+        setServices(services);
       } catch (error) {
         if (isAxiosError(error)) {
           const message =

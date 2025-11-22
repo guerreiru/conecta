@@ -1,4 +1,5 @@
 import { Header } from "@/components/header";
+import { NavBar } from "@/components/navBar";
 import { AuthProvider } from "@/providers/authProvider";
 import { CategoriesProvider } from "@/providers/categoriesProvider";
 import type { Metadata } from "next";
@@ -23,12 +24,13 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-br">
-      <body className={`antialiased ${manrope.className} px-4 relative pb-20 lg:pb-0`}>
+      <body className={`antialiased ${manrope.className} relative pb-24 lg:pb-0`}>
         <AuthProvider>
           <CategoriesProvider>
             <Header />
             {children}
-            <ToastContainer />
+            <ToastContainer autoClose={500} />
+            <NavBar />
           </CategoriesProvider>
         </AuthProvider>
       </body>

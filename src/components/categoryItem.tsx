@@ -9,7 +9,7 @@ type CategoryItemProps = {
 export function CategoryItem({ name, active, description }: CategoryItemProps) {
   return (
     <p
-      className={`py-2 px-3 rounded-[20px] text-black w-fit block hover:brightness-90 ${active ? "bg-lime-400" : "bg-white"
+      className={`py-2 px-3 rounded-[20px] text-black w-fit block hover:brightness-90 border border-gray-200 ${active ? "bg-lime-400 border-lime-400" : "bg-white"
         }`}
       title={description}
     >

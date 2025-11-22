@@ -1,6 +1,7 @@
 import { Category } from "./Category";
 import { Company } from "./Company";
 import { Provider } from "./Provider";
+import { User } from "./User";
 
 export type Service = {
   id: string;
@@ -9,6 +10,5 @@ export type Service = {
   price: string;
   typeOfChange: string;
   category: Category;
-  company: Company | null;
-  provider: Provider | null;
+  user: User;
 };

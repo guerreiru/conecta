@@ -131,8 +131,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-
-      {/* HEADER */}
       <header className="px-4 py-5 md:px-8 md:py-10 bg-gradient-to-b from-lime-400 to-lime-500 dark:from-lime-500 dark:to-lime-600 flex md:items-center justify-between gap-x-2 gap-y-4 flex-col md:flex-row">
         <div>
           <h1 className="font-bold text-3xl text-black dark:text-black-200">
@@ -172,8 +170,6 @@ export default function Home() {
           </button>
         )}
       </header>
-
-      {/* LISTA DE SERVIÇOS */}
       {user.role === 'provider' && (
         <section className="p-4 md:p-8 text-black dark:text-gray-200" aria-labelledby="meus-servicos">
           <h2 id="meus-servicos" className="text-xl font-semibold dark:text-white">
@@ -234,8 +230,6 @@ export default function Home() {
           )}
         </section>
       )}
-
-      {/* MODAL DE INSERÇÃO / EDIÇÃO */}
       <Modal open={modalIsOpen} onClose={handleCloseModal}>
         <div className="h-dvh pt-1 pb-4 overflow-y-auto" onClick={handleCloseModal}>
           <div onClick={(e) => e.stopPropagation()} className="w-fit mx-auto">
@@ -250,8 +244,6 @@ export default function Home() {
           </div>
         </div>
       </Modal>
-
-      {/* MODAL DE EXCLUSÃO */}
       <ModalExclusion
         open={deleteModalIsOpen}
         onClose={handleCloseDeleteModal}

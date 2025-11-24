@@ -74,11 +74,7 @@ export default function Start() {
 
   return (
     <>
-      <div className="bg-white dark:bg-black-200 grid gap-y-6 px-4 md:px-6 pb-6">
-        {user?.name && <div>
-          <p className="font-bold text-2xl mt-4">Olá, {user.name}</p>
-        </div>}
-
+      <div className="bg-white dark:bg-black-200 grid gap-y-6 px-4 md:px-6 pb-2">
         <div className="grid md:grid-cols-[1fr_auto] gap-y-1 gap-x-2 items-end mt-3">
           <Input
             label="Termo de Busca:"

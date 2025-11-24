@@ -24,7 +24,7 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-br">
-      <body className={`antialiased ${manrope.className} relative pb-24 lg:pb-0`}>
+      <body className={`antialiased ${manrope.className} relative pb-28 lg:pb-0`}>
         <AuthProvider>
           <CategoriesProvider>
             <Header />

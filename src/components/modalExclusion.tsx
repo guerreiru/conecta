@@ -18,10 +18,10 @@ export function ModalExclusion({ open, onClose, onConfirm }: ModalExclusion) {
             className="mx-auto text-red-500"
             aria-hidden="true"
           />
-          <h3 className="text-lg font-semibold text-gray-800 text-center">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white text-center">
             Confirmar Exclusão
           </h3>
-          <p className="mb-6 text-sm text-gray-600">
+          <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">
             Você tem certeza que deseja excluir este serviço?
           </p>
           <div className="flex justify-center space-x-4">

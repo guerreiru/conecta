@@ -9,7 +9,7 @@ const Register: React.FC = () => {
   const [role, setRole] = useState("client")
 
   return (
-    <div className="flex items-center justify-center pt-6">
+    <div className="flex items-center justify-center pt-6 px-4">
       <div className="w-full max-w-lg px-6 py-8 bg-white dark:bg-black-200 rounded-3xl shadow-xl">
         <h1 className="text-3xl font-bold text-center">Cadastro</h1>
 

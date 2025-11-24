@@ -133,7 +133,7 @@ export default function Profile() {
         <h1 className="text-white text-3xl text-center">Meu perfil</h1>
       </header>
 
-      {!user && <Loading />}
+      {!isLoading && !user && <Loading />}
 
       {user && (
         <div className="px-4">
@@ -220,7 +220,7 @@ export default function Profile() {
           onClick={handleCloseModal}
         >
           <div
-            className="max-w-lg mx-auto rounded-2xl p-4 bg-white"
+            className="max-w-lg mx-auto rounded-2xl p-4 bg-white dark:bg-black-200"
             onClick={(e) => e.stopPropagation()}
           >
             {user?.role === "provider" && (

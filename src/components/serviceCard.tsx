@@ -73,7 +73,7 @@ export function ServiceCard({ service, owner, onEdit, onDelete }: ServiceCardPro
           {id && showSeeProfile && pathname !== `/provider/${owner.id}` && (
             <Link
               href={`/provider/${owner.id}`}
-              className="px-3 py-2 rounded-lg bg-gray-100 text-black"
+              className="px-3 py-2 rounded-lg bg-gray-100 text-black hover:brightness-95"
             >
               Ver perfil
             </Link>
@@ -88,7 +88,7 @@ export function ServiceCard({ service, owner, onEdit, onDelete }: ServiceCardPro
               })}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-2 rounded-lg bg-lime-400 text-black dark:text-black"
+              className="px-3 py-2 rounded-lg bg-lime-400 text-black dark:text-black hover:brightness-95"
             >
               Solicitar
             </Link>

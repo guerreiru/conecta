@@ -26,13 +26,11 @@ export function LocationModal({
   cities,
   loading,
 }: LocationModalProps) {
-
   useEffect(() => {
     if (selectedState && selectedCity) {
       setIsOpen(false);
     }
   }, [selectedState, selectedCity, setIsOpen]);
-
 
   const stateOptions = useMemo(
     () =>
@@ -64,7 +62,9 @@ export function LocationModal({
           <div className="bg-black rounded-full p-4 mb-4">
             <MapPinIcon size={24} className="text-lime-400" />
           </div>
-          <h2 className="text-2xl font-bold text-black">Qual sua localização?</h2>
+          <h2 className="text-2xl font-bold text-black">
+            Qual sua localização?
+          </h2>
           <p className="text-black mt-2 text-sm">
             Para encontrar os melhores profissionais na sua região
           </p>
@@ -91,6 +91,7 @@ export function LocationModal({
               label="Cidade"
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
+              disabled={!selectedState || loading}
               defaultValue={
                 loading ? "Carregando cidades..." : "Selecione a Cidade"
               }

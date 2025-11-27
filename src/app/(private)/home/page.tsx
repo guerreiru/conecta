@@ -4,7 +4,10 @@ import { ServiceForm } from "@/components/forms/serviceForm";
 import { Modal } from "@/components/modal";
 import { ModalExclusion } from "@/components/modalExclusion";
 import { useAuth } from "@/hooks/useAuth";
-import { deleteService } from "@/services/servicesService";
+import {
+  useProviderServices,
+  useDeleteService,
+} from "@/hooks/useServiceQueries";
 import { Service } from "@/types/Service";
 import { capitalizeFirstLetter } from "@/utils/capitalizeFirstLetter";
 import { formatToBRL } from "@/utils/formatToBRL";
@@ -14,58 +17,39 @@ import {
   PencilIcon,
   PlusIcon,
   SuitcaseIcon,
-  TrashIcon
+  TrashIcon,
 } from "@phosphor-icons/react";
-import { isAxiosError } from "axios";
-import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { useState } from "react";
 import { toast } from "react-toastify";
+
+const FREE_PLAN_SERVICE_LIMIT = 2;
 
 export default function Home() {
   const { user } = useAuth();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
-  const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(null);
-  const [myServices, setMyServices] = useState<Service[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(
+    null
+  );
   const [serviceToEdit, setServiceToEdit] = useState<Service | null>(null);
 
-  const fetchUserServices = useCallback(async () => {
-    if (!user?.id) {
-      setIsLoading(false);
-      return;
-    }
+  const { data: myServices = [], isLoading } = useProviderServices(
+    user?.role === "provider" ? user.id : undefined
+  );
+  const deleteServiceMutation = useDeleteService();
 
-    if (user.role === 'client') {
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `http://localhost:3001/services/provider/${user.id}`
-      );
-
-      if (!response.ok) {
-        throw new Error("Falha ao carregar serviços.");
-      }
-
-      const data = await response.json();
-      setMyServices(data);
-    } catch (error) {
-      console.error("Erro ao buscar serviços:", error);
-      setMyServices([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [user?.id]);
-
-  useEffect(() => {
-    fetchUserServices();
-  }, [fetchUserServices]);
+  const hasReachedServiceLimit = myServices.length >= FREE_PLAN_SERVICE_LIMIT;
+  const canAddService = !hasReachedServiceLimit;
 
   const handleOpenAddModal = () => {
+    if (!canAddService) {
+      toast.warning(
+        `Você atingiu o limite de ${FREE_PLAN_SERVICE_LIMIT} serviços gratuitos. Assine um plano para adicionar mais!`,
+        { autoClose: 3000 }
+      );
+      return;
+    }
     setServiceToEdit(null);
     setModalIsOpen(true);
   };
@@ -93,24 +77,11 @@ export default function Home() {
   async function handleDeleteService() {
     if (!serviceToDeleteId) return;
 
-    try {
-      await deleteService(serviceToDeleteId);
-      toast.success("Serviço excluído com sucesso");
-      fetchUserServices();
-      handleCloseDeleteModal();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const message =
-          error.response?.data.message ||
-          "Erro excluir serviço, tente novamente mais tarde ou entre em contado com o suporte";
-        toast.error(message);
-        return;
-      }
-
-      toast.error(
-        "Erro excluir serviço, tente novamente mais tarde ou entre em contado com o suporte"
-      );
-    }
+    deleteServiceMutation.mutate(serviceToDeleteId, {
+      onSuccess: () => {
+        handleCloseDeleteModal();
+      },
+    });
   }
 
   if (!user || isLoading) {
@@ -137,7 +108,7 @@ export default function Home() {
             Bem-vindo, {user.name}
           </h1>
 
-          {user.role === 'provider' && (
+          {user.role === "provider" && (
             <>
               <p className="text-black/80 dark:text-black-100">
                 Gerencie seus serviços e atraia mais clientes
@@ -149,7 +120,9 @@ export default function Home() {
               >
                 <SuitcaseIcon size={24} aria-hidden="true" />
                 <div>
-                  <p className="text-black/70 dark:text-black-100">Serviços Ativos</p>
+                  <p className="text-black/70 dark:text-black-100">
+                    Serviços Ativos
+                  </p>
                   <span aria-label="Quantidade de serviços ativos">
                     {myServices.length}
                   </span>
@@ -159,20 +132,42 @@ export default function Home() {
           )}
         </div>
 
-        {user.role === 'provider' && (
-          <button
-            className="px-4 py-3.5 bg-black dark:bg-black-200 rounded-xl text-white dark:text-black-50 flex items-center gap-1.5 text-sm"
-            aria-label="Adicionar novo serviço"
-            onClick={handleOpenAddModal}
-          >
-            <PlusIcon size={18} aria-hidden="true" />
-            <span>Adicionar Serviço</span>
-          </button>
+        {user.role === "provider" && (
+          <div className="flex flex-col gap-2">
+            <button
+              className={`px-4 py-3.5 rounded-xl text-white dark:text-black-50 flex items-center gap-1.5 text-sm transition-all ${
+                canAddService
+                  ? "bg-black dark:bg-black-200 hover:brightness-90"
+                  : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed opacity-60"
+              }`}
+              aria-label="Adicionar novo serviço"
+              onClick={handleOpenAddModal}
+              disabled={!canAddService}
+            >
+              <PlusIcon size={18} aria-hidden="true" />
+              <span>Adicionar Serviço</span>
+            </button>
+            {!canAddService && (
+              <Link
+                href="/plans"
+                className="text-xs text-black/70 dark:text-black-100 md:text-center max-w-xs"
+              >
+                Limite de {FREE_PLAN_SERVICE_LIMIT} serviços atingido. Assine um
+                plano!
+              </Link>
+            )}
+          </div>
         )}
       </header>
-      {user.role === 'provider' && (
-        <section className="p-4 md:p-8 text-black dark:text-gray-200" aria-labelledby="meus-servicos">
-          <h2 id="meus-servicos" className="text-xl font-semibold dark:text-white">
+      {user.role === "provider" && (
+        <section
+          className="p-4 md:p-8 text-black dark:text-gray-200"
+          aria-labelledby="meus-servicos"
+        >
+          <h2
+            id="meus-servicos"
+            className="text-xl font-semibold dark:text-white"
+          >
             Meus Serviços
           </h2>
 
@@ -183,9 +178,12 @@ export default function Home() {
                   <article className="p-6 bg-white dark:bg-black-200 rounded-2xl shadow-sm h-full border border-gray-200 dark:border-gray-700">
                     <header className="flex items-center justify-between">
                       <div>
-                        <h3 className="font-bold text-lg dark:text-white">{service.title}</h3>
+                        <h3 className="font-bold text-lg dark:text-white">
+                          {service.title}
+                        </h3>
                         <p className="mt-3 font-medium text-sm bg-lime-400/10 dark:bg-lime-500/20 px-2 py-0.5 rounded-lg w-fit text-black dark:text-white">
-                          {service.category.name && capitalizeFirstLetter(service.category.name)}
+                          {service.category.name &&
+                            capitalizeFirstLetter(service.category.name)}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
@@ -206,7 +204,9 @@ export default function Home() {
                       </div>
                     </header>
 
-                    <p className="text-stone-500 dark:text-gray-400 my-4">{service.description}</p>
+                    <p className="text-stone-500 dark:text-gray-400 my-4">
+                      {service.description}
+                    </p>
 
                     <p className="text-stone-500 dark:text-gray-300 text-sm flex items-center gap-1">
                       <CurrencyDollarIcon size={14} aria-hidden="true" />
@@ -231,14 +231,14 @@ export default function Home() {
         </section>
       )}
       <Modal open={modalIsOpen} onClose={handleCloseModal}>
-        <div className="h-dvh pt-1 pb-4 overflow-y-auto" onClick={handleCloseModal}>
+        <div
+          className="h-dvh pt-1 pb-4 overflow-y-auto"
+          onClick={handleCloseModal}
+        >
           <div onClick={(e) => e.stopPropagation()} className="w-fit mx-auto">
             <ServiceForm
               onCancel={handleCloseModal}
-              onServiceAdded={() => {
-                fetchUserServices();
-                handleCloseModal();
-              }}
+              onServiceAdded={handleCloseModal}
               serviceToEdit={serviceToEdit}
             />
           </div>
@@ -249,7 +249,6 @@ export default function Home() {
         onClose={handleCloseDeleteModal}
         onConfirm={handleDeleteService}
       />
-
     </main>
   );
 }

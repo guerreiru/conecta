@@ -3,86 +3,71 @@
 import { AuthContext } from "@/contexts/AuthContext";
 import { api } from "@/services/api";
 import { User } from "@/types/User";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/messages";
 import { ReactNode, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export function AuthProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const response = await api.get("/auth/me");
+        setUser(response.data.user);
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadUser();
+  }, []);
 
   async function login(email: string, password: string) {
     setLoading(true);
-    const res = await fetch("/api/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      credentials: "include",
-    });
+    try {
+      const response = await api.post("/auth/login", { email, password });
 
-    const data = await res.json();
+      setUser(response.data.user);
+      toast.success(`Olá ${response.data.user.name || ""}!`);
 
-    if (data.user) {
-      const user: User = data.user;
-      setUser(user);
-      toast.success(`Olá ${user.name || ''}!`);
-      return { message: "success" };
+      return { success: true };
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || ERROR_MESSAGES.LOGIN_ERROR;
+      toast.error(message);
+
+      return { success: false, message };
+    } finally {
+      setLoading(false);
     }
-
-    toast.error(data.message || "Erro desconhecido");
-    setLoading(true);
-
-    return { message: data.message };
   }
 
   async function logout() {
     try {
-      setUser(null);
       await api.post("/auth/logout");
-      toast.success("Até mais!");
-    } catch {
-      toast.error("Erro ao realizar logout");
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    } finally {
+      setUser(null);
+      window.location.href = "/login";
     }
   }
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        setLoading(true)
-        const res = await fetch("/api/refresh", {
-          method: "POST",
-          credentials: "include",
-        });
-
-        const data = await res.json();
-
-        if (data.user) {
-          setUser(data.user);
-        }
-      } catch (error) {
-        setUser(null);
-      } finally {
-        setLoading(false)
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  function handleSetUser(user: User) {
-    setUser(user);
+  function updateUser(updatedUser: User) {
+    setUser(updatedUser);
   }
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        handleSetUser,
         loading,
         login,
         logout,
+        updateUser,
       }}
     >
       {children}

@@ -10,6 +10,8 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { AddressFields } from "./addressFields";
 import { useAuth } from "@/hooks/useAuth";
+import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
+import { useState } from "react";
 
 const providerSchemaCreate = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
@@ -20,38 +22,19 @@ const providerSchemaCreate = z.object({
   address: addressSchema,
 });
 
-const providerSchemaEdit = z
-  .object({
-    name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
-    email: z.email("E-mail inválido"),
-    specialty: z.string().optional(),
-    bio: z.string().optional(),
-    address: addressSchema,
-    password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
-    newPassword: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.newPassword) {
-        return !!data.password && !!data.newPassword;
-      }
-      return true;
-    },
-    {
-      message: "Informe a senha atual e a nova senha para alterar",
-      path: ["newPassword"],
-    }
-  );
-
-type ProviderFormData = z.infer<typeof providerSchemaEdit>;
+type ProviderFormData = z.infer<typeof providerSchemaCreate>;
 
 type ProviderFormProps = {
   mode: "create" | "edit";
   defaultValues?: Partial<ProviderFormData> & { id?: string };
+  onCancel?: () => void;
 };
 
-export function ProviderForm({ mode, defaultValues }: ProviderFormProps) {
-  const schema = mode === "create" ? providerSchemaCreate : providerSchemaEdit;
+export function ProviderForm({
+  mode,
+  defaultValues,
+  onCancel,
+}: ProviderFormProps) {
   const {
     register,
     handleSubmit,
@@ -60,28 +43,30 @@ export function ProviderForm({ mode, defaultValues }: ProviderFormProps) {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<ProviderFormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(providerSchemaCreate),
     defaultValues,
   });
-  const { handleSetUser } = useAuth()
-
+  const { updateUser, user } = useAuth();
   const { addressEditable } = useCepLookup(watch, setValue);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function onSubmit(data: ProviderFormData) {
-    const providerDate = {
+    const providerData = {
       ...data,
       role: "provider",
-    }
+    };
 
     try {
       if (mode === "create") {
-        await api.post("/users", providerDate);
+        await api.post("/users", providerData);
         toast.success("Profissional cadastrado com sucesso!");
       } else {
-        const res = await api.put(`/users/${defaultValues?.id}`, providerDate);
+        const res = await api.put(`/users/${defaultValues?.id}`, providerData);
+
         const updatedUser = res.data;
+
         if (updatedUser.id) {
-          handleSetUser(updatedUser);
+          updateUser(updatedUser);
         }
 
         toast.success("Profissional atualizado com sucesso!");
@@ -102,6 +87,10 @@ export function ProviderForm({ mode, defaultValues }: ProviderFormProps) {
     }
   }
 
+  function togglePasswordVisibility() {
+    setShowPassword((prev) => !prev);
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <Input
@@ -111,41 +100,37 @@ export function ProviderForm({ mode, defaultValues }: ProviderFormProps) {
         error={errors.name?.message}
       />
 
-      <Input
-        id="email"
-        type="email"
-        label="E-mail"
-        {...register("email")}
-        error={errors.email?.message}
-        disabled={mode === "edit"}
-      />
-
       {mode === "create" && (
-        <Input
-          id="password"
-          type="password"
-          label="Senha"
-          {...register("password")}
-          error={errors.password?.message}
-        />
-      )}
-
-      {mode === "edit" && (
         <>
           <Input
-            id="password"
-            type="password"
-            label="Senha atual"
-            {...register("password")}
-            error={errors.password?.message}
+            id="email"
+            type="email"
+            label="E-mail"
+            {...register("email")}
+            error={errors.email?.message}
           />
 
           <Input
-            id="newPassword"
-            type="password"
-            label="Nova senha"
-            {...register("newPassword")}
-            error={errors.newPassword?.message}
+            label="Senha"
+            id="password"
+            type={showPassword ? "text" : "password"}
+            {...register("password")}
+            error={errors?.password?.message}
+            rightIcon={
+              showPassword ? (
+                <EyeSlashIcon
+                  size={18}
+                  onClick={togglePasswordVisibility}
+                  className="cursor-pointer"
+                />
+              ) : (
+                <EyeIcon
+                  size={18}
+                  onClick={togglePasswordVisibility}
+                  className="cursor-pointer"
+                />
+              )
+            }
           />
         </>
       )}
@@ -165,15 +150,23 @@ export function ProviderForm({ mode, defaultValues }: ProviderFormProps) {
         setValue={setValue}
       />
 
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting
-          ? mode === "create"
-            ? "Cadastrando..."
-            : "Salvando..."
-          : mode === "create"
+      <div className="flex items-center justify-between gap-4 flex-wrap md:flex-nowrap">
+        {mode === "edit" && (
+          <Button onClick={onCancel} variant="black" className="w-full">
+            Cancelar
+          </Button>
+        )}
+
+        <Button type="submit" disabled={isSubmitting} className="w-full">
+          {isSubmitting
+            ? mode === "create"
+              ? "Cadastrando..."
+              : "Salvando..."
+            : mode === "create"
             ? "Cadastrar"
             : "Salvar alterações"}
-      </Button>
+        </Button>
+      </div>
     </form>
   );
 }

@@ -1,11 +1,9 @@
 "use client";
 
 import { useCategories } from "@/hooks/useCategories";
-import { api } from "@/services/api";
+import { useCreateService, useUpdateService } from "@/hooks/useServiceQueries";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import z from "zod";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -38,20 +36,30 @@ type ServiceFormProps = {
   onCancel: () => void;
   onServiceAdded: () => void;
   serviceToEdit?: Service | null;
-}
+};
 
-export function ServiceForm({ onCancel, onServiceAdded, serviceToEdit }: ServiceFormProps) {
+export function ServiceForm({
+  onCancel,
+  onServiceAdded,
+  serviceToEdit,
+}: ServiceFormProps) {
   const { categories } = useCategories();
   const { user } = useAuth();
+  const createServiceMutation = useCreateService();
+  const updateServiceMutation = useUpdateService();
 
   const isEditing = !!serviceToEdit;
-  const submitButtonText = isEditing ? "Salvar Alterações" : "Cadastrar Serviço";
+  const submitButtonText = isEditing
+    ? "Salvar Alterações"
+    : "Cadastrar Serviço";
+  const isLoading =
+    createServiceMutation.isPending || updateServiceMutation.isPending;
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -69,38 +77,30 @@ export function ServiceForm({ onCancel, onServiceAdded, serviceToEdit }: Service
   }
 
   async function onSubmit(data: ProductFormData) {
-    if (!user?.id) {
-      return
-    }
+    if (!user?.id) return;
 
     const servicePayload = {
       ...data,
       userId: user.id,
     };
 
-    try {
-      if (isEditing) {
-        await api.put(`/services/${serviceToEdit.id}`, servicePayload);
-        toast.success("Serviço atualizado com sucesso");
-      } else {
-        await api.post("/services", servicePayload);
-        toast.success("Serviço criado com sucesso");
-      }
-
-      onServiceAdded();
-      reset();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const message =
-          error.response?.data.message ||
-          "Erro ao realizar a operação, tente novamente mais tarde ou entre em contado com o suporte";
-        toast.error(message);
-        return;
-      }
-
-      toast.error(
-        "Erro ao realizar a operação, tente novamente mais tarde ou entre em contado com o suporte"
+    if (isEditing) {
+      updateServiceMutation.mutate(
+        { id: serviceToEdit.id, data: servicePayload },
+        {
+          onSuccess: () => {
+            onServiceAdded();
+            reset();
+          },
+        }
       );
+    } else {
+      createServiceMutation.mutate(servicePayload, {
+        onSuccess: () => {
+          onServiceAdded();
+          reset();
+        },
+      });
     }
   }
 
@@ -111,9 +111,14 @@ export function ServiceForm({ onCancel, onServiceAdded, serviceToEdit }: Service
           <p className="font-bold text-2xl mb-2 dark:text-black-200">
             {isEditing ? "Editar Serviço" : "Adicionar Novo Serviço"}
           </p>
-          <p className="dark:text-black-200 text-sm">Preencha as informações do serviço</p>
+          <p className="dark:text-black-200 text-sm">
+            Preencha as informações do serviço
+          </p>
         </header>
-        <form onSubmit={handleSubmit(onSubmit)} className="p-4 grid gap-4 overflow-y-auto max-h-dvh">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="p-4 grid gap-4 overflow-y-auto max-h-dvh"
+        >
           <Input
             label="Nome do serviço"
             placeholder="Ex: Curso de informática"
@@ -142,10 +147,18 @@ export function ServiceForm({ onCancel, onServiceAdded, serviceToEdit }: Service
             <Input
               label="Tipo de Cobrança"
               placeholder="Exemplo: por hora"
+              list="billingTypes"
               type="text"
               {...register("typeOfChange")}
               error={errors.typeOfChange?.message}
             />
+
+            <datalist id="billingTypes">
+              <option value="Hora" />
+              <option value="Diária" />
+              <option value="Mês" />
+              <option value="Projeto" />
+            </datalist>
           </div>
 
           <Textarea
@@ -157,11 +170,15 @@ export function ServiceForm({ onCancel, onServiceAdded, serviceToEdit }: Service
           />
 
           <div className="grid grid-cols-2 gap-4">
-            <Button disabled={isSubmitting} variant="accent" onClick={handleOnCancel}>
+            <Button
+              disabled={isLoading}
+              variant="accent"
+              onClick={handleOnCancel}
+            >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Salvando..." : submitButtonText}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Salvando..." : submitButtonText}
             </Button>
           </div>
         </form>

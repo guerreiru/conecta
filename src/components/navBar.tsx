@@ -1,47 +1,89 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { SignOutIcon, HouseIcon, MagnifyingGlassIcon, UserIcon } from "@phosphor-icons/react";
+import {
+  CaretLeftIcon,
+  HouseIcon,
+  MagnifyingGlassIcon,
+  SignOutIcon,
+  UserIcon,
+} from "@phosphor-icons/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { ModalLogout } from "./modalLogout";
-import { logout } from "@/utils/logout";
+import { SUCCESS_MESSAGES } from "@/constants/messages";
+import { toast } from "react-toastify";
 
 export function NavBar() {
   const pathname = usePathname();
-  const { logout: authLogout, user } = useAuth();
+  const { logout, user } = useAuth();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const router = useRouter();
 
   const navigationLinks = [
-    { href: "/home", icon: <HouseIcon size={20} />, label: "Home", showFor: ["provider", "admin"] },
-    { href: "/profile", icon: <UserIcon size={20} />, label: "Profile", showFor: ["client", "provider", "admin"] },
-    { href: "/", icon: <MagnifyingGlassIcon size={20} />, label: "Search", showFor: ["client", "provider", "admin"] },
+    {
+      href: "/home",
+      icon: <HouseIcon size={20} />,
+      label: "Home",
+      showFor: ["provider", "admin"],
+    },
+    {
+      href: "/profile",
+      icon: <UserIcon size={20} />,
+      label: "Profile",
+      showFor: ["client", "provider", "admin"],
+    },
+    {
+      href: "/",
+      icon: <MagnifyingGlassIcon size={20} />,
+      label: "Search",
+      showFor: ["guest", "client", "provider", "admin"],
+    },
+    {
+      href: "/login",
+      icon: <UserIcon size={20} />,
+      label: "Login",
+      showFor: ["guest"],
+    },
   ];
 
   const filteredLinks = user
-    ? navigationLinks.filter(link => link.showFor.includes(user.role))
-    : navigationLinks;
+    ? navigationLinks.filter((link) => link.showFor.includes(user.role))
+    : navigationLinks.filter((link) => link.showFor.includes("guest"));
 
   function handleLogout() {
-    authLogout();
     logout();
+    toast.success(SUCCESS_MESSAGES.LOGOUT_SUCCESS);
     setIsLogoutModalOpen(false);
   }
 
   return (
-    <nav className="fixed bottom-2 left-0 w-full lg:hidden">
-      <ul className="max-w-3xl mx-4 bg-black-200 text-white flex items-center justify-evenly p-7 rounded-[36px]">
+    <nav className="fixed bottom-2 left-0 w-full px-4 grid place-items-center lg:hidden">
+      <ul className="w-full max-w-2xl mx-4 flex items-center justify-evenly p-4 rounded-[36px] bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.25)] relative before:content-[''] before:absolute before:inset-0 before:rounded-[36px] before:bg-gradient-to-b before:from-white/30 before:to-transparent before:pointer-events-none before:opacity-50">
+        <li className="grid place-items-center">
+          <button
+            onClick={() => router.back()}
+            aria-label="Logout"
+            className="text-black dark:text-white transition-colors hover:text-lime-400"
+          >
+            <CaretLeftIcon size={22} />
+          </button>
+        </li>
+
         {filteredLinks.map(({ href, icon, label }) => {
           const isActive = pathname === href;
 
           return (
-            <li key={label}>
-              <Link
-                href={href}
-                className={`transition-colors ${isActive ? "text-lime-400" : "text-white"}`}
-                aria-label={label}
-              >
+            <li
+              key={label}
+              className={`block p-1 rounded-full transition-colors ${
+                isActive
+                  ? "text-black-200 bg-lime-400"
+                  : "text-black dark:text-white"
+              }`}
+            >
+              <Link href={href} aria-label={label}>
                 {icon}
               </Link>
             </li>
@@ -53,7 +95,7 @@ export function NavBar() {
             <button
               onClick={() => setIsLogoutModalOpen(true)}
               aria-label="Logout"
-              className="text-white transition-colors hover:text-lime-400"
+              className="text-black dark:text-white transition-colors hover:text-lime-400"
             >
               <SignOutIcon size={18} />
             </button>

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ModalLogout } from "./modalLogout";
-import { logout } from "@/utils/logout";
+import { toast } from "react-toastify";
+import { SUCCESS_MESSAGES } from "@/constants/messages";
 
 function ListItem({
   href,
@@ -20,8 +21,9 @@ function ListItem({
     <li>
       <Link
         href={href}
-        className={`px-4 md:px-6 py-2 hover:brightness-90 font-medium rounded-xl ${isActive ? "bg-lime-400 dark:text-black" : ""
-          }`}
+        className={`px-4 md:px-6 py-2 hover:brightness-90 font-medium rounded-xl ${
+          isActive ? "bg-lime-400 dark:text-black" : ""
+        }`}
       >
         {title}
       </Link>
@@ -35,21 +37,21 @@ export function NavHeader({
   accessToken: string | undefined;
 }) {
   const pathName = usePathname();
-  const { logout: authLogout, user } = useAuth()
+  const { logout: authLogout, user } = useAuth();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const isActive = (path: string) => pathName === path;
 
-  function handleLogout() {
-    authLogout();
-    logout();
+  async function handleLogout() {
     setIsLogoutModalOpen(false);
+    toast.success(SUCCESS_MESSAGES.LOGOUT_SUCCESS);
+    await authLogout();
   }
 
   return (
     <nav className="flex items-center gap-1 md:gap-2">
       <ul className="flex items-center gap-1 md:gap-2">
-        {accessToken && user?.role !== 'client' && (
+        {accessToken && user?.role !== "client" && (
           <ListItem href="/home" isActive={isActive("/home")} title="Home" />
         )}
 
@@ -90,7 +92,6 @@ export function NavHeader({
           </li>
         )}
       </ul>
-
 
       <ModalLogout
         open={isLogoutModalOpen}

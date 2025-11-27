@@ -1,5 +1,7 @@
 "use client";
 
+import { ChangeEmailForm } from "@/components/forms/changeEmailForm";
+import { ChangePasswordForm } from "@/components/forms/changePasswordForm";
 import { ClientForm } from "@/components/forms/clientForm";
 import { ProviderForm } from "@/components/forms/providerForm";
 import { ServiceForm } from "@/components/forms/serviceForm";
@@ -9,60 +11,35 @@ import { ModalLogout } from "@/components/modalLogout";
 import { ServiceCard } from "@/components/serviceCard";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loadin";
+import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { useAuth } from "@/hooks/useAuth";
-import { deleteService } from "@/services/servicesService";
+import {
+  useProviderServices,
+  useDeleteService,
+} from "@/hooks/useServiceQueries";
 import { Service } from "@/types/Service";
-import { logout } from "@/utils/logout";
 import { PencilIcon } from "@phosphor-icons/react";
-import { isAxiosError } from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Profile() {
   const { logout: authLogout, user } = useAuth();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
-  const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(null);
+  const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(
+    null
+  );
   const [modalNewServiceIsOpen, setModalNewServiceIsOpen] = useState(false);
-  const [myServices, setMyServices] = useState<Service[]>([]);
   const [serviceToEdit, setServiceToEdit] = useState<Service | null>(null);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
+    useState(false);
 
-  const fetchUserServices = useCallback(async () => {
-    if (!user?.id) {
-      setIsLoading(false);
-      return;
-    }
-
-    if (user.role === "client") {
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `http://localhost:3001/services/provider/${user.id}`
-      );
-
-      if (!response.ok) {
-        throw new Error("Falha ao carregar serviços.");
-      }
-
-      const data = await response.json();
-      setMyServices(data);
-    } catch (error) {
-      console.error("Erro ao buscar serviços:", error);
-      setMyServices([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [user?.id]);
-
-  useEffect(() => {
-    fetchUserServices();
-  }, [fetchUserServices]);
+  const { data: myServices = [], isLoading } = useProviderServices(
+    user?.role === "provider" ? user?.id : undefined
+  );
+  const deleteServiceMutation = useDeleteService();
 
   function handleCloseModal() {
     setModalIsOpen(false);
@@ -86,7 +63,6 @@ export default function Profile() {
     setModalNewServiceIsOpen(true);
   };
 
-
   const handleOpenDeleteModal = (serviceId: string) => {
     setServiceToDeleteId(serviceId);
     setDeleteModalIsOpen(true);
@@ -97,35 +73,21 @@ export default function Profile() {
     setDeleteModalIsOpen(false);
   };
 
-  async function handleDeleteService() {
+  function handleDeleteService() {
     if (!serviceToDeleteId) return;
 
-    try {
-      await deleteService(serviceToDeleteId);
-      toast.success("Serviço excluído com sucesso");
-      fetchUserServices();
-      handleCloseDeleteModal();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const message =
-          error.response?.data.message ||
-          "Erro excluir serviço, tente novamente mais tarde ou entre em contado com o suporte";
-        toast.error(message);
-        return;
-      }
-
-      toast.error(
-        "Erro excluir serviço, tente novamente mais tarde ou entre em contado com o suporte"
-      );
-    }
+    deleteServiceMutation.mutate(serviceToDeleteId, {
+      onSuccess: () => {
+        handleCloseDeleteModal();
+      },
+    });
   }
 
-  function handleLogout() {
-    authLogout();
-    logout();
+  async function handleLogout() {
     setIsLogoutModalOpen(false);
+    toast.success(SUCCESS_MESSAGES.LOGOUT_SUCCESS);
+    await authLogout();
   }
-
 
   return (
     <main className="relative">
@@ -155,9 +117,26 @@ export default function Profile() {
               <p>{user?.email}</p>
             </div>
 
-            <div>
+            <div className="mb-6">
               <p className="text-sm text-zinc-500">Telefone</p>
               <p>{user?.address?.phone}</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              <Button
+                variant="accent"
+                onClick={() => setIsChangeEmailModalOpen(true)}
+                className="w-full"
+              >
+                Alterar Email
+              </Button>
+              <Button
+                variant="accent"
+                onClick={() => setIsChangePasswordModalOpen(true)}
+                className="w-full"
+              >
+                Alterar Senha
+              </Button>
             </div>
           </div>
 
@@ -216,7 +195,7 @@ export default function Profile() {
 
       <Modal open={modalIsOpen} onClose={() => setModalIsOpen(false)}>
         <div
-          className="max-h-dvh rounded-2xl overflow-y-auto pb-4"
+          className="max-h-dvh rounded-2xl overflow-y-auto pb-4 px-4"
           onClick={handleCloseModal}
         >
           <div
@@ -224,29 +203,83 @@ export default function Profile() {
             onClick={(e) => e.stopPropagation()}
           >
             {user?.role === "provider" && (
-              <ProviderForm mode="edit" defaultValues={user} />
+              <ProviderForm
+                mode="edit"
+                defaultValues={user}
+                onCancel={handleCloseModal}
+              />
             )}
-            {user?.role === "client" && <ClientForm mode="edit" defaultValues={user} />}
+            {user?.role === "client" && (
+              <ClientForm
+                mode="edit"
+                defaultValues={user}
+                onCancel={handleCloseModal}
+              />
+            )}
           </div>
         </div>
       </Modal>
 
       <Modal open={modalNewServiceIsOpen} onClose={handleCloseModalNewService}>
-        <div className="h-dvh pt-1 pb-4 overflow-y-auto" onClick={() => setModalNewServiceIsOpen(false)}>
+        <div
+          className="h-dvh pt-1 pb-4 overflow-y-auto"
+          onClick={() => setModalNewServiceIsOpen(false)}
+        >
           <div onClick={(e) => e.stopPropagation()} className="w-fit mx-auto">
             <ServiceForm
               onCancel={handleCloseModalNewService}
-              onServiceAdded={() => {
-                fetchUserServices();
-                handleCloseModalNewService();
-              }}
+              onServiceAdded={handleCloseModalNewService}
               serviceToEdit={serviceToEdit}
             />
           </div>
         </div>
       </Modal>
 
-      <ModalExclusion open={deleteModalIsOpen} onClose={handleCloseDeleteModal} onConfirm={handleDeleteService} />
+      <ModalExclusion
+        open={deleteModalIsOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleDeleteService}
+      />
+
+      <Modal
+        open={isChangeEmailModalOpen}
+        onClose={() => setIsChangeEmailModalOpen(false)}
+      >
+        <div
+          className="max-h-dvh rounded-2xl overflow-y-auto pb-4 px-4"
+          onClick={() => setIsChangeEmailModalOpen(false)}
+        >
+          <div
+            className="max-w-lg mx-auto rounded-2xl p-6 bg-white dark:bg-black-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ChangeEmailForm
+              onCancel={() => setIsChangeEmailModalOpen(false)}
+              onSuccess={() => setIsChangeEmailModalOpen(false)}
+            />
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        open={isChangePasswordModalOpen}
+        onClose={() => setIsChangePasswordModalOpen(false)}
+      >
+        <div
+          className="max-h-dvh rounded-2xl overflow-y-auto pb-4 px-4"
+          onClick={() => setIsChangePasswordModalOpen(false)}
+        >
+          <div
+            className="max-w-lg mx-auto rounded-2xl p-6 bg-white dark:bg-black-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ChangePasswordForm
+              onCancel={() => setIsChangePasswordModalOpen(false)}
+              onSuccess={() => setIsChangePasswordModalOpen(false)}
+            />
+          </div>
+        </div>
+      </Modal>
     </main>
   );
 }

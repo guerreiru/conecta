@@ -1,5 +1,5 @@
 import { ServiceOwnerProfile } from "@/components/serviceOwnerProfile";
-import { User } from "@/types/User";
+import { getUserById } from "@/services/usersService";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -7,13 +7,16 @@ type Props = {
 
 export default async function ProviderProfile({ params }: Props) {
   const { id } = await params;
-  const res = await fetch(`http://localhost:3001/users/${id}`);
-  const user: User = await res.json();
 
-  if (!user.id) {
-    return <p>Nenhum profissional foi encontrado para esse perfil</p>
+  try {
+    const user = await getUserById(id);
+
+    if (!user.id) {
+      return <p>Nenhum profissional foi encontrado para esse perfil</p>;
+    }
+
+    return <ServiceOwnerProfile owner={user} />;
+  } catch (error) {
+    return <p>Nenhum profissional foi encontrado para esse perfil</p>;
   }
-
-
-  return <ServiceOwnerProfile owner={user} />;
 }

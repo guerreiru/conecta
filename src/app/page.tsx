@@ -31,7 +31,6 @@ export default function Start() {
   const { cities, loading } = useCitiesByState(selectedState);
   const [cityName, setCityName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user } = useAuth()
 
   const handleSearch = async (categoryParam?: Category | null) => {
     const categoryId = categoryParam?.id ?? selectedCategory?.id ?? null;
@@ -49,9 +48,7 @@ export default function Start() {
 
   useEffect(() => {
     if (selectedCity) {
-      const city = cities.find(
-        (c) => c.id === selectedCity
-      );
+      const city = cities.find((c) => c.id === selectedCity);
 
       if (city) {
         setCityName(city.name);
@@ -120,8 +117,13 @@ export default function Start() {
         <HowItWorksCard />
 
         <div className="flex items-center justify-between flex-wrap gap-y-2 w-full max-w-2xl mx-auto">
-          <p className="font-bold text-xl md:text-2xl">Mostrando serviços em: {cityName}</p>
-          <button className="flex items-center gap-2 border border-lime-400 py-3.5 px-6 rounded-xl hover:brightness-90 bg-white dark:bg-black-200" onClick={handleChangeLocation}>
+          <p className="font-bold text-xl md:text-2xl">
+            Mostrando serviços em: {cityName}
+          </p>
+          <button
+            className="flex items-center gap-2 border border-lime-400 py-3.5 px-6 rounded-xl hover:brightness-90 bg-white dark:bg-black-200"
+            onClick={handleChangeLocation}
+          >
             <MapPinIcon size={18} />
             Alterar localização
           </button>

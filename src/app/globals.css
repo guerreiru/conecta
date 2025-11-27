@@ -40,6 +40,10 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
   height: 4px;

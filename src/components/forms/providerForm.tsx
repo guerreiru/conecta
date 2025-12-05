@@ -12,6 +12,7 @@ import { AddressFields } from "./addressFields";
 import { useAuth } from "@/hooks/useAuth";
 import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useState } from "react";
+import { Textarea } from "../ui/textarea";
 
 const providerSchemaCreate = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
@@ -141,7 +142,12 @@ export function ProviderForm({
         error={errors.specialty?.message}
       />
 
-      <Input label="Sobre" {...register("bio")} error={errors.bio?.message} />
+      <Textarea
+        label="Sobre"
+        {...register("bio")}
+        error={errors.bio?.message}
+        rows={4}
+      />
 
       <AddressFields
         register={register}

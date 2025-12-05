@@ -6,14 +6,13 @@ import { LocationModal } from "@/components/locationModal";
 import { ServiceCard } from "@/components/serviceCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/useAuth";
 import { useCategories } from "@/hooks/useCategories";
 import { useCitiesByState } from "@/hooks/useCitiesByState";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useServices } from "@/hooks/useServices";
 import { Category } from "@/types/Category";
-import { MapPinIcon } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { MapPinIcon, SuitcaseIcon } from "@phosphor-icons/react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Start() {
   const { categories } = useCategories();
@@ -32,15 +31,18 @@ export default function Start() {
   const [cityName, setCityName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSearch = async (categoryParam?: Category | null) => {
-    const categoryId = categoryParam?.id ?? selectedCategory?.id ?? null;
-    fetchServices({
-      stateId: selectedState,
-      cityId: selectedCity,
-      searchTerm,
-      categoryId,
-    });
-  };
+  const handleSearch = useCallback(
+    async (categoryParam?: Category | null) => {
+      const categoryId = categoryParam?.id ?? selectedCategory?.id ?? null;
+      fetchServices({
+        stateId: selectedState,
+        cityId: selectedCity,
+        searchTerm,
+        categoryId,
+      });
+    },
+    [selectedCategory, selectedState, selectedCity, searchTerm, fetchServices]
+  );
 
   useEffect(() => {
     handleSearch();
@@ -140,7 +142,39 @@ export default function Start() {
             ))}
           </div>
         ) : (
-          <p>Nenhum serviço encontrado</p>
+          <div className="w-full max-w-2xl mx-auto text-center py-12">
+            <div className="bg-white dark:bg-black-200 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-700">
+              <div className="mb-4">
+                <SuitcaseIcon
+                  size={48}
+                  className="mx-auto text-gray-400 dark:text-gray-600"
+                />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-black dark:text-white">
+                Nenhum serviço encontrado
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                Não encontramos serviços{" "}
+                {selectedCategory && `de "${selectedCategory.name}" `}
+                em {cityName || "sua região"}.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button
+                  variant="accent"
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setSearchTerm("");
+                    handleSearch(null);
+                  }}
+                >
+                  Limpar filtros
+                </Button>
+                <Button onClick={handleChangeLocation}>
+                  Tentar outra localização
+                </Button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
 

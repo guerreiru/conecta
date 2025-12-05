@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
     description:
       "Encontre o CEP de qualquer rua com facilidade. Saiba o CEP de cada rua!",
-    images: ["/og-image.png"],
+    images: ["/antevisao.png"],
     url: "https://www.prolocal.com.br",
     type: "website",
     locale: "pt_BR",

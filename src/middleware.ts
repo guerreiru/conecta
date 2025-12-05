@@ -5,10 +5,7 @@ export function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("accessToken")?.value;
   const roles = req.cookies.get("roles")?.value;
 
-  const protectedRoutes = [
-    { path: "/dashboard", roles: ["company", "provider"] },
-    { path: "/admin", roles: ["admin"] },
-  ];
+  const protectedRoutes = [{ path: "/admin", roles: ["admin"] }];
 
   const authRoutes = ["/login", "/register"];
 

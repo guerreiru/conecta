@@ -1,10 +1,15 @@
-import { Profile } from "./Profile";
+import { Address } from "./Address";
+import { Service } from "./Service";
 import { UserRole } from "./UserRole";
 
 export type User = {
   id: string;
   name: string;
   email: string;
-  roles: UserRole[];
-  profiles: Profile[];
+  password: string;
+  role: UserRole;
+  specialty?: string;
+  bio?: string;
+  address?: Address;
+  services?: Service[];
 };

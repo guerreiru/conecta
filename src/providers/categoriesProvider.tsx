@@ -17,6 +17,7 @@ export function CategoriesProvider({
     setLoading(true);
     try {
       const { data } = await api.get("/categories");
+
       setCategories(data);
     } catch (error) {
       console.error("Erro ao carregar categorias", error);

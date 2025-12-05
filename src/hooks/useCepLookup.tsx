@@ -2,6 +2,7 @@
 
 import { AddressFormData } from "@/components/forms/addressFields";
 import { api } from "@/services/api";
+import { viaCepApi } from "@/services/viaCepApi";
 import { City } from "@/types/City";
 import { capitalizeFirstLetter } from "@/utils/capitalizeFirstLetter";
 import { states } from "@/utils/states/states";
@@ -54,7 +55,7 @@ export function useCepLookup(
           cityName: false,
           cityId: false,
           stateName: false,
-          stateId: false
+          stateId: false,
         });
       } else {
         const addressKeysToClear: AddressKeys[] = [
@@ -75,7 +76,7 @@ export function useCepLookup(
           cityName: true,
           cityId: true,
           stateName: true,
-          stateId: true
+          stateId: true,
         });
       }
     }, 500);
@@ -91,19 +92,23 @@ async function fetchAddressByCep(zipCode: string) {
     const cleanedCep = zipCode.replace(/\D/g, "").slice(0, 8);
     if (cleanedCep.length !== 8) return null;
 
-    const res = await fetch(`https://viacep.com.br/ws/${cleanedCep}/json/`);
-    const data = await res.json();
+    const response = await viaCepApi.get(`/${cleanedCep}/json/`);
+    const data = response.data;
 
     if (data.erro) return null;
 
-    const state = states.find((state) => state.acronym.toUpperCase() === data.uf);
-    let city: City | null = null
+    const state = states.find(
+      (state) => state.acronym.toUpperCase() === data.uf
+    );
+    let city: City | null = null;
 
     if (state?.id) {
-      const res = await api(`/cities?name=${data.localidade}&stateId=${state?.id}`)
+      const res = await api.get(
+        `/cities?name=${data.localidade}&stateId=${state?.id}`
+      );
 
       if (res.data) {
-        city = res.data[0]
+        city = res.data[0];
       }
     }
 
@@ -113,7 +118,7 @@ async function fetchAddressByCep(zipCode: string) {
       cityName: city?.name || "",
       cityId: city?.id || "",
       stateName: state?.name ? capitalizeFirstLetter(state.name) : "",
-      stateId: state?.id || ""
+      stateId: state?.id || "",
     };
   } catch {
     return null;

@@ -1,47 +1,28 @@
 import { useState } from "react";
-import { api } from "@/services/api";
-import { Service } from "@/types/Service";
-import { isAxiosError } from "axios";
-import { toast } from "react-toastify";
-
-interface FetchServicesParams {
-  stateId: string;
-  cityId: string;
-  searchTerm: string;
-  categoryId: string | null;
-}
+import { useSearchServices, SearchServicesParams } from "./useServiceQueries";
 
 export function useServices() {
-  const [services, setServices] = useState<Service[]>([]);
+  const [searchParams, setSearchParams] = useState<SearchServicesParams>({
+    stateId: "",
+    cityId: "",
+    searchTerm: "",
+    categoryId: null,
+  });
 
-  const fetchServices = async ({
-    stateId,
-    cityId,
-    searchTerm,
-    categoryId,
-  }: FetchServicesParams) => {
-    if (stateId && cityId) {
-      try {
-        const res = await api(
-          `/services/search?stateId=${stateId}&cityId=${cityId}&searchTerm=${searchTerm}&categoryId=${categoryId}`
-        );
+  const {
+    data: services = [],
+    isLoading,
+    isError,
+  } = useSearchServices(searchParams);
 
-        setServices(res.data?.data ?? res.data ?? []);
-      } catch (error) {
-        if (isAxiosError(error)) {
-          const message =
-            error.response?.data.message ||
-            "Erro ao buscar serviços, tente novamente mais tarde ou entre em contado com o suporte";
-          toast.error(message);
-          return;
-        }
-
-        toast.error(
-          "Erro ao buscar serviços, tente novamente mais tarde ou entre em contado com o suporte"
-        );
-      }
-    }
+  const fetchServices = (params: SearchServicesParams) => {
+    setSearchParams(params);
   };
 
-  return { services, fetchServices };
+  return {
+    services,
+    fetchServices,
+    isLoading,
+    isError,
+  };
 }

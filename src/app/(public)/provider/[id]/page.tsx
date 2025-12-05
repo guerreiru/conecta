@@ -1,5 +1,5 @@
 import { ServiceOwnerProfile } from "@/components/serviceOwnerProfile";
-import { Provider } from "@/types/Provider";
+import { getUserById } from "@/services/usersService";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -7,14 +7,16 @@ type Props = {
 
 export default async function ProviderProfile({ params }: Props) {
   const { id } = await params;
-  const res = await fetch(`https://conecta-api-l0kh.onrender.com/providers/${id}`);
-  const provider: Provider = await res.json();
 
-  if (!provider.id) {
-    return <p>Nenhum profissional foi encontrado para esse perfil</p>
+  try {
+    const user = await getUserById(id);
+
+    if (!user.id) {
+      return <p>Nenhum profissional foi encontrado para esse perfil</p>;
+    }
+
+    return <ServiceOwnerProfile owner={user} />;
+  } catch {
+    return <p>Nenhum profissional foi encontrado para esse perfil</p>;
   }
-
-  const name = provider.providerName ?? provider.profile.user?.name ?? "";
-
-  return <ServiceOwnerProfile owner={provider} ownerName={name} />;
 }

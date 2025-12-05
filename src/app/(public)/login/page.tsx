@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -28,18 +29,23 @@ const Login: React.FC = () => {
 
   const router = useRouter();
   const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = async ({ email, password }: LoginFormData) => {
-    const res = await login(email, password);
+  async function onSubmit({ email, password }: LoginFormData) {
+    const result = await login(email, password);
 
-    if (res.message === "success") {
+    if (result.success) {
       router.push("/");
       router.refresh();
     }
-  };
+  }
+
+  function togglePasswordVisibility() {
+    setShowPassword((prev) => !prev);
+  }
 
   return (
-    <div className="flex items-center justify-center pt-6">
+    <div className="flex items-center justify-center pt-6 px-4">
       <div className="w-full max-w-md px-6 py-8 bg-white dark:bg-black-200 rounded-3xl shadow-xl">
         <h1 className="text-3xl font-bold text-center">Login</h1>
         <div className="mt-3 mb-6 font-semibold text-zinc-500 dark:text-white flex flex-wrap justify-center gap-1.5">
@@ -61,9 +67,24 @@ const Login: React.FC = () => {
           <Input
             label="Senha"
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             {...register("password")}
             error={errors?.password?.message}
+            rightIcon={
+              showPassword ? (
+                <EyeSlashIcon
+                  size={18}
+                  onClick={togglePasswordVisibility}
+                  className="cursor-pointer"
+                />
+              ) : (
+                <EyeIcon
+                  size={18}
+                  onClick={togglePasswordVisibility}
+                  className="cursor-pointer"
+                />
+              )
+            }
           />
 
           <Button type="submit" disabled={isSubmitting} className="w-full">

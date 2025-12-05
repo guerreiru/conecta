@@ -1,100 +1,285 @@
 "use client";
 
+import { ChangeEmailForm } from "@/components/forms/changeEmailForm";
+import { ChangePasswordForm } from "@/components/forms/changePasswordForm";
+import { ClientForm } from "@/components/forms/clientForm";
+import { ProviderForm } from "@/components/forms/providerForm";
+import { ServiceForm } from "@/components/forms/serviceForm";
+import { Modal } from "@/components/modal";
+import { ModalExclusion } from "@/components/modalExclusion";
+import { ModalLogout } from "@/components/modalLogout";
+import { ServiceCard } from "@/components/serviceCard";
 import { Button } from "@/components/ui/button";
+import { Loading } from "@/components/ui/loading";
+import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { useAuth } from "@/hooks/useAuth";
-import { Profile as ProfileType } from "@/types/Profile";
 import {
-  ArticleIcon,
-  BellIcon,
-  ChatTextIcon,
-  LockIcon,
-  UserListIcon,
-} from "@phosphor-icons/react";
-import { useRouter } from "next/navigation";
-
-function getProfileName(profile: ProfileType) {
-  return profile.company?.companyName ?? profile.provider?.providerName ?? profile.user?.name ?? "Sem nome"
-}
+  useProviderServices,
+  useDeleteService,
+} from "@/hooks/useServiceQueries";
+import { Service } from "@/types/Service";
+import { PencilIcon } from "@phosphor-icons/react";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Profile() {
-  const { activeProfile } = useAuth();
-  const router = useRouter()
+  const { logout: authLogout, user } = useAuth();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+  const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(
+    null
+  );
+  const [modalNewServiceIsOpen, setModalNewServiceIsOpen] = useState(false);
+  const [serviceToEdit, setServiceToEdit] = useState<Service | null>(null);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
+    useState(false);
+
+  const { data: myServices = [], isLoading } = useProviderServices(
+    user?.role === "provider" ? user?.id : undefined
+  );
+  const deleteServiceMutation = useDeleteService();
+
+  function handleCloseModal() {
+    setModalIsOpen(false);
+  }
+
+  function handleOpenModal() {
+    setModalIsOpen(true);
+  }
+
+  const handleOpenAddModalNewService = () => {
+    setServiceToEdit(null);
+    setModalNewServiceIsOpen(true);
+  };
+
+  function handleCloseModalNewService() {
+    setModalNewServiceIsOpen(false);
+  }
+
+  const handleOpenEditModal = (service: Service) => {
+    setServiceToEdit(service);
+    setModalNewServiceIsOpen(true);
+  };
+
+  const handleOpenDeleteModal = (serviceId: string) => {
+    setServiceToDeleteId(serviceId);
+    setDeleteModalIsOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setServiceToDeleteId(null);
+    setDeleteModalIsOpen(false);
+  };
+
+  function handleDeleteService() {
+    if (!serviceToDeleteId) return;
+
+    deleteServiceMutation.mutate(serviceToDeleteId, {
+      onSuccess: () => {
+        handleCloseDeleteModal();
+      },
+    });
+  }
+
+  async function handleLogout() {
+    setIsLogoutModalOpen(false);
+    toast.success(SUCCESS_MESSAGES.LOGOUT_SUCCESS);
+    await authLogout();
+  }
 
   return (
-    <main className="py-4 grid">
-      <section aria-labelledby="profile-header" className="relative">
-        <div className="bg-black-200 h-32 rounded-b-[64px] md:rounded-b-[80px] lg:rounded-b-full"></div>
+    <main className="relative">
+      <header className="pt-6 pb-8 bg-black dark:bg-black-200">
+        <h1 className="text-white text-3xl text-center">Meu perfil</h1>
+      </header>
 
-        <header
-          id="profile-header"
-          className="grid place-items-center gapx-3 py-2 relative -top-[30%]"
+      {!isLoading && !user && <Loading />}
+
+      {user && (
+        <div className="px-4">
+          <div className="shadow border border-gray-200 dark:border-black rounded-3xl relative -top-4 p-6 bg-white dark:bg-black-200 w-full max-w-2xl mx-auto">
+            <div className="flex items-center justify-between">
+              <p className="font-semibold text-xl">Informações da Conta</p>
+              <button onClick={handleOpenModal}>
+                <PencilIcon />
+              </button>
+            </div>
+
+            <div className="mt-6">
+              <p className="text-sm text-zinc-500">Nome</p>
+              <p>{user?.name}</p>
+            </div>
+
+            <div className="my-4">
+              <p className="text-sm text-zinc-500">Email</p>
+              <p>{user?.email}</p>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-sm text-zinc-500">Telefone</p>
+              <p>{user?.address?.phone}</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              <Button
+                variant="accent"
+                onClick={() => setIsChangeEmailModalOpen(true)}
+                className="w-full"
+              >
+                Alterar Email
+              </Button>
+              <Button
+                variant="accent"
+                onClick={() => setIsChangePasswordModalOpen(true)}
+                className="w-full"
+              >
+                Alterar Senha
+              </Button>
+            </div>
+          </div>
+
+          {user?.role === "provider" && (
+            <>
+              <div className="mt-6 shadow border border-gray-200 dark:border-black rounded-3xl relative -top-4 p-6 bg-white dark:bg-black-200 w-full max-w-2xl mx-auto">
+                <div className="flex items-center justify-between">
+                  <p className="font-semibold text-xl">Meus serviços</p>
+                </div>
+
+                {isLoading && (
+                  <div className="mt-6">
+                    <p>Carregando serviços...</p>
+                  </div>
+                )}
+
+                {myServices?.map((service) => (
+                  <div key={service.id} className="mt-3">
+                    <ServiceCard
+                      owner={user}
+                      service={service}
+                      onEdit={() => handleOpenEditModal(service)}
+                      onDelete={() => handleOpenDeleteModal(service.id)}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="w-full max-w-2xl mx-auto grid place-items-center mb-2">
+                <Button
+                  className="w-full"
+                  onClick={handleOpenAddModalNewService}
+                >
+                  Cadastrar serviço
+                </Button>
+              </div>
+            </>
+          )}
+          <div className="w-full max-w-2xl mx-auto grid place-items-center lg:hidden">
+            <Button
+              className="w-full"
+              onClick={() => setIsLogoutModalOpen(true)}
+              variant="black"
+            >
+              Sair
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <ModalLogout
+        open={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+      />
+
+      <Modal open={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+        <div
+          className="max-h-dvh rounded-2xl overflow-y-auto pb-4 px-4"
+          onClick={handleCloseModal}
         >
-          <figure className="size-28 border border-lime-400 bg-zinc-500 rounded-full"></figure>
+          <div
+            className="max-w-lg mx-auto rounded-2xl p-4 bg-white dark:bg-black"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {user?.role === "provider" && (
+              <ProviderForm
+                mode="edit"
+                defaultValues={user}
+                onCancel={handleCloseModal}
+              />
+            )}
+            {user?.role === "client" && (
+              <ClientForm
+                mode="edit"
+                defaultValues={user}
+                onCancel={handleCloseModal}
+              />
+            )}
+          </div>
+        </div>
+      </Modal>
 
-          <figcaption className="flex flex-col items-center text-center">
-            <h1 className="text-xl font-semibold">
-              {activeProfile && getProfileName(activeProfile)}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {activeProfile?.user?.email}
-            </p>
-          </figcaption>
-        </header>
-      </section>
+      <Modal open={modalNewServiceIsOpen} onClose={handleCloseModalNewService}>
+        <div
+          className="h-dvh pt-1 pb-4 overflow-y-auto"
+          onClick={() => setModalNewServiceIsOpen(false)}
+        >
+          <div onClick={(e) => e.stopPropagation()} className="w-fit mx-auto">
+            <ServiceForm
+              onCancel={handleCloseModalNewService}
+              onServiceAdded={handleCloseModalNewService}
+              serviceToEdit={serviceToEdit}
+            />
+          </div>
+        </div>
+      </Modal>
 
-      <section
-        aria-labelledby="profile-options"
-        className="grid gap-5 text-black md:mx-auto"
+      <ModalExclusion
+        open={deleteModalIsOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleDeleteService}
+      />
+
+      <Modal
+        open={isChangeEmailModalOpen}
+        onClose={() => setIsChangeEmailModalOpen(false)}
       >
-        <h2 id="profile-options" className="sr-only">
-          Opções do perfil
-        </h2>
-
-        <article
-          aria-label="Informações e notificações"
-          className="p-4 bg-white rounded-lg shadow grid gap-y-3"
+        <div
+          className="max-h-dvh rounded-2xl overflow-y-auto pb-4 px-4"
+          onClick={() => setIsChangeEmailModalOpen(false)}
         >
-          <ul className="grid gap-y-3">
-            <li className="flex items-center gapx-3 py-2">
-              <ArticleIcon size={24} aria-hidden />
-              <span>Editar informações</span>
-            </li>
+          <div
+            className="max-w-lg mx-auto rounded-2xl p-6 bg-white dark:bg-black-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ChangeEmailForm
+              onCancel={() => setIsChangeEmailModalOpen(false)}
+              onSuccess={() => setIsChangeEmailModalOpen(false)}
+            />
+          </div>
+        </div>
+      </Modal>
 
-            <li className="flex items-center gapx-3 py-2">
-              <BellIcon size={24} aria-hidden />
-              <span>Notificações</span>
-            </li>
-          </ul>
-        </article>
-
-        <article
-          aria-label="Suporte e privacidade"
-          className="p-4 bg-white rounded-lg shadow grid gap-y-3"
+      <Modal
+        open={isChangePasswordModalOpen}
+        onClose={() => setIsChangePasswordModalOpen(false)}
+      >
+        <div
+          className="max-h-dvh rounded-2xl overflow-y-auto pb-4 px-4"
+          onClick={() => setIsChangePasswordModalOpen(false)}
         >
-          <ul className="grid gap-y-3">
-            <li className="flex items-center gapx-3 py-2">
-              <UserListIcon size={24} aria-hidden />
-              <span>Ajuda e Suporte</span>
-            </li>
-
-            <li className="flex items-center gapx-3 py-2">
-              <ChatTextIcon size={24} aria-hidden />
-              <span>Contatos</span>
-            </li>
-
-            <li className="flex items-center gapx-3 py-2">
-              <LockIcon size={24} aria-hidden />
-              <span>Política de Privacidade</span>
-            </li>
-          </ul>
-        </article>
-
-        {activeProfile?.type !== "client" && (
-          <Button className="w-full" onClick={() => router.push('/profile/services/new')}>
-            Cadastrar Serviço
-          </Button>
-        )}
-      </section>
+          <div
+            className="max-w-lg mx-auto rounded-2xl p-6 bg-white dark:bg-black-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ChangePasswordForm
+              onCancel={() => setIsChangePasswordModalOpen(false)}
+              onSuccess={() => setIsChangePasswordModalOpen(false)}
+            />
+          </div>
+        </div>
+      </Modal>
     </main>
   );
 }

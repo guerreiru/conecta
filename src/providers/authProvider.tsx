@@ -1,9 +1,10 @@
 "use client";
 
+import { ERROR_MESSAGES } from "@/constants/messages";
 import { AuthContext } from "@/contexts/AuthContext";
 import { api } from "@/services/api";
 import { User } from "@/types/User";
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/messages";
+import { isAxiosError } from "axios";
 import { ReactNode, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -16,7 +17,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const response = await api.get("/auth/me");
         setUser(response.data.user);
-      } catch (error) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
@@ -35,12 +36,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       toast.success(`Olá ${response.data.user.name || ""}!`);
 
       return { success: true };
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || ERROR_MESSAGES.LOGIN_ERROR;
-      toast.error(message);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const message =
+          error.response?.data?.message || ERROR_MESSAGES.LOGIN_ERROR;
+        toast.error(message);
+        return { success: false, message };
+      }
 
-      return { success: false, message };
+      toast.error("Erro inesperado, tente novamente");
+      return { success: false, message: "Erro inesperado" };
     } finally {
       setLoading(false);
     }

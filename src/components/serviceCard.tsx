@@ -7,7 +7,7 @@ import { whatsAppMessage } from "@/utils/whatsAppMessage";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { PencilIcon, TrashIcon } from "@phosphor-icons/react";
+import { PencilIcon, TrashIcon, StarIcon } from "@phosphor-icons/react";
 
 type ServiceCardProps = {
   service: Service;
@@ -16,19 +16,74 @@ type ServiceCardProps = {
   onDelete?: (serviceId: string) => void;
 };
 
-export function ServiceCard({ service, owner, onEdit, onDelete }: ServiceCardProps) {
-  const { title, description, price, id, typeOfChange } = service;
+const highlightColorMap = {
+  enterprise: {
+    bg: "bg-red-50 dark:bg-red-950/30",
+    border: "border-red-300 dark:border-red-700",
+    badge: "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300",
+  },
+  premium: {
+    bg: "bg-amber-50 dark:bg-amber-950/30",
+    border: "border-amber-300 dark:border-amber-700",
+    badge: "bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300",
+  },
+  pro: {
+    bg: "bg-lime-50 dark:bg-lime-950/30",
+    border: "border-lime-300 dark:border-lime-700",
+    badge: "bg-lime-100 dark:bg-lime-900 text-lime-700 dark:text-lime-300",
+  },
+};
+
+export function ServiceCard({
+  service,
+  owner,
+  onEdit,
+  onDelete,
+}: ServiceCardProps) {
+  const {
+    title,
+    description,
+    price,
+    id,
+    typeOfChange,
+    isHighlighted,
+    highlightLevel,
+  } = service;
   const { user } = useAuth();
   const pathname = usePathname();
 
   const showSeeProfile = user?.id !== owner.id;
 
+  const highlightColors =
+    isHighlighted && highlightLevel ? highlightColorMap[highlightLevel] : null;
+  const baseBg = highlightColors?.bg ?? "bg-white dark:bg-black-200";
+  const baseBorder =
+    highlightColors?.border ?? "border-gray-200 dark:border-gray-700";
+
   return (
-    <article className="p-4 bg-white dark:bg-black-200 rounded-xl grid gap-3 border border-gray-200 dark:border-gray-700 shadow-md">
+    <article
+      className={`p-4 rounded-xl grid gap-3 border shadow-md transition-all ${baseBg} ${baseBorder}`}
+    >
+      {isHighlighted && highlightLevel && (
+        <div
+          className={`flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg w-fit ${highlightColors?.badge}`}
+        >
+          <StarIcon size={14} weight="fill" />
+          <span className="capitalize">
+            {highlightLevel === "enterprise"
+              ? "Destaque Premium"
+              : highlightLevel === "premium"
+              ? "Destaque Plus"
+              : "Destaque"}
+          </span>
+        </div>
+      )}
 
       <header className="flex items-start justify-between">
         <div>
-          <span className="text-xs text-gray-500 dark:text-gray-400">{owner.name}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            {owner.name}
+          </span>
           <h3 className="font-semibold text-black dark:text-white leading-snug">
             {title}
           </h3>

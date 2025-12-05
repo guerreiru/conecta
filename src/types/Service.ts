@@ -9,4 +9,6 @@ export type Service = {
   typeOfChange: string;
   category: Category;
   user: User;
+  isHighlighted?: boolean;
+  highlightLevel?: "pro" | "premium" | "enterprise";
 };

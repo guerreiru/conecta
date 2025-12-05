@@ -46,7 +46,7 @@ export function ProviderForm({
     resolver: zodResolver(providerSchemaCreate),
     defaultValues,
   });
-  const { updateUser, user } = useAuth();
+  const { updateUser } = useAuth();
   const { addressEditable } = useCepLookup(watch, setValue);
   const [showPassword, setShowPassword] = useState(false);
 

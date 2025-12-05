@@ -16,7 +16,7 @@ export default async function ProviderProfile({ params }: Props) {
     }
 
     return <ServiceOwnerProfile owner={user} />;
-  } catch (error) {
+  } catch {
     return <p>Nenhum profissional foi encontrado para esse perfil</p>;
   }
 }

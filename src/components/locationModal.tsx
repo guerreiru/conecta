@@ -81,7 +81,7 @@ export function LocationModal({
                 setSelectedState(e.target.value);
                 setSelectedCity("");
               }}
-              defaultValue="Selecione o Estado"
+              defaultValue="Selecione o estado"
               options={stateOptions}
             />
 
@@ -93,7 +93,7 @@ export function LocationModal({
               onChange={(e) => setSelectedCity(e.target.value)}
               disabled={!selectedState || loading}
               defaultValue={
-                loading ? "Carregando cidades..." : "Selecione a Cidade"
+                loading ? "Carregando cidades..." : "Selecione a cidade"
               }
               options={cityOptions}
             />

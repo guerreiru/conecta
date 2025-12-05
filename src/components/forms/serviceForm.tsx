@@ -146,19 +146,11 @@ export function ServiceForm({
 
             <Input
               label="Tipo de Cobrança"
-              placeholder="Exemplo: por hora"
-              list="billingTypes"
+              placeholder="Exemplo: hora, diária, mês, projeto, orçamento"
               type="text"
               {...register("typeOfChange")}
               error={errors.typeOfChange?.message}
             />
-
-            <datalist id="billingTypes">
-              <option value="Hora" />
-              <option value="Diária" />
-              <option value="Mês" />
-              <option value="Projeto" />
-            </datalist>
           </div>
 
           <Textarea

@@ -135,6 +135,11 @@ export default function Profile() {
               </div>
             )}
 
+            <div className="mb-6">
+              <p className="text-sm text-zinc-500">Sobre mim</p>
+              <p>{user?.bio}</p>
+            </div>
+
             <div className="grid grid-cols-2 gap-3 mt-4">
               <Button
                 variant="accent"

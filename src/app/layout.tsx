@@ -37,13 +37,21 @@ export const metadata: Metadata = {
   creator: "ProLocal",
   publisher: "ProLocal",
   openGraph: {
-    title: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
-    description:
-      "Encontre o CEP de qualquer rua com facilidade. Saiba o CEP de cada rua!",
-    images: ["/antevisao.png"],
-    url: "https://www.prolocal.com.br",
     type: "website",
     locale: "pt_BR",
+    url: "/",
+    siteName: "ProLocal",
+    title: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
+    description:
+      "Conecte-se com profissionais qualificados na sua região. Encontre prestadores de serviços de confiança para reformas, reparos, manutenção e muito mais.",
+    images: [
+      {
+        url: "/antevisao.png",
+        width: 1200,
+        height: 630,
+        alt: "ProLocal - Marketplace de Serviços Locais",
+      },
+    ],
   },
   alternates: {
     canonical: "/",

@@ -10,7 +10,7 @@ import { ModalExclusion } from "@/components/modalExclusion";
 import { ModalLogout } from "@/components/modalLogout";
 import { ServiceCard } from "@/components/serviceCard";
 import { Button } from "@/components/ui/button";
-import { Loading } from "@/components/ui/loadin";
+import { Loading } from "@/components/ui/loading";
 import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -199,7 +199,7 @@ export default function Profile() {
           onClick={handleCloseModal}
         >
           <div
-            className="max-w-lg mx-auto rounded-2xl p-4 bg-white dark:bg-black-200"
+            className="max-w-lg mx-auto rounded-2xl p-4 bg-white dark:bg-black"
             onClick={(e) => e.stopPropagation()}
           >
             {user?.role === "provider" && (

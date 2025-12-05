@@ -59,7 +59,7 @@ export function NavBar() {
   }
 
   return (
-    <nav className="fixed bottom-2 left-0 w-full px-4 grid place-items-center lg:hidden">
+    <nav className="fixed bottom-2 left-0 w-full px-4 grid place-items-center md:hidden">
       <ul className="w-full max-w-2xl mx-4 flex items-center justify-evenly px-4 py-2 rounded-[36px] bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.25)] relative before:content-[''] before:absolute before:inset-0 before:rounded-[36px] before:bg-gradient-to-b before:from-white/30 before:to-transparent before:pointer-events-none before:opacity-50">
         <li className="grid place-items-center">
           <button

@@ -172,7 +172,7 @@ export function ServiceForm({
           <div className="grid grid-cols-2 gap-4">
             <Button
               disabled={isLoading}
-              variant="accent"
+              variant="border"
               onClick={handleOnCancel}
             >
               Cancelar

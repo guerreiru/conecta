@@ -7,6 +7,7 @@ import { QueryProvider } from "@/providers/queryProvider";
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import { ToastContainer } from "react-toastify";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,33 +21,29 @@ export const metadata: Metadata = {
   description:
     "Conecte-se com profissionais qualificados na sua região. Encontre prestadores de serviços de confiança para reformas, reparos, manutenção e muito mais. Rápido, fácil e sem complicações.",
   keywords: [
-    "serviços profissionais",
-    "prestadores de serviços",
-    "profissionais qualificados",
-    "serviços locais",
+    "contratar serviços",
     "reformas",
     "manutenção",
     "reparos",
     "marketplace de serviços",
+    "profissionais qualificados",
+    "prestadores de serviços",
+    "serviços locais",
     "encontrar profissionais",
-    "contratar serviços",
+    "serviços profissionais",
   ],
+
   authors: [{ name: "ProLocal" }],
   creator: "ProLocal",
   publisher: "ProLocal",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
   openGraph: {
     type: "website",
     locale: "pt_BR",
     url: "/",
     title: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
-    description:
-      "Conecte-se com profissionais qualificados na sua região. Marketplace de serviços confiável e fácil de usar.",
+    description: "Conecte-se com profissionais qualificados na sua região.",
     siteName: "ProLocal",
+    images: ["/og-image.png"],
   },
   twitter: {
     card: "summary_large_image",
@@ -54,44 +51,64 @@ export const metadata: Metadata = {
     description:
       "Conecte-se com profissionais qualificados na sua região. Marketplace de serviços confiável e fácil de usar.",
     creator: "@prolocal",
+    images: ["/og-image.png"],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+  alternates: {
+    canonical: "/",
   },
-  verification: {},
+
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
-const manrope = Manrope({
-  subsets: ["latin"],
-});
+const manrope = Manrope({ subsets: ["latin"] });
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  const jsonLd = {
+}) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001";
+
+  const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "ProLocal",
-    description:
-      "Marketplace para conectar profissionais qualificados com clientes que precisam de serviços locais",
-    url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Any",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "BRL",
+    description: "Marketplace de serviços locais",
+    url: baseUrl,
+  };
+
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Marketplace de serviços locais",
+    provider: { "@type": "Organization", name: "ProLocal", url: baseUrl },
+  };
+
+  const searchSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "ProLocal",
+    url: baseUrl,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${baseUrl}/search?q={search_term}`,
+      "query-input": "required name=search_term",
     },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Início",
+        item: baseUrl,
+      },
+    ],
   };
 
   return (
@@ -99,11 +116,24 @@ export default async function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(searchSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
       </head>
+
       <body
-        className={`antialiased ${manrope.className} relative pb-28 lg:pb-0`}
+        className={`antialiased ${manrope.className} relative pb-20 lg:pb-0`}
       >
         <ErrorBoundary>
           <QueryProvider>
@@ -113,6 +143,7 @@ export default async function RootLayout({
                 {children}
                 <ToastContainer autoClose={500} />
                 <NavBar />
+                <Analytics />
               </CategoriesProvider>
             </AuthProvider>
           </QueryProvider>

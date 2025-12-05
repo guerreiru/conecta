@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ProLocal",
+  "description": "Marketplace para conectar profissionais qualificados com clientes que precisam de serviços locais",
+  "url": "https://prolocal.com.br",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "150"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "ProLocal"
+  }
+}

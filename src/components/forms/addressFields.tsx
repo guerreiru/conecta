@@ -121,7 +121,7 @@ export function AddressFields({
         error={errors?.phone?.message}
       />
       <Input
-        label="Website"
+        label="Site"
         {...register("address.website")}
         error={errors?.website?.message}
       />

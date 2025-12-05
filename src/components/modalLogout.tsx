@@ -19,7 +19,7 @@ export function ModalLogout({ open, onClose, onConfirm }: ModalExclusion) {
               className="mx-auto text-red-500"
               aria-hidden="true"
             />
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 dark:text-gray-200">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
               Confirmar Logout
             </h3>
             <p className="mb-6 text-sm text-gray-600 dark:text-gray-400">

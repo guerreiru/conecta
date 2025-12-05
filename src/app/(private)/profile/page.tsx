@@ -204,7 +204,7 @@ export default function Profile() {
               </div>
             </>
           )}
-          <div className="w-full max-w-2xl mx-auto grid place-items-center lg:hidden">
+          <div className="w-full max-w-2xl mx-auto grid place-items-center lg:hidden mt-1">
             <Button
               className="w-full"
               onClick={() => setIsLogoutModalOpen(true)}

@@ -3,6 +3,7 @@
 import { ServiceForm } from "@/components/forms/serviceForm";
 import { Modal } from "@/components/modal";
 import { ModalExclusion } from "@/components/modalExclusion";
+import { FREE_PLAN_SERVICE_LIMIT } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
 import {
   useProviderServices,
@@ -22,8 +23,6 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
-
-const FREE_PLAN_SERVICE_LIMIT = 1;
 
 export default function Home() {
   const { user } = useAuth();

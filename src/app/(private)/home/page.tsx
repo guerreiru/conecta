@@ -23,7 +23,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-const FREE_PLAN_SERVICE_LIMIT = 2;
+const FREE_PLAN_SERVICE_LIMIT = 1;
 
 export default function Home() {
   const { user } = useAuth();

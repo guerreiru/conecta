@@ -17,8 +17,9 @@ export function Textarea({ label, error, id, name, ...props }: TextareaProps) {
         {...props}
         id={id || name}
         name={name || id}
-        className={`px-3 py-2 min-h-12 bg-white dark:bg-black-200 rounded-lg disabled:bg-zinc-500 resize-none ${error ? "border-red-500" : ""
-          }`}
+        className={`px-3 py-2 min-h-12 bg-white dark:bg-black-200 rounded-lg disabled:bg-gray-300/70 dark:disabled:bg-zinc-700 disabled:cursor-no-drop resize-none border ${
+          error ? "border-red-500" : "border-gray-200"
+        }`}
       />
 
       {error && <p className="text-red-500 text-sm">{error}</p>}

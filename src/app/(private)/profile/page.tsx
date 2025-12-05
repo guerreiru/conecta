@@ -117,10 +117,12 @@ export default function Profile() {
               <p>{user?.email}</p>
             </div>
 
-            <div className="mb-6">
-              <p className="text-sm text-zinc-500">Telefone</p>
-              <p>{user?.address?.phone}</p>
-            </div>
+            {user?.role === "provider" && (
+              <div className="mb-6">
+                <p className="text-sm text-zinc-500">Telefone</p>
+                <p>{user?.address?.phone}</p>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-3 mt-4">
               <Button

@@ -11,6 +11,7 @@ import { ModalLogout } from "@/components/modalLogout";
 import { ServiceCard } from "@/components/serviceCard";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loading";
+import { FREE_PLAN_SERVICE_LIMIT } from "@/constants";
 import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -41,6 +42,9 @@ export default function Profile() {
   );
   const deleteServiceMutation = useDeleteService();
 
+  const hasReachedServiceLimit = myServices.length >= FREE_PLAN_SERVICE_LIMIT;
+  const canAddService = !hasReachedServiceLimit;
+
   function handleCloseModal() {
     setModalIsOpen(false);
   }
@@ -50,6 +54,13 @@ export default function Profile() {
   }
 
   const handleOpenAddModalNewService = () => {
+    if (!canAddService) {
+      toast.warning(
+        `Você atingiu o limite de ${FREE_PLAN_SERVICE_LIMIT} serviços gratuitos. Assine um plano para adicionar mais!`,
+        { autoClose: 3000 }
+      );
+      return;
+    }
     setServiceToEdit(null);
     setModalNewServiceIsOpen(true);
   };
@@ -169,11 +180,27 @@ export default function Profile() {
 
               <div className="w-full max-w-2xl mx-auto grid place-items-center mb-2">
                 <Button
-                  className="w-full"
+                  className={`w-full transition-all ${
+                    canAddService
+                      ? ""
+                      : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed opacity-60"
+                  }`}
                   onClick={handleOpenAddModalNewService}
+                  disabled={!canAddService}
                 >
                   Cadastrar serviço
                 </Button>
+                {!canAddService && (
+                  <p className="text-xs text-center mt-2 text-gray-600 dark:text-gray-400">
+                    Limite de {FREE_PLAN_SERVICE_LIMIT} serviços atingido.{" "}
+                    <a
+                      href="/plans"
+                      className="text-lime-500 hover:underline font-medium"
+                    >
+                      Assine um plano!
+                    </a>
+                  </p>
+                )}
               </div>
             </>
           )}

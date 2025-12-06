@@ -138,12 +138,12 @@ export default function Start() {
 
         <div className="flex items-center justify-between flex-wrap gap-2 w-full max-w-2xl mx-auto">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-bold text-xl md:text-2xl">
+            <p className="font-bold text-lg md:text-2xl">
               Mostrando serviços
               {cityName ? ` em: ${cityName}` : " em todo o Brasil"}
             </p>
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="grid md:flex gap-2 flex-wrap w-full">
             <AdvancedFilters
               priceRange={priceRange}
               setPriceRange={setPriceRange}

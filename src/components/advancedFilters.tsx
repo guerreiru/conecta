@@ -144,7 +144,7 @@ export function AdvancedFilters({
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="font-semibold text-sm mb-2 block">
                   Avaliação Mínima
                 </label>
@@ -154,7 +154,7 @@ export function AdvancedFilters({
                   options={ratingOptions}
                   defaultValue="Qualquer"
                 />
-              </div>
+              </div> */}
 
               <div>
                 <label className="font-semibold text-sm mb-2 block">

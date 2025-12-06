@@ -54,32 +54,56 @@ export function useDeleteService() {
 }
 
 export interface SearchServicesParams {
-  stateId: string;
-  cityId: string;
+  stateId?: string;
+  cityId?: string;
   searchTerm?: string;
   categoryId?: string | null;
+  priceMin?: number;
+  priceMax?: number;
+  minRating?: number;
+  sortBy?: string;
+  serviceType?: string;
 }
 
 export function useSearchServices(params: SearchServicesParams) {
+  const queryParams = new URLSearchParams({
+    ...(params.stateId && { stateId: params.stateId }),
+    ...(params.cityId && { cityId: params.cityId }),
+    searchTerm: params.searchTerm || "",
+    categoryId: params.categoryId || "",
+    ...(params.priceMin !== undefined && {
+      priceMin: params.priceMin.toString(),
+    }),
+    ...(params.priceMax !== undefined && {
+      priceMax: params.priceMax.toString(),
+    }),
+    ...(params.minRating !== undefined && {
+      minRating: params.minRating.toString(),
+    }),
+    sortBy: params.sortBy || "relevance",
+    ...(params.serviceType && { serviceType: params.serviceType }),
+  });
+
   return useQuery({
     queryKey: serviceKeys.search({
-      stateId: params.stateId,
-      cityId: params.cityId,
+      stateId: params.stateId || "",
+      cityId: params.cityId || "",
       searchTerm: params.searchTerm || "",
       categoryId: params.categoryId || "",
+      priceMin: params.priceMin?.toString() || "",
+      priceMax: params.priceMax?.toString() || "",
+      minRating: params.minRating?.toString() || "",
+      sortBy: params.sortBy || "relevance",
+      serviceType: params.serviceType || "",
     }),
     queryFn: async () => {
       const response = await api.get(
-        `/services/search?stateId=${params.stateId}&cityId=${
-          params.cityId
-        }&searchTerm=${params.searchTerm || ""}&categoryId=${
-          params.categoryId || ""
-        }`
+        `/services/search?${queryParams.toString()}`
       );
       const services: Service[] = response.data?.data ?? response.data ?? [];
       return services;
     },
-    enabled: !!(params.stateId && params.cityId),
+    enabled: true,
     staleTime: 1000 * 60 * 5,
   });
 }

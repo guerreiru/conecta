@@ -1,5 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { CheckIcon, CrownSimpleIcon, LightningIcon, SparkleIcon } from "@phosphor-icons/react/dist/ssr";
+import {
+  CheckIcon,
+  CrownSimpleIcon,
+  LightningIcon,
+  SparkleIcon,
+} from "@phosphor-icons/react/dist/ssr";
 
 export default function PlansPage() {
   return (
@@ -21,8 +26,6 @@ export default function PlansPage() {
           aria-labelledby="plans-heading"
           className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-8 max-w-5xl mx-auto"
         >
-
-
           <h2 id="plans-heading" className="sr-only">
             Planos disponíveis
           </h2>
@@ -36,16 +39,20 @@ export default function PlansPage() {
                 <span className="p-3 bg-gray-100 rounded-2xl">
                   <SparkleIcon size={24} className="text-stone-500" />
                 </span>
-                <h3 id="basic-plan-title" className="dark:text-black-200">Básico</h3>
+                <h3 id="basic-plan-title" className="dark:text-black-200">
+                  Básico
+                </h3>
               </div>
             </header>
 
-            <p className="font-bold text-4xl mt-4 dark:text-black-200">Grátis</p>
+            <p className="font-bold text-4xl mt-4 dark:text-black-200">
+              R$ 11,90/mês
+            </p>
             <p className="text-stone-500 mt-2 mb-4">
               Perfeito para começar a encontrar profissionais
             </p>
             <Button variant="black" className="w-full ">
-              Começar Grátis
+              Assinar Básico
             </Button>
 
             <ul className="mt-4 text-stone-600 grid gap-3">
@@ -93,23 +100,27 @@ export default function PlansPage() {
             className="border-2 border-lime-400 p-8 bg-white rounded-3xl relative"
             aria-labelledby="basic-plan-title"
           >
-            <p className="absolute -top-4 bg-lime-400 py-1 px-6 rounded-lg font-bold dark:text-black-200">Mais popular</p>
+            <p className="absolute -top-4 bg-lime-400 py-1 px-6 rounded-lg font-bold dark:text-black-200">
+              Mais popular
+            </p>
             <header>
               <div className="flex items-center gap-3">
                 <span className="p-3 bg-lime-400 rounded-2xl dark:text-black-200">
                   <LightningIcon size={24} />
                 </span>
-                <h3 id="basic-plan-title" className="dark:text-black-200">Premium</h3>
+                <h3 id="basic-plan-title" className="dark:text-black-200">
+                  Premium
+                </h3>
               </div>
             </header>
 
-            <p className="font-bold text-4xl mt-4 dark:text-black-200">R$ 29,90/mês</p>
+            <p className="font-bold text-4xl mt-4 dark:text-black-200">
+              R$ 14,90/mês
+            </p>
             <p className="text-stone-500 mt-2 mb-4">
               Ideal para quem precisa de mais recursos
             </p>
-            <Button className="w-full">
-              Assinar Premium
-            </Button>
+            <Button className="w-full">Assinar Premium</Button>
 
             <ul className="mt-4 text-stone-600 grid gap-3">
               <li className="flex items-center gap-3">
@@ -161,11 +172,15 @@ export default function PlansPage() {
                 <span className="p-3 bg-gray-100 rounded-2xl">
                   <CrownSimpleIcon size={24} className="text-stone-500" />
                 </span>
-                <h3 id="basic-plan-title" className="dark:text-black-200">Enterprise</h3>
+                <h3 id="basic-plan-title" className="dark:text-black-200">
+                  Enterprise
+                </h3>
               </div>
             </header>
 
-            <p className="font-bold text-4xl mt-4 dark:text-black-200">R$ 79,90/mês</p>
+            <p className="font-bold text-4xl mt-4 dark:text-black-200">
+              R$ 19,90/mês
+            </p>
             <p className="text-stone-500 mt-2 mb-4">
               Para empresas e uso profissional intensivo
             </p>

@@ -1,22 +1,24 @@
 import { useState } from "react";
 import { useSearchServices, SearchServicesParams } from "./useServiceQueries";
-import { sortByHighlight } from "@/utils/sortByHighlight";
 
 export function useServices() {
   const [searchParams, setSearchParams] = useState<SearchServicesParams>({
-    stateId: "",
-    cityId: "",
+    stateId: undefined,
+    cityId: undefined,
     searchTerm: "",
     categoryId: null,
+    priceMin: 0,
+    priceMax: 10000,
+    minRating: 0,
+    sortBy: "relevance",
+    serviceType: "",
   });
 
   const {
-    data: rawServices = [],
+    data: services = [],
     isLoading,
     isError,
   } = useSearchServices(searchParams);
-
-  const services = sortByHighlight(rawServices);
 
   const fetchServices = (params: SearchServicesParams) => {
     setSearchParams(params);

@@ -7,7 +7,14 @@ import { whatsAppMessage } from "@/utils/whatsAppMessage";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { PencilIcon, TrashIcon, StarIcon } from "@phosphor-icons/react";
+import {
+  PencilIcon,
+  TrashIcon,
+  StarIcon,
+  LaptopIcon,
+  BuildingIcon,
+  ArrowsCounterClockwiseIcon,
+} from "@phosphor-icons/react";
 
 type ServiceCardProps = {
   service: Service;
@@ -119,10 +126,31 @@ export function ServiceCard({
       )}
 
       <footer className="flex items-center justify-between flex-wrap gap-2">
-        <p className="font-bold text-black dark:text-white">
-          {formatToBRL(price)}
-          {typeOfChange ? `/${typeOfChange}` : ""}
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="font-bold text-black dark:text-white">
+            {formatToBRL(price)}
+            {typeOfChange ? `/${typeOfChange}` : ""}
+          </p>
+          {service.serviceType && (
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+              {service.serviceType === "in_person" && (
+                <>
+                  <BuildingIcon size={18} />
+                </>
+              )}
+              {service.serviceType === "online" && (
+                <>
+                  <LaptopIcon size={18} />
+                </>
+              )}
+              {service.serviceType === "all" && (
+                <>
+                  <ArrowsCounterClockwiseIcon size={18} />
+                </>
+              )}
+            </span>
+          )}
+        </div>
 
         <div className="flex items-center gap-2">
           {id && showSeeProfile && pathname !== `/provider/${owner.id}` && (

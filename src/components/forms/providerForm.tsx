@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Textarea } from "../ui/textarea";
+import { useRouter } from "next/navigation";
 
 const providerSchemaCreate = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
@@ -47,7 +48,8 @@ export function ProviderForm({
     resolver: zodResolver(providerSchemaCreate),
     defaultValues,
   });
-  const { updateUser } = useAuth();
+  const { updateUser, login } = useAuth();
+  const router = useRouter();
   const { addressEditable } = useCepLookup(watch, setValue);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -61,6 +63,11 @@ export function ProviderForm({
       if (mode === "create") {
         await api.post("/users", providerData);
         toast.success("Profissional cadastrado com sucesso!");
+        const loginResult = await login(data.email, data.password);
+        if (loginResult.success) {
+          reset();
+          router.push("/");
+        }
       } else {
         const res = await api.put(`/users/${defaultValues?.id}`, providerData);
 
@@ -71,10 +78,6 @@ export function ProviderForm({
         }
 
         toast.success("Profissional atualizado com sucesso!");
-      }
-
-      if (mode === "create") {
-        reset();
       }
     } catch (error) {
       if (isAxiosError(error)) {

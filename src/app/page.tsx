@@ -1,5 +1,6 @@
 "use client";
 
+import { AdvancedFilters } from "@/components/advancedFilters";
 import { CategoryItem } from "@/components/categoryItem";
 import { HowItWorksCard } from "@/components/howItWorksCard";
 import { LocationModal } from "@/components/locationModal";
@@ -27,9 +28,14 @@ export default function Start() {
   );
   const [selectedCity, setSelectedCity] = useLocalStorage("selectedCity", "");
   const { services, fetchServices } = useServices();
-  const { cities, loading } = useCitiesByState(selectedState);
+  const { cities } = useCitiesByState(selectedState);
   const [cityName, setCityName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 });
+  const [minRating, setMinRating] = useState(0);
+  const [sortBy, setSortBy] = useState("relevance");
+  const [serviceType, setServiceType] = useState("");
 
   const handleSearch = useCallback(
     async (categoryParam?: Category | null) => {
@@ -39,9 +45,24 @@ export default function Start() {
         cityId: selectedCity,
         searchTerm,
         categoryId,
+        priceMin: priceRange.min,
+        priceMax: priceRange.max,
+        minRating,
+        sortBy,
+        serviceType,
       });
     },
-    [selectedCategory, selectedState, selectedCity, searchTerm, fetchServices]
+    [
+      selectedCategory,
+      selectedState,
+      selectedCity,
+      searchTerm,
+      priceRange,
+      minRating,
+      sortBy,
+      serviceType,
+      fetchServices,
+    ]
   );
 
   useEffect(() => {
@@ -58,17 +79,14 @@ export default function Start() {
     }
   }, [cities, selectedCity]);
 
-  useEffect(() => {
-    if (!selectedState && !selectedCity) {
-      setIsModalOpen(true);
-    }
-  }, [selectedState, selectedCity]);
-
   function handleChangeLocation() {
-    setSelectedCity("");
-    setSelectedState("");
-    setCityName("");
     setIsModalOpen(true);
+  }
+
+  function handleClearLocation() {
+    setSelectedState("");
+    setSelectedCity("");
+    setCityName("");
   }
 
   return (
@@ -118,17 +136,42 @@ export default function Start() {
       <div className="px-4 md:px-6 py-4 grid gap-y-6">
         <HowItWorksCard />
 
-        <div className="flex items-center justify-between flex-wrap gap-y-2 w-full max-w-2xl mx-auto">
-          <p className="font-bold text-xl md:text-2xl">
-            Mostrando serviços em: {cityName}
-          </p>
-          <button
-            className="flex items-center gap-2 border border-lime-400 py-3.5 px-6 rounded-xl hover:brightness-90 bg-white dark:bg-black-200"
-            onClick={handleChangeLocation}
-          >
-            <MapPinIcon size={18} />
-            Alterar localização
-          </button>
+        <div className="flex items-center justify-between flex-wrap gap-2 w-full max-w-2xl mx-auto">
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="font-bold text-xl md:text-2xl">
+              Mostrando serviços
+              {cityName ? ` em: ${cityName}` : " em todo o Brasil"}
+            </p>
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            <AdvancedFilters
+              priceRange={priceRange}
+              setPriceRange={setPriceRange}
+              minRating={minRating}
+              setMinRating={setMinRating}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              serviceType={serviceType}
+              setServiceType={setServiceType}
+              onApply={handleSearch}
+            />
+            <button
+              className="flex items-center gap-2 border border-lime-400 py-3.5 px-6 rounded-xl hover:brightness-90 bg-white dark:bg-black-200 transition"
+              onClick={handleChangeLocation}
+            >
+              <MapPinIcon size={18} />
+              Alterar localização
+            </button>
+
+            {cityName && (
+              <button
+                className="flex items-center gap-2 border border-transparent py-3.5 px-6 rounded-xl hover:brightness-90 bg-lime-400 dark:bg-lime-600 transition"
+                onClick={handleClearLocation}
+              >
+                Limpar localização
+              </button>
+            )}
+          </div>
         </div>
 
         {services.length > 0 ? (
@@ -156,7 +199,7 @@ export default function Start() {
               <p className="text-gray-600 dark:text-gray-400 mb-4">
                 Não encontramos serviços{" "}
                 {selectedCategory && `de "${selectedCategory.name}" `}
-                em {cityName || "sua região"}.
+                {cityName ? `em ${cityName}` : "em todo o Brasil"}.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button
@@ -185,8 +228,6 @@ export default function Start() {
         selectedCity={selectedCity}
         setSelectedCity={setSelectedCity}
         setSelectedState={setSelectedState}
-        cities={cities}
-        loading={loading}
       />
     </>
   );

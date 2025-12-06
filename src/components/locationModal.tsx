@@ -1,8 +1,9 @@
 "use client";
-import { City } from "@/types/City";
+import { useCitiesByState } from "@/hooks/useCitiesByState";
 import { states } from "@/utils/states/states";
 import { MapPinIcon } from "@phosphor-icons/react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Button } from "./ui/button";
 import { Select } from "./ui/select";
 
 type LocationModalProps = {
@@ -12,8 +13,6 @@ type LocationModalProps = {
   selectedCity: string;
   setSelectedState: (state: string) => void;
   setSelectedCity: (city: string) => void;
-  cities: City[];
-  loading: boolean;
 };
 
 export function LocationModal({
@@ -23,14 +22,27 @@ export function LocationModal({
   selectedState,
   setSelectedCity,
   setSelectedState,
-  cities,
-  loading,
 }: LocationModalProps) {
+  const [tempState, setTempState] = useState(selectedState);
+  const [tempCity, setTempCity] = useState(selectedCity);
+
+  const { cities: tempCities, loading: loadingCities } =
+    useCitiesByState(tempState);
+
   useEffect(() => {
-    if (selectedState && selectedCity) {
+    if (isOpen) {
+      setTempState(selectedState);
+      setTempCity(selectedCity);
+    }
+  }, [isOpen, selectedState, selectedCity]);
+
+  const handleFilter = () => {
+    if (tempState && tempCity) {
+      setSelectedState(tempState);
+      setSelectedCity(tempCity);
       setIsOpen(false);
     }
-  }, [selectedState, selectedCity, setIsOpen]);
+  };
 
   const stateOptions = useMemo(
     () =>
@@ -43,20 +55,38 @@ export function LocationModal({
 
   const cityOptions = useMemo(
     () =>
-      cities.map((c) => ({
+      tempCities.map((c) => ({
         label: c.name,
         value: c.id,
       })),
-    [cities]
+    [tempCities]
   );
+
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    }
+    window.addEventListener("keydown", handleEscape);
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [setIsOpen]);
 
   if (!isOpen) {
     return null;
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/60 px-4 z-50">
-      <div className="bg-lime-400 rounded-lg shadow-lg w-full max-w-md">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black/60 px-4 z-50"
+      onClick={() => setIsOpen(false)}
+    >
+      <div
+        className="bg-lime-400 rounded-lg shadow-lg w-full max-w-md"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="px-6 pb-6 pt-7 text-center grid place-items-center">
           <div className="bg-black rounded-full p-4 mb-4">
@@ -76,10 +106,10 @@ export function LocationModal({
               id="state"
               name="state"
               label="Estado"
-              value={selectedState}
+              value={tempState}
               onChange={(e) => {
-                setSelectedState(e.target.value);
-                setSelectedCity("");
+                setTempState(e.target.value);
+                setTempCity("");
               }}
               defaultValue="Selecione o estado"
               options={stateOptions}
@@ -89,14 +119,32 @@ export function LocationModal({
               id="city"
               name="city"
               label="Cidade"
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              disabled={!selectedState || loading}
+              value={tempCity}
+              onChange={(e) => setTempCity(e.target.value)}
+              disabled={!tempState || loadingCities}
               defaultValue={
-                loading ? "Carregando cidades..." : "Selecione a cidade"
+                loadingCities ? "Carregando cidades..." : "Selecione a cidade"
               }
               options={cityOptions}
             />
+
+            <div className="mt-2 flex gap-4 w-full">
+              <Button
+                className="w-full"
+                variant="border"
+                onClick={() => setIsOpen(false)}
+              >
+                Fechar
+              </Button>
+
+              <Button
+                className="w-full"
+                onClick={handleFilter}
+                disabled={!tempState || !tempCity}
+              >
+                Filtrar
+              </Button>
+            </div>
           </div>
         </div>
       </div>

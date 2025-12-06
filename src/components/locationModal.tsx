@@ -1,11 +1,10 @@
 "use client";
-import { City } from "@/types/City";
+import { useCitiesByState } from "@/hooks/useCitiesByState";
 import { states } from "@/utils/states/states";
 import { MapPinIcon } from "@phosphor-icons/react";
 import { useEffect, useMemo, useState } from "react";
-import { Select } from "./ui/select";
 import { Button } from "./ui/button";
-import { useCitiesByState } from "@/hooks/useCitiesByState";
+import { Select } from "./ui/select";
 
 type LocationModalProps = {
   isOpen: boolean;

@@ -5,6 +5,7 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { api } from "@/services/api";
 import { User } from "@/types/User";
 import { isAxiosError } from "axios";
+import { redirect } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -58,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Erro ao fazer logout:", error);
     } finally {
       setUser(null);
-      window.location.href = "/login";
+      redirect("/");
     }
   }
   function updateUser(updatedUser: User) {

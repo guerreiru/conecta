@@ -11,6 +11,7 @@ import { Select } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { Service } from "@/types/Service";
+import { serviceTypes } from "@/constants";
 
 const productSchema = z.object({
   title: z
@@ -28,6 +29,7 @@ const productSchema = z.object({
     .min(3, "O tipo de cobrança deve ter pelo menos 1 caracter")
     .max(100, "O tipo de cobrança deve máximo 10 caracteres"),
   categoryId: z.uuid("ID da categoria inválido"),
+  serviceType: z.string(),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -68,6 +70,7 @@ export function ServiceForm({
       price: Number(serviceToEdit?.price || 1),
       typeOfChange: serviceToEdit?.typeOfChange || "hora",
       categoryId: serviceToEdit?.category.id || categories[0]?.id || "",
+      serviceType: serviceToEdit?.serviceType || "all",
     },
   });
 
@@ -133,6 +136,15 @@ export function ServiceForm({
               value: category.id,
             }))}
             {...register("categoryId")}
+          />
+
+          <Select
+            label="Tip de atendimento"
+            options={serviceTypes.map((type) => ({
+              label: type.label,
+              value: type.value,
+            }))}
+            {...register("serviceType")}
           />
 
           <div className="grid md:grid-cols-2 gap-4">

@@ -16,18 +16,15 @@ export function sortByHighlight(services: Service[]): Service[] {
   };
 
   return [...services].sort((a, b) => {
-    // Destacados aparecem primeiro
     if (a.isHighlighted && !b.isHighlighted) return -1;
     if (!a.isHighlighted && b.isHighlighted) return 1;
 
-    // Se ambos destacados, ordenar por nível
     if (a.isHighlighted && b.isHighlighted) {
       const levelA = highlightLevelOrder[a.highlightLevel || "pro"] ?? 999;
       const levelB = highlightLevelOrder[b.highlightLevel || "pro"] ?? 999;
       return levelA - levelB;
     }
 
-    // Se nenhum destacado, manter ordem original
     return 0;
   });
 }

@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const clientSchemaCreate = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
@@ -35,7 +36,8 @@ export function ClientForm({ mode, defaultValues, onCancel }: ClientFormProps) {
     defaultValues,
   });
 
-  const { updateUser } = useAuth();
+  const { updateUser, login } = useAuth();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   function togglePasswordVisibility() {
@@ -48,8 +50,11 @@ export function ClientForm({ mode, defaultValues, onCancel }: ClientFormProps) {
         const res = await api.post("/users", data);
 
         if (res.data.id) {
-          toast.success("Usuário cadastrado com sucesso!");
-          reset();
+          const loginResult = await login(data.email, data.password);
+          if (loginResult.success) {
+            reset();
+            router.push("/");
+          }
         }
       } else {
         const { password, ...rest } = data;

@@ -51,7 +51,7 @@ export function NavHeader() {
   }
 
   return (
-    <nav className="flex items-center gap-1 md:gap-2 min-h-9">
+    <nav className="hidden md:flex items-center gap-1 md:gap-2 min-h-9">
       <ul className="flex items-center gap-1 md:gap-2">
         <ListItem href="/" isActive={isActive("/")} title="Buscar serviços" />
 

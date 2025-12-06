@@ -132,20 +132,23 @@ export function ServiceCard({
             {typeOfChange ? `/${typeOfChange}` : ""}
           </p>
           {service.serviceType && (
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
               {service.serviceType === "in_person" && (
                 <>
-                  <BuildingIcon size={18} />
+                  <BuildingIcon size={16} />
+                  <span>Presencial</span>
                 </>
               )}
               {service.serviceType === "online" && (
                 <>
-                  <LaptopIcon size={18} />
+                  <LaptopIcon size={16} />
+                  <span>Online</span>
                 </>
               )}
               {service.serviceType === "all" && (
                 <>
-                  <ArrowsCounterClockwiseIcon size={18} />
+                  <ArrowsCounterClockwiseIcon size={16} />
+                  <span>Presencial + Online</span>
                 </>
               )}
             </span>

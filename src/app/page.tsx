@@ -31,7 +31,6 @@ export default function Start() {
   const { cities } = useCitiesByState(selectedState);
   const [cityName, setCityName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 });
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState("relevance");
@@ -207,6 +206,11 @@ export default function Start() {
                   onClick={() => {
                     setSelectedCategory(null);
                     setSearchTerm("");
+                    setPriceRange({ min: 0, max: 10000 });
+                    setMinRating(0);
+                    setSortBy("relevance");
+                    setServiceType("");
+                    handleClearLocation();
                     handleSearch(null);
                   }}
                 >

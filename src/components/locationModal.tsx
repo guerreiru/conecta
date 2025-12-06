@@ -131,7 +131,7 @@ export function LocationModal({
             <div className="mt-2 flex gap-4 w-full">
               <Button
                 className="w-full"
-                variant="border"
+                variant="accent"
                 onClick={() => setIsOpen(false)}
               >
                 Fechar

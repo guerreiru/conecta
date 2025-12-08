@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "react-toastify";
 import { ChangeEmailForm } from "@/components/forms/changeEmailForm";
 import { ChangePasswordForm } from "@/components/forms/changePasswordForm";
 import { ClientForm } from "@/components/forms/clientForm";
@@ -8,7 +10,9 @@ import { ServiceForm } from "@/components/forms/serviceForm";
 import { Modal } from "@/components/modal";
 import { ModalExclusion } from "@/components/modalExclusion";
 import { ModalLogout } from "@/components/modalLogout";
-import { ServiceCard } from "@/components/serviceCard";
+import { ProfileInfoCard } from "@/components/profile/profileInfoCard";
+import { ProfileServicesCard } from "@/components/profile/profileServicesCard";
+import { ProfileModal } from "@/components/profile/profileModal";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loading";
 import { FREE_PLAN_SERVICE_LIMIT } from "@/constants";
@@ -19,9 +23,6 @@ import {
   useDeleteService,
 } from "@/hooks/useServiceQueries";
 import { Service } from "@/types/Service";
-import { PencilIcon } from "@phosphor-icons/react";
-import { useState } from "react";
-import { toast } from "react-toastify";
 
 export default function Profile() {
   const { logout: authLogout, user } = useAuth();
@@ -43,18 +44,9 @@ export default function Profile() {
   const deleteServiceMutation = useDeleteService();
 
   const hasReachedServiceLimit = myServices.length >= FREE_PLAN_SERVICE_LIMIT;
-  const canAddService = !hasReachedServiceLimit;
-
-  function handleCloseModal() {
-    setModalIsOpen(false);
-  }
-
-  function handleOpenModal() {
-    setModalIsOpen(true);
-  }
 
   const handleOpenAddModalNewService = () => {
-    if (!canAddService) {
+    if (hasReachedServiceLimit) {
       toast.warning(
         `Você atingiu o limite de ${FREE_PLAN_SERVICE_LIMIT} serviços gratuitos. Assine um plano para adicionar mais!`,
         { autoClose: 3000 }
@@ -64,10 +56,6 @@ export default function Profile() {
     setServiceToEdit(null);
     setModalNewServiceIsOpen(true);
   };
-
-  function handleCloseModalNewService() {
-    setModalNewServiceIsOpen(false);
-  }
 
   const handleOpenEditModal = (service: Service) => {
     setServiceToEdit(service);
@@ -110,110 +98,29 @@ export default function Profile() {
 
       {user && (
         <div className="px-4">
-          <div className="shadow border border-gray-200 dark:border-black rounded-3xl relative -top-4 p-6 bg-white dark:bg-black-200 w-full max-w-2xl mx-auto">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold text-xl">Informações da Conta</p>
-              <button onClick={handleOpenModal}>
-                <PencilIcon />
-              </button>
-            </div>
+          <ProfileInfoCard
+            user={user}
+            onEdit={() => setModalIsOpen(true)}
+            onChangeEmail={() => setIsChangeEmailModalOpen(true)}
+            onChangePassword={() => setIsChangePasswordModalOpen(true)}
+          />
 
-            <div className="mt-6">
-              <p className="text-sm text-zinc-500">Nome</p>
-              <p>{user?.name}</p>
-            </div>
-
-            <div className="my-4">
-              <p className="text-sm text-zinc-500">Email</p>
-              <p>{user?.email}</p>
-            </div>
-
-            {user?.role === "provider" && (
-              <div className="mb-6">
-                <p className="text-sm text-zinc-500">Telefone</p>
-                <p>{user?.address?.phone}</p>
-              </div>
-            )}
-
-            <div className="mb-6">
-              <p className="text-sm text-zinc-500">Sobre mim</p>
-              <p>{user?.bio}</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 mt-4">
-              <Button
-                variant="accent"
-                onClick={() => setIsChangeEmailModalOpen(true)}
-                className="w-full"
-              >
-                Alterar Email
-              </Button>
-              <Button
-                variant="accent"
-                onClick={() => setIsChangePasswordModalOpen(true)}
-                className="w-full"
-              >
-                Alterar Senha
-              </Button>
-            </div>
-          </div>
-
-          {user?.role === "provider" && (
-            <>
-              <div className="mt-6 shadow border border-gray-200 dark:border-black rounded-3xl relative -top-4 p-6 bg-white dark:bg-black-200 w-full max-w-2xl mx-auto">
-                <div className="flex items-center justify-between">
-                  <p className="font-semibold text-xl">Meus serviços</p>
-                </div>
-
-                {isLoading && (
-                  <div className="mt-6">
-                    <p>Carregando serviços...</p>
-                  </div>
-                )}
-
-                {myServices?.map((service) => (
-                  <div key={service.id} className="mt-3">
-                    <ServiceCard
-                      owner={user}
-                      service={service}
-                      onEdit={() => handleOpenEditModal(service)}
-                      onDelete={() => handleOpenDeleteModal(service.id)}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <div className="w-full max-w-2xl mx-auto grid place-items-center mb-2">
-                <Button
-                  className={`w-full transition-all ${
-                    canAddService
-                      ? ""
-                      : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed opacity-60"
-                  }`}
-                  onClick={handleOpenAddModalNewService}
-                  disabled={!canAddService}
-                >
-                  Cadastrar serviço
-                </Button>
-                {!canAddService && (
-                  <p className="text-xs text-center mt-2 text-gray-600 dark:text-gray-400">
-                    Limite de {FREE_PLAN_SERVICE_LIMIT} serviços atingido.{" "}
-                    <a
-                      href="/plans"
-                      className="text-lime-500 hover:underline font-medium"
-                    >
-                      Assine um plano!
-                    </a>
-                  </p>
-                )}
-              </div>
-            </>
+          {user.role === "provider" && (
+            <ProfileServicesCard
+              user={user}
+              services={myServices}
+              isLoading={isLoading}
+              onEdit={handleOpenEditModal}
+              onDelete={handleOpenDeleteModal}
+              onAddService={handleOpenAddModalNewService}
+            />
           )}
+
           <div className="w-full max-w-2xl mx-auto grid place-items-center lg:hidden mt-1">
             <Button
-              className="w-full"
+              className="w-full bg-black-200 text-white dark:bg-white dark:text-black-200"
               onClick={() => setIsLogoutModalOpen(true)}
-              variant="black"
+              variant="unstyled"
             >
               Sair
             </Button>
@@ -221,6 +128,7 @@ export default function Profile() {
         </div>
       )}
 
+      {/* Modals */}
       <ModalLogout
         open={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
@@ -230,7 +138,7 @@ export default function Profile() {
       <Modal open={modalIsOpen} onClose={() => setModalIsOpen(false)}>
         <div
           className="max-h-dvh rounded-2xl overflow-y-auto pb-4 px-4"
-          onClick={handleCloseModal}
+          onClick={() => setModalIsOpen(false)}
         >
           <div
             className="max-w-lg mx-auto rounded-2xl p-4 bg-white dark:bg-black"
@@ -240,29 +148,32 @@ export default function Profile() {
               <ProviderForm
                 mode="edit"
                 defaultValues={user}
-                onCancel={handleCloseModal}
+                onCancel={() => setModalIsOpen(false)}
               />
             )}
             {user?.role === "client" && (
               <ClientForm
                 mode="edit"
                 defaultValues={user}
-                onCancel={handleCloseModal}
+                onCancel={() => setModalIsOpen(false)}
               />
             )}
           </div>
         </div>
       </Modal>
 
-      <Modal open={modalNewServiceIsOpen} onClose={handleCloseModalNewService}>
+      <Modal
+        open={modalNewServiceIsOpen}
+        onClose={() => setModalNewServiceIsOpen(false)}
+      >
         <div
           className="h-dvh pt-1 pb-4 overflow-y-auto"
           onClick={() => setModalNewServiceIsOpen(false)}
         >
           <div onClick={(e) => e.stopPropagation()} className="w-fit mx-auto">
             <ServiceForm
-              onCancel={handleCloseModalNewService}
-              onServiceAdded={handleCloseModalNewService}
+              onCancel={() => setModalNewServiceIsOpen(false)}
+              onServiceAdded={() => setModalNewServiceIsOpen(false)}
               serviceToEdit={serviceToEdit}
             />
           </div>
@@ -275,45 +186,25 @@ export default function Profile() {
         onConfirm={handleDeleteService}
       />
 
-      <Modal
+      <ProfileModal
         open={isChangeEmailModalOpen}
         onClose={() => setIsChangeEmailModalOpen(false)}
       >
-        <div
-          className="max-h-dvh rounded-2xl overflow-y-auto pb-4 px-4"
-          onClick={() => setIsChangeEmailModalOpen(false)}
-        >
-          <div
-            className="max-w-lg mx-auto rounded-2xl p-6 bg-white dark:bg-black-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <ChangeEmailForm
-              onCancel={() => setIsChangeEmailModalOpen(false)}
-              onSuccess={() => setIsChangeEmailModalOpen(false)}
-            />
-          </div>
-        </div>
-      </Modal>
+        <ChangeEmailForm
+          onCancel={() => setIsChangeEmailModalOpen(false)}
+          onSuccess={() => setIsChangeEmailModalOpen(false)}
+        />
+      </ProfileModal>
 
-      <Modal
+      <ProfileModal
         open={isChangePasswordModalOpen}
         onClose={() => setIsChangePasswordModalOpen(false)}
       >
-        <div
-          className="max-h-dvh rounded-2xl overflow-y-auto pb-4 px-4"
-          onClick={() => setIsChangePasswordModalOpen(false)}
-        >
-          <div
-            className="max-w-lg mx-auto rounded-2xl p-6 bg-white dark:bg-black-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <ChangePasswordForm
-              onCancel={() => setIsChangePasswordModalOpen(false)}
-              onSuccess={() => setIsChangePasswordModalOpen(false)}
-            />
-          </div>
-        </div>
-      </Modal>
+        <ChangePasswordForm
+          onCancel={() => setIsChangePasswordModalOpen(false)}
+          onSuccess={() => setIsChangePasswordModalOpen(false)}
+        />
+      </ProfileModal>
     </main>
   );
 }

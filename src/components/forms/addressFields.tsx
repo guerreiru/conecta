@@ -9,16 +9,14 @@ import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import z from "zod";
 import { Select } from "../ui/select";
 
-const address = z.object({
-  name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
-  email: z.email("E-mail inválido"),
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
-  specialty: z.string().optional(),
-  bio: z.string().optional(),
-  address: addressSchema,
-});
-
-export type AddressFormData = z.infer<typeof address>;
+export type AddressFormData = {
+  name: string;
+  email: string;
+  password: string;
+  specialty?: string;
+  bio?: string;
+  address: z.infer<typeof addressSchema>;
+};
 
 type AddressFieldsProps = {
   registerAction: UseFormRegister<AddressFormData>;

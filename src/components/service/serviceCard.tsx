@@ -128,7 +128,7 @@ export function ServiceCard({
       )}
 
       <footer className="flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <p className="font-bold text-black dark:text-white">
             {formatToBRL(price)}
             {typeOfChange ? `/${typeOfChange}` : ""}

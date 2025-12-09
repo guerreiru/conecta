@@ -103,7 +103,18 @@ export default function Start() {
     setSortBy("relevance");
     setServiceType("");
     handleClearLocation();
-    handleSearch(null);
+
+    fetchServices({
+      stateId: "",
+      cityId: "",
+      searchTerm: "",
+      categoryId: null,
+      priceMin: 0,
+      priceMax: 10000,
+      minRating: 0,
+      sortBy: "relevance",
+      serviceType: "",
+    });
   }
 
   return (

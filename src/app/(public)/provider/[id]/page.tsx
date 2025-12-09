@@ -1,4 +1,4 @@
-import { ServiceOwnerProfile } from "@/components/serviceOwnerProfile";
+import { ServiceOwnerProfile } from "@/components/profile/serviceOwnerProfile";
 import { getUserById } from "@/services/usersService";
 
 type Props = {

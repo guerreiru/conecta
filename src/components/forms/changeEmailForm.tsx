@@ -111,7 +111,7 @@ export function ChangeEmailForm({ onCancel, onSuccess }: ChangeEmailFormProps) {
       <div className="flex gap-4 pt-4">
         <Button
           type="button"
-          variant="accent"
+          variant="danger"
           onClick={onCancel}
           disabled={changeEmailMutation.isPending}
           className="flex-1"

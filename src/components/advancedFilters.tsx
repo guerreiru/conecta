@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { FunnelIcon, XIcon } from "@phosphor-icons/react";
+import { FadersHorizontalIcon, XIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 
 const filterOptions = [
@@ -23,9 +23,9 @@ const ratingOptions = [
 
 const serviceTypeOptions = [
   { value: "", label: "Qualquer um" },
-  { value: "presencial", label: "Presencial" },
+  { value: "in_person", label: "Presencial" },
   { value: "online", label: "Online" },
-  { value: "ambos", label: "Presencial + Online" },
+  { value: "all", label: "Presencial + Online" },
 ];
 
 interface AdvancedFiltersProps {
@@ -77,14 +77,10 @@ export function AdvancedFilters({
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 border py-3.5 px-6 rounded-xl transition ${
-          hasActiveFilters
-            ? "border-lime-400 bg-lime-50 dark:bg-lime-950"
-            : "border-gray-200 dark:border-gray-700 bg-white dark:bg-black-200"
-        }`}
+        className="flex items-center gap-2 border border-gray-200 py-2.5 px-3.5 rounded-full hover:brightness-90 bg-white dark:bg-black-200 shadow transition"
       >
-        <FunnelIcon size={18} />
-        Filtros {hasActiveFilters && <span className="text-xs">●</span>}
+        <FadersHorizontalIcon size={18} />
+        <span>Filtros</span>
       </button>
 
       {isOpen && (
@@ -144,7 +140,7 @@ export function AdvancedFilters({
                 </div>
               </div>
 
-              {/* <div>
+              <div>
                 <label className="font-semibold text-sm mb-2 block">
                   Avaliação Mínima
                 </label>
@@ -154,7 +150,7 @@ export function AdvancedFilters({
                   options={ratingOptions}
                   defaultValue="Qualquer"
                 />
-              </div> */}
+              </div>
 
               <div>
                 <label className="font-semibold text-sm mb-2 block">
@@ -184,9 +180,9 @@ export function AdvancedFilters({
             <div className="flex gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
               {hasActiveFilters && (
                 <Button
-                  variant="accent"
+                  variant="unstyled"
                   onClick={handleReset}
-                  className="flex-1"
+                  className="flex-1 border border-red-600 text-red-600 hover:bg-red-50"
                 >
                   Limpar
                 </Button>

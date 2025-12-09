@@ -1,20 +1,19 @@
-'use client'
+"use client";
 
-import { ServiceCard } from "@/components/serviceCard";
+import { ServiceCard } from "@/components/service/serviceCard";
 import { User } from "@/types/User";
 import { formatToBRL } from "@/utils/formatToBRL";
 import { PhoneIcon, WhatsappLogoIcon } from "@phosphor-icons/react/ssr";
 import Link from "next/link";
 
 type Props = {
-  owner: User
+  owner: User;
 };
 
 export function ServiceOwnerProfile({ owner }: Props) {
   return (
     <main className="w-full max-w-2xl mx-auto px-4">
       <article className="grid gap-4">
-
         {/* HEADER */}
         <header className="bg-white dark:bg-black-100 rounded-3xl pb-4 shadow relative">
           <div className="bg-black-200 dark:bg-black-300 h-20 rounded-t-3xl" />
@@ -34,18 +33,24 @@ export function ServiceOwnerProfile({ owner }: Props) {
           </section>
 
           <section className="flex justify-between mx-3 mt-3">
-            {owner.services && owner.services.length > 0 && (() => {
-              const cheapestService = [...owner.services].sort((a, b) => Number(a.price) - Number(b.price))[0];
+            {owner.services &&
+              owner.services.length > 0 &&
+              (() => {
+                const cheapestService = [...owner.services].sort(
+                  (a, b) => Number(a.price) - Number(b.price)
+                )[0];
 
-              return (
-                <div>
-                  <p className="text-zinc-500 dark:text-gray-300">A partir de</p>
-                  <p className="text-black dark:text-white">
-                    {formatToBRL(cheapestService.price)}
-                  </p>
-                </div>
-              );
-            })()}
+                return (
+                  <div>
+                    <p className="text-zinc-500 dark:text-gray-300">
+                      A partir de
+                    </p>
+                    <p className="text-black dark:text-white">
+                      {formatToBRL(cheapestService.price)}
+                    </p>
+                  </div>
+                );
+              })()}
 
             <p className="text-zinc-500 dark:text-gray-300">
               {owner.address?.cityName}
@@ -63,7 +68,10 @@ export function ServiceOwnerProfile({ owner }: Props) {
         )}
 
         {/* SERVIÇOS OFERECIDOS */}
-        <Card title="Serviços oferecidos" className="bg-lime-400 dark:bg-lime-600">
+        <Card
+          title="Serviços oferecidos"
+          className="bg-lime-400 dark:bg-lime-600"
+        >
           {owner.services && owner.services.length > 0 && (
             <div className="grid gap-3 py-2">
               {owner.services.map((service) => (
@@ -75,7 +83,6 @@ export function ServiceOwnerProfile({ owner }: Props) {
 
         {/* CONTATO */}
         <Card title="Contato" className="bg-white dark:bg-black-100">
-
           {/* Telefone */}
           <div className="flex items-center gap-4 border text-black dark:text-gray-100 border-slate-200 dark:border-gray-700 p-2 px-3 rounded-xl">
             <PhoneIcon size={18} />
@@ -105,9 +112,7 @@ export function ServiceOwnerProfile({ owner }: Props) {
               </Link>
             </div>
           </div>
-
         </Card>
-
       </article>
     </main>
   );
@@ -117,16 +122,14 @@ export function ServiceOwnerProfile({ owner }: Props) {
 function Card({
   title,
   children,
-  className = ""
+  className = "",
 }: {
   title: string;
   children: React.ReactNode;
   className?: string;
 }) {
   return (
-    <section
-      className={`rounded-3xl p-4 pb-7 grid gap-2 ${className}`}
-    >
+    <section className={`rounded-3xl p-4 pb-7 grid gap-2 ${className}`}>
       <h2 className="text-black dark:text-gray-100 font-bold">{title}</h2>
       {children}
     </section>

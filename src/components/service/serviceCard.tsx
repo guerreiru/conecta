@@ -19,8 +19,8 @@ import {
 type ServiceCardProps = {
   service: Service;
   owner: User;
-  onEdit?: (service: Service) => void;
-  onDelete?: (serviceId: string) => void;
+  onEditAction?: (service: Service) => void;
+  onDeleteAction?: (serviceId: string) => void;
 };
 
 const highlightColorMap = {
@@ -44,8 +44,8 @@ const highlightColorMap = {
 export function ServiceCard({
   service,
   owner,
-  onEdit,
-  onDelete,
+  onEditAction: onEdit,
+  onDeleteAction: onDelete,
 }: ServiceCardProps) {
   const {
     title,
@@ -87,15 +87,17 @@ export function ServiceCard({
       )}
 
       <header className="flex items-start justify-between">
-        <div>
+        <Link
+          href={`/service/${id}`}
+          className="flex-1 hover:opacity-75 transition"
+        >
           <span className="text-xs text-gray-500 dark:text-gray-400">
             {owner.name}
           </span>
           <h3 className="font-semibold text-black dark:text-white leading-snug">
             {title}
           </h3>
-        </div>
-
+        </Link>
         <div className="flex items-center gap-2">
           {onEdit && (
             <button

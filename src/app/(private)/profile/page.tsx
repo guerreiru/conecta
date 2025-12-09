@@ -172,8 +172,8 @@ export default function Profile() {
         >
           <div onClick={(e) => e.stopPropagation()} className="w-fit mx-auto">
             <ServiceForm
-              onCancel={() => setModalNewServiceIsOpen(false)}
-              onServiceAdded={() => setModalNewServiceIsOpen(false)}
+              onCancelAction={() => setModalNewServiceIsOpen(false)}
+              onServiceAddedAction={() => setModalNewServiceIsOpen(false)}
               serviceToEdit={serviceToEdit}
             />
           </div>

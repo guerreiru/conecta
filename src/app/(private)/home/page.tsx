@@ -236,8 +236,8 @@ export default function Home() {
         >
           <div onClick={(e) => e.stopPropagation()} className="w-fit mx-auto">
             <ServiceForm
-              onCancel={handleCloseModal}
-              onServiceAdded={handleCloseModal}
+              onCancelAction={handleCloseModal}
+              onServiceAddedAction={handleCloseModal}
               serviceToEdit={serviceToEdit}
             />
           </div>

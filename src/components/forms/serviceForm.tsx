@@ -1,7 +1,10 @@
 "use client";
 
-import { useCategories } from "@/hooks/useCategories";
+import { serviceTypes } from "@/constants";
+import { useAuth } from "@/hooks/useAuth";
 import { useCreateService, useUpdateService } from "@/hooks/useServiceQueries";
+import { Service } from "@/types/Service";
+import { categories } from "@/utils/categories";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -9,9 +12,6 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Select } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-import { useAuth } from "@/hooks/useAuth";
-import { Service } from "@/types/Service";
-import { serviceTypes } from "@/constants";
 
 const productSchema = z.object({
   title: z
@@ -35,17 +35,16 @@ const productSchema = z.object({
 type ProductFormData = z.infer<typeof productSchema>;
 
 type ServiceFormProps = {
-  onCancel: () => void;
-  onServiceAdded: () => void;
+  onCancelAction: () => void;
+  onServiceAddedAction: () => void;
   serviceToEdit?: Service | null;
 };
 
 export function ServiceForm({
-  onCancel,
-  onServiceAdded,
+  onCancelAction: onCancel,
+  onServiceAddedAction: onServiceAdded,
   serviceToEdit,
 }: ServiceFormProps) {
-  const { categories } = useCategories();
   const { user } = useAuth();
   const createServiceMutation = useCreateService();
   const updateServiceMutation = useUpdateService();

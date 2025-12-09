@@ -26,19 +26,19 @@ export function NavBar() {
       href: "/home",
       icon: <HouseIcon size={20} />,
       label: "Home",
-      showFor: ["provider", "admin"],
+      showFor: ["provider"],
     },
     {
       href: "/profile",
       icon: <UserIcon size={20} />,
       label: "Profile",
-      showFor: ["client", "provider", "admin"],
+      showFor: ["client", "provider"],
     },
     {
       href: "/",
       icon: <MagnifyingGlassIcon size={20} />,
       label: "Search",
-      showFor: ["guest", "client", "provider", "admin"],
+      showFor: ["guest", "client", "provider"],
     },
     {
       href: "/login",

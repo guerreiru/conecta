@@ -162,27 +162,29 @@ export default function Start() {
   return (
     <>
       <div className="bg-white dark:bg-black-200 grid gap-y-6 px-4 md:px-6 pb-2">
-        {user?.id && (
-          <div>
-            <p className="text-2xl font-bold mt-4">Olá, {user.name}!</p>
-            <span className="text-sm text-gray-400">{cityName}</span>
+        <div className="mt-4">
+          {user?.id && (
+            <div className="pb-2">
+              <p className="text-2xl font-bold">Olá, {user.name}!</p>
+              <span className="text-sm text-gray-400">{cityName}</span>
+            </div>
+          )}
+          <div className="grid md:grid-cols-[1fr_auto] gap-y-1 gap-x-2 max-w-2xl mx-auto w-full">
+            <Input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Digite o nome do serviço"
+              className="w-full"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch();
+                }
+              }}
+              rightIcon={<MagnifyingGlassIcon size={18} />}
+            />
           </div>
-        )}
-        <div className="grid md:grid-cols-[1fr_auto] gap-y-1 gap-x-2 max-w-2xl mx-auto w-full">
-          <Input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Digite o nome do serviço"
-            className="w-full"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleSearch();
-              }
-            }}
-            rightIcon={<MagnifyingGlassIcon size={18} />}
-          />
         </div>
 
         <ul className="flex overflow-x-auto pb-2 whitespace-nowrap gap-2 custom-scrollbar">

@@ -20,7 +20,14 @@ api.interceptors.response.use(
       const isLoginEndpoint = originalRequest.url?.includes("/auth/login");
 
       if (isRefreshEndpoint || isLoginEndpoint) {
-        window.location.href = "/login";
+        // Não redireciona se já estiver na página de login/register
+        if (
+          typeof window !== "undefined" &&
+          !window.location.pathname.startsWith("/login") &&
+          !window.location.pathname.startsWith("/register")
+        ) {
+          window.location.href = "/login";
+        }
         return Promise.reject(error);
       }
 
@@ -32,7 +39,14 @@ api.interceptors.response.use(
 
           return api(originalRequest);
         } catch (refreshError) {
-          window.location.href = "/login";
+          // Não redireciona se já estiver na página de login/register
+          if (
+            typeof window !== "undefined" &&
+            !window.location.pathname.startsWith("/login") &&
+            !window.location.pathname.startsWith("/register")
+          ) {
+            window.location.href = "/login";
+          }
           return Promise.reject(refreshError);
         }
       }

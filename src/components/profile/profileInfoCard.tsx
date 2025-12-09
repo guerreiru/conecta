@@ -37,16 +37,18 @@ export function ProfileInfoCard({
       </div>
 
       {user.role === "provider" && (
-        <div className="mb-6">
-          <p className="text-sm text-zinc-500">Telefone</p>
-          <p>{user.address?.phone}</p>
-        </div>
-      )}
+        <>
+          <div className="mb-6">
+            <p className="text-sm text-zinc-500">Telefone</p>
+            <p>{user.address?.phone}</p>
+          </div>
 
-      <div className="mb-6">
-        <p className="text-sm text-zinc-500">Sobre mim</p>
-        <p className="first-letter:capitalize">{user.bio}</p>
-      </div>
+          <div className="mb-6">
+            <p className="text-sm text-zinc-500">Sobre mim</p>
+            <p className="first-letter:capitalize">{user.bio}</p>
+          </div>
+        </>
+      )}
 
       <div className="grid grid-cols-2 gap-3 mt-4">
         <Button

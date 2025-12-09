@@ -9,11 +9,11 @@ import { ServiceCard } from "@/components/service/serviceCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-import { useCategories } from "@/hooks/useCategories";
 import { useCitiesByState } from "@/hooks/useCitiesByState";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useServices } from "@/hooks/useServices";
 import { Category } from "@/types/Category";
+import { categories } from "@/utils/categories";
 import {
   MagnifyingGlassIcon,
   MapPinIcon,
@@ -22,7 +22,6 @@ import {
 import { useCallback, useEffect, useState } from "react";
 
 export default function Start() {
-  const { categories } = useCategories();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null

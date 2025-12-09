@@ -88,10 +88,51 @@ export default function Start() {
     setIsModalOpen(true);
   }
 
+  const handleFetchWithOverrides = useCallback(
+    (
+      overrides: Partial<{
+        stateId: string;
+        cityId: string;
+        searchTerm: string;
+        categoryId: string | null;
+        priceMin: number;
+        priceMax: number;
+        minRating: number;
+        sortBy: string;
+        serviceType: string;
+      }> = {}
+    ) => {
+      fetchServices({
+        stateId: selectedState,
+        cityId: selectedCity,
+        searchTerm,
+        categoryId: selectedCategory?.id ?? null,
+        priceMin: priceRange.min,
+        priceMax: priceRange.max,
+        minRating,
+        sortBy,
+        serviceType,
+        ...overrides,
+      });
+    },
+    [
+      selectedState,
+      selectedCity,
+      searchTerm,
+      selectedCategory,
+      priceRange,
+      minRating,
+      sortBy,
+      serviceType,
+      fetchServices,
+    ]
+  );
+
   function handleClearLocation() {
     setSelectedState("");
     setSelectedCity("");
     setCityName("");
+    handleFetchWithOverrides({ stateId: "", cityId: "" });
   }
 
   function handleClearAllFilters() {
@@ -101,7 +142,9 @@ export default function Start() {
     setMinRating(0);
     setSortBy("relevance");
     setServiceType("");
-    handleClearLocation();
+    setSelectedState("");
+    setSelectedCity("");
+    setCityName("");
 
     fetchServices({
       stateId: "",
@@ -211,27 +254,28 @@ export default function Start() {
                 serviceType={serviceType}
                 onClearSearchTerm={() => {
                   setSearchTerm("");
-                  handleSearch();
+                  handleFetchWithOverrides({ searchTerm: "" });
                 }}
                 onClearCategory={() => {
                   setSelectedCategory(null);
+                  handleFetchWithOverrides({ categoryId: null });
                 }}
                 onClearLocation={handleClearLocation}
                 onClearPriceRange={() => {
                   setPriceRange({ min: 0, max: 10000 });
-                  handleSearch();
+                  handleFetchWithOverrides({ priceMin: 0, priceMax: 10000 });
                 }}
                 onClearMinRating={() => {
                   setMinRating(0);
-                  handleSearch();
+                  handleFetchWithOverrides({ minRating: 0 });
                 }}
                 onClearSortBy={() => {
                   setSortBy("relevance");
-                  handleSearch();
+                  handleFetchWithOverrides({ sortBy: "relevance" });
                 }}
                 onClearServiceType={() => {
                   setServiceType("");
-                  handleSearch();
+                  handleFetchWithOverrides({ serviceType: "" });
                 }}
                 onClearAll={handleClearAllFilters}
               />

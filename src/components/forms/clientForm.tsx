@@ -17,24 +17,38 @@ const clientSchemaCreate = z.object({
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
 });
 
-type ClientFormData = z.infer<typeof clientSchemaCreate>;
+const clientSchemaEdit = z.object({
+  name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
+  email: z.string().optional(),
+  password: z.string().optional(),
+});
+
+type ClientFormCreateData = z.infer<typeof clientSchemaCreate>;
+type ClientFormEditData = z.infer<typeof clientSchemaEdit>;
 
 type ClientFormProps = {
   mode: "create" | "edit";
-  defaultValues?: Partial<ClientFormData> & { id?: string };
+  defaultValues?: Partial<ClientFormCreateData> & { id?: string };
   onCancel?: () => void;
 };
 
 export function ClientForm({ mode, defaultValues, onCancel }: ClientFormProps) {
+  const createForm = useForm<ClientFormCreateData>({
+    resolver: zodResolver(clientSchemaCreate),
+    defaultValues,
+  });
+
+  const editForm = useForm<ClientFormEditData>({
+    resolver: zodResolver(clientSchemaEdit),
+    defaultValues,
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<ClientFormData>({
-    resolver: zodResolver(clientSchemaCreate),
-    defaultValues,
-  });
+  } = mode === "create" ? createForm : editForm;
 
   const { updateUser, login } = useAuth();
   const router = useRouter();
@@ -44,9 +58,9 @@ export function ClientForm({ mode, defaultValues, onCancel }: ClientFormProps) {
     setShowPassword((prev) => !prev);
   }
 
-  async function onSubmit(data: ClientFormData) {
+  async function onSubmit(data: ClientFormCreateData | ClientFormEditData) {
     try {
-      if (mode === "create") {
+      if (mode === "create" && data.email && data.password) {
         const res = await api.post("/users", data);
 
         if (res.data.id) {
@@ -57,9 +71,9 @@ export function ClientForm({ mode, defaultValues, onCancel }: ClientFormProps) {
           }
         }
       } else {
-        const { password, ...rest } = data;
-
-        const res = await api.put(`/users/${defaultValues?.id}`, rest);
+        const res = await api.put(`/users/${defaultValues?.id}`, {
+          name: data.name,
+        });
         const updatedUser = res.data;
         if (updatedUser.id) {
           updateUser(updatedUser);

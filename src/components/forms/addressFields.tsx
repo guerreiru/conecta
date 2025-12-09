@@ -21,15 +21,15 @@ const address = z.object({
 export type AddressFormData = z.infer<typeof address>;
 
 type AddressFieldsProps = {
-  register: UseFormRegister<AddressFormData>;
-  setValue: UseFormSetValue<AddressFormData>;
+  registerAction: UseFormRegister<AddressFormData>;
+  setValueAction: UseFormSetValue<AddressFormData>;
   addressEditable: Record<string, boolean>;
   errors?: FieldErrors<AddressFormData["address"]>;
 };
 
 export function AddressFields({
-  register,
-  setValue,
+  registerAction: register,
+  setValueAction: setValue,
   addressEditable,
   errors,
 }: AddressFieldsProps) {
@@ -40,7 +40,12 @@ export function AddressFields({
 
   return (
     <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-3 py-2">
-      <legend className="mb-2 font-semibold">Endereço</legend>
+      <div className="col-span-2 mb-2">
+        <legend className="font-semibold">Endereço</legend>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+          Digite o CEP para preencher automaticamente os campos de endereço
+        </p>
+      </div>
 
       <Input
         label="CEP"

@@ -153,10 +153,10 @@ export function ProviderForm({
       />
 
       <AddressFields
-        register={register}
+        registerAction={register}
         errors={errors.address}
         addressEditable={addressEditable}
-        setValue={setValue}
+        setValueAction={setValue}
       />
 
       <div className="flex items-center justify-between gap-4 flex-wrap md:flex-nowrap">

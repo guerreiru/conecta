@@ -42,7 +42,7 @@ export function Input({
           id={id || name}
           name={name || id}
           className={`
-            w-full px-3 py-2 min-h-12 bg-white dark:bg-black-200 rounded-lg disabled:bg-gray-300/70 dark:disabled:bg-zinc-700 disabled:cursor-no-drop border 
+            w-full px-3 py-2 min-h-12 bg-white dark:bg-black-200 rounded-lg disabled:bg-gray-100 dark:disabled:bg-zinc-700/75 disabled:cursor-no-drop border 
             ${error ? "border-red-500" : "border-gray-200"} 
             ${leftIcon ? "pl-10" : ""}
             ${rightIcon ? "pr-10" : ""}

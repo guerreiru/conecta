@@ -38,7 +38,7 @@ export function AddressFields({
 
   return (
     <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-3 py-2">
-      <div className="col-span-2 mb-2">
+      <div className="md:col-span-2 mb-2">
         <legend className="font-semibold">Endereço</legend>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
           Digite o CEP para preencher automaticamente os campos de endereço

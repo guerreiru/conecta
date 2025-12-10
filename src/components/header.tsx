@@ -75,6 +75,7 @@ export function Header() {
               alt="Logo ProLocal"
               width={27}
               height={40}
+              quality={100}
               className="dark:hidden"
             />
             <Image
@@ -82,6 +83,7 @@ export function Header() {
               alt="Logo ProLocal"
               width={27}
               height={40}
+              quality={100}
               className="hidden dark:block"
             />
             <Image

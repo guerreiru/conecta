@@ -11,7 +11,7 @@ const Register: React.FC = () => {
   const [role, setRole] = useState<string | null>(null);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 px-6 md:px-12 py-7 min-h-[calc(100vh-65px)] gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 px-6 md:px-12 py-7 md:min-h-[calc(100vh-65px)] gap-8">
       <WelcomeSection />
 
       <section
@@ -19,10 +19,12 @@ const Register: React.FC = () => {
         aria-labelledby="login-heading"
       >
         <div className="flex items-center justify-center">
-          <div className="w-full max-w-lg px-6 py-8 bg-white dark:bg-black-200 rounded-3xl shadow-xl">
-            <h1 className="text-3xl font-bold text-center">Cadastro</h1>
+          <div className="w-full max-w-lg px-6 py-6 md:py-8 bg-white dark:bg-black-200 rounded-3xl shadow-xl">
+            <h1 className="text-2xl md:text-3xl font-bold text-center">
+              Cadastro
+            </h1>
 
-            <div className="mt-3 mb-6 font-semibold text-zinc-500 dark:text-white flex justify-center gap-1.5">
+            <div className="mt-1 md:mt-3 mb-2 md:mb-6 font-semibold text-zinc-500 dark:text-white flex justify-center gap-1.5">
               <p>Já possui conta?</p>
               <Link href="login" className="text-blue-500 cursor-pointer">
                 Entrar
@@ -46,7 +48,7 @@ const Register: React.FC = () => {
                 aria-pressed={role === "client"}
               >
                 <UserIcon size={36} className="mb-2 text-lime-500" />
-                <span className="font-bold text-lg mb-1">Sou Cliente</span>
+                <span className="font-bold md:text-lg mb-1">Sou Cliente</span>
                 <span className="text-sm text-gray-500 dark:text-zinc-300 mb-2 text-center">
                   Contrate serviços perto de você
                 </span>
@@ -70,7 +72,9 @@ const Register: React.FC = () => {
                 aria-pressed={role === "professional"}
               >
                 <SuitcaseIcon size={36} className="mb-2 text-lime-500" />
-                <span className="font-bold text-lg mb-1">Sou Profissional</span>
+                <span className="font-bold md:text-lg mb-1">
+                  Sou Profissional
+                </span>
                 <span className="text-sm text-gray-500 dark:text-zinc-300 mb-2 text-center">
                   Ofereça seus serviços e conquiste clientes
                 </span>

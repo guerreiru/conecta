@@ -66,7 +66,7 @@ export function Header() {
   }
 
   return (
-    <header className="bg-white dark:bg-black-200 grid md:flex lg:grid-cols-3 items-center justify-between py-3 px-4 md:px-6 border-b border-gray-200 dark:border-zinc-700">
+    <header className="bg-white dark:bg-black-200 grid grid-cols-2 md:flex lg:grid-cols-3 items-center justify-between py-3 px-4 md:px-6 border-b border-gray-200 dark:border-zinc-700">
       <div className="flex items-center">
         <Link href="/" aria-label="Ir para página inicial">
           <div className="flex items-center gap-2">
@@ -118,36 +118,51 @@ export function Header() {
 
       {ready && !user && (
         <nav
-          className="hidden md:flex items-center justify-end gap-2"
+          className="flex items-center justify-end gap-2"
           aria-label="Navegação de autenticação"
         >
+          <ListItem
+            href="/about"
+            isActive={isActive("/about")}
+            title="Sobre nós"
+          />
+
           <ListItem
             href="/login"
             isActive={isActive("/login")}
             title="Entrar"
+            className="hidden md:block"
           />
           <ListItem
             href="/register"
             isActive={isActive("/register")}
             title="Cadastrar-se"
             variant="highlighted"
+            className="hidden md:block"
           />
         </nav>
       )}
 
       {ready && user && (
         <nav
-          className="hidden md:flex items-center justify-end gap-2"
+          className="flex items-center justify-end gap-2"
           aria-label="Navegação do usuário"
         >
+          <ListItem
+            href="/about"
+            isActive={isActive("/about")}
+            title="Sobre nós"
+          />
+
           <ListItem
             href="/profile"
             isActive={isActive("/profile")}
             title="Perfil"
+            className="hidden md:block"
           />
           <button
             onClick={() => setIsLogoutModalOpen(true)}
-            className="px-4 md:px-6 py-2 font-medium rounded-xl hover:brightness-90 bg-black-200 text-white dark:bg-white dark:text-black-200"
+            className="px-4 md:px-6 py-2 font-medium rounded-xl hover:brightness-90 bg-black-200 text-white dark:bg-white dark:text-black-200 hidden md:block"
             aria-label="Sair da conta"
           >
             Sair

@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { WelcomeSection } from "@/components/welcomeSection";
 
 const loginSchema = z.object({
   email: z.email("E-mail inválido"),
@@ -45,53 +46,80 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="flex items-center justify-center pt-6 px-4">
-      <div className="w-full max-w-md px-6 py-8 bg-white dark:bg-black-200 rounded-3xl shadow-xl">
-        <h1 className="text-3xl font-bold text-center">Login</h1>
-        <div className="mt-3 mb-6 font-semibold text-zinc-500 dark:text-white flex flex-wrap justify-center gap-1.5">
-          <p>Ainda não tem uma conta?</p>
-          <Link href="/register" className="text-blue-500 cursor-pointer">
-            Criar Conta
-          </Link>
+    <div className="grid grid-cols-1 lg:grid-cols-2 px-6 md:px-12 py-7 min-h-[calc(100vh-65px)] gap-8">
+      <WelcomeSection />
+
+      <section
+        className="grid place-items-center"
+        aria-labelledby="login-heading"
+      >
+        <div className="w-full max-w-md px-6 py-8 bg-white dark:bg-black-200 rounded-3xl shadow-xl">
+          <h2 id="login-heading" className="text-3xl font-bold text-center">
+            Login
+          </h2>
+          <p className="mt-3 mb-6 font-semibold text-zinc-500 dark:text-white text-center">
+            Ainda não tem uma conta?{" "}
+            <Link
+              href="/register"
+              className="text-blue-500 hover:text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+            >
+              Criar Conta
+            </Link>
+          </p>
+
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4"
+            noValidate
+            aria-label="Formulário de login"
+          >
+            <Input
+              label="Email"
+              id="email"
+              type="email"
+              autoComplete="email"
+              {...register("email")}
+              error={errors?.email?.message}
+              aria-invalid={!!errors?.email}
+              aria-describedby={errors?.email ? "email-error" : undefined}
+            />
+
+            <Input
+              label="Senha"
+              id="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              {...register("password")}
+              error={errors?.password?.message}
+              aria-invalid={!!errors?.password}
+              aria-describedby={errors?.password ? "password-error" : undefined}
+              rightIcon={
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                >
+                  {showPassword ? (
+                    <EyeSlashIcon size={18} aria-hidden="true" />
+                  ) : (
+                    <EyeIcon size={18} aria-hidden="true" />
+                  )}
+                </button>
+              }
+            />
+
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full"
+              aria-busy={isSubmitting}
+            >
+              {isSubmitting ? "Entrando..." : "Entrar"}
+            </Button>
+          </form>
         </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Input
-            label="Email"
-            id="email"
-            type="email"
-            {...register("email")}
-            error={errors?.email?.message}
-          />
-
-          <Input
-            label="Senha"
-            id="password"
-            type={showPassword ? "text" : "password"}
-            {...register("password")}
-            error={errors?.password?.message}
-            rightIcon={
-              showPassword ? (
-                <EyeSlashIcon
-                  size={18}
-                  onClick={togglePasswordVisibility}
-                  className="cursor-pointer"
-                />
-              ) : (
-                <EyeIcon
-                  size={18}
-                  onClick={togglePasswordVisibility}
-                  className="cursor-pointer"
-                />
-              )
-            }
-          />
-
-          <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? "Entrando..." : "Entrar"}
-          </Button>
-        </form>
-      </div>
+      </section>
     </div>
   );
 };

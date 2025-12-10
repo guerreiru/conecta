@@ -146,7 +146,7 @@ export default async function RootLayout({
             <AuthProvider>
               <CategoriesProvider>
                 <Header />
-                {children}
+                <main>{children}</main>
                 <ToastContainer autoClose={500} />
                 <NavBar />
                 <Analytics />

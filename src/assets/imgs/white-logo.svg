@@ -1,19 +1,5 @@
-<svg width="104" height="144" viewBox="0 0 104 144" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_d_6_2)">
-<path d="M45.3042 81.6126L5 1.27999V81.6059L45.3042 81.6126Z" fill="#BEEE02"/>
-<path d="M99 40.2606C99 -6.32334 47.0754 2.07966 45.7575 1.00293L45.3042 81.6126C45.3042 81.6126 99 86.8446 99 40.2606Z" fill="white"/>
-<path d="M5 1.27999C5 1.27999 5.67143 1.28678 45.7575 1.00293M5 1.27999L45.3042 81.6126M5 1.27999V81.6059M45.7575 1.00293C47.0754 2.07966 99 -6.32334 99 40.2606C99 86.8446 45.3042 81.6126 45.3042 81.6126M45.7575 1.00293L45.3042 81.6126M45.3042 81.6126V134.92C26.6564 135.666 17.4531 131.673 5 111.014V81.6059M45.3042 81.6126L5 81.6059" stroke="white" stroke-width="2"/>
-</g>
-<defs>
-<filter id="filter0_d_6_2" x="0" y="0" width="104" height="144.003" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_6_2"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_6_2" result="shape"/>
-</filter>
-</defs>
+<svg width="22" height="34" viewBox="0 0 22 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9.20809 19.6796C9.20809 19.6796 21 19.8385 21 9.74893C21 -0.340686 9.20809 1.067 9.20809 1.067V19.6796Z" fill="white"/>
+<path d="M1 1.06699V32.8407L9.20809 19.6796L1 1.06699Z" fill="#BEEE02"/>
+<path d="M1 1.06699V32.8407M1 1.06699L9.20809 1.067M1 1.06699L9.20809 19.6796M1 32.8407C5.50291 33.2043 5.68113 33.1638 9.20809 30.3051V19.6796M1 32.8407L9.20809 19.6796M9.20809 19.6796C9.20809 19.6796 21 19.8385 21 9.74893C21 -0.340686 9.20809 1.067 9.20809 1.067M9.20809 19.6796V1.067" stroke="white" stroke-width="2"/>
 </svg>

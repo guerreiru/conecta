@@ -6,13 +6,15 @@ import WhiteLogo from "@/assets/imgs/white-logo.svg";
 import WhiteProLocal from "@/assets/imgs/white-prolocal.svg";
 import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { useAuth } from "@/hooks/useAuth";
+import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ModalLogout } from "./modalLogout";
-import clsx from "clsx";
+
+const svgLoader = ({ src }: { src: string }) => src;
 
 function ListItem({
   href,
@@ -69,35 +71,29 @@ export function Header() {
     <header className="bg-white dark:bg-black-200 grid md:flex lg:grid-cols-3 items-center justify-between py-3 px-4 md:px-6 border-b border-gray-200 dark:border-zinc-700">
       <div className="flex items-center">
         <Link href="/" aria-label="Ir para página inicial">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <Image
               src={Logo}
               alt="Logo ProLocal"
-              width={27}
-              height={40}
-              quality={100}
+              loader={svgLoader}
               className="dark:hidden"
             />
             <Image
               src={WhiteLogo}
               alt="Logo ProLocal"
-              width={27}
-              height={40}
-              quality={100}
+              loader={svgLoader}
               className="hidden dark:block"
             />
             <Image
               src={ProLocal}
               alt="ProLocal"
-              width={74}
-              height={16}
+              loader={svgLoader}
               className="dark:hidden"
             />
             <Image
               src={WhiteProLocal}
               alt="ProLocal"
-              width={74}
-              height={16}
+              loader={svgLoader}
               className="hidden dark:block"
             />
           </div>

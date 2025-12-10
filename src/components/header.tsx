@@ -14,8 +14,6 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ModalLogout } from "./modalLogout";
 
-const svgLoader = ({ src }: { src: string }) => src;
-
 function ListItem({
   href,
   isActive,
@@ -75,25 +73,25 @@ export function Header() {
             <Image
               src={Logo}
               alt="Logo ProLocal"
-              loader={svgLoader}
+              unoptimized
               className="dark:hidden"
             />
             <Image
               src={WhiteLogo}
               alt="Logo ProLocal"
-              loader={svgLoader}
+              unoptimized
               className="hidden dark:block"
             />
             <Image
               src={ProLocal}
               alt="ProLocal"
-              loader={svgLoader}
+              unoptimized
               className="dark:hidden"
             />
             <Image
               src={WhiteProLocal}
               alt="ProLocal"
-              loader={svgLoader}
+              unoptimized
               className="hidden dark:block"
             />
           </div>

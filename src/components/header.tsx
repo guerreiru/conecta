@@ -102,10 +102,14 @@ export function Header() {
         className="hidden md:flex justify-center gap-2"
         aria-label="Navegação principal"
       >
-        <ListItem href="/" isActive={isActive("/")} title="Buscar serviços" />
+        <ListItem href="/" isActive={isActive("/")} title="Explorar" />
 
         {ready && user && user?.role !== "client" && (
-          <ListItem href="/home" isActive={isActive("/home")} title="Home" />
+          <ListItem
+            href="/dashboard"
+            isActive={isActive("/dashboard")}
+            title="Minha Área"
+          />
         )}
 
         {!ready && (
@@ -149,17 +153,18 @@ export function Header() {
           aria-label="Navegação do usuário"
         >
           <ListItem
-            href="/about"
-            isActive={isActive("/about")}
-            title="Sobre nós"
-          />
-
-          <ListItem
             href="/profile"
             isActive={isActive("/profile")}
             title="Perfil"
             className="hidden md:block"
           />
+
+          <ListItem
+            href="/about"
+            isActive={isActive("/about")}
+            title="Sobre nós"
+          />
+
           <button
             onClick={() => setIsLogoutModalOpen(true)}
             className="px-4 md:px-6 py-2 font-medium rounded-xl hover:brightness-90 bg-black-200 text-white dark:bg-white dark:text-black-200 hidden md:block"
@@ -176,8 +181,12 @@ export function Header() {
           aria-hidden="true"
           aria-live="polite"
         >
-          <div className="h-9 w-20 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
-          <div className="h-9 w-28 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-9 w-20 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse"
+            />
+          ))}
         </div>
       )}
 

@@ -23,9 +23,9 @@ export function NavBar() {
 
   const navigationLinks = [
     {
-      href: "/home",
+      href: "/dashboard",
       icon: <HouseIcon size={20} />,
-      label: "Home",
+      label: "Minha Área",
       showFor: ["provider"],
     },
     {

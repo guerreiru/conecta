@@ -3,17 +3,21 @@
 import { ServiceForm } from "@/components/forms/serviceForm";
 import { Modal } from "@/components/modal";
 import { ModalExclusion } from "@/components/modalExclusion";
-import { FREE_PLAN_SERVICE_LIMIT } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
 import {
-  useProviderServices,
+  useActivateService,
+  useDeactivateService,
   useDeleteService,
+  useProviderServices,
 } from "@/hooks/useServiceQueries";
+import { useSubscription } from "@/hooks/useSubscription";
 import { Service } from "@/types/Service";
 import { capitalizeFirstLetter } from "@/utils/capitalizeFirstLetter";
 import { formatToBRL } from "@/utils/formatToBRL";
 import {
   CurrencyDollarIcon,
+  EyeIcon,
+  EyeSlashIcon,
   MapPinIcon,
   PencilIcon,
   PlusIcon,
@@ -23,6 +27,13 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
+const PLAN_LIMITS = {
+  free: 1,
+  plus: 5,
+  premium: 15,
+  enterprise: 50,
+};
 
 export default function Home() {
   const { user } = useAuth();
@@ -36,15 +47,33 @@ export default function Home() {
   const { data: myServices = [], isLoading } = useProviderServices(
     user?.role === "provider" ? user.id : undefined
   );
-  const deleteServiceMutation = useDeleteService();
 
-  const hasReachedServiceLimit = myServices.length >= FREE_PLAN_SERVICE_LIMIT;
+  const { data: subscription, isLoading: isLoadingSubscription } =
+    useSubscription();
+
+  const deleteServiceMutation = useDeleteService();
+  const activateServiceMutation = useActivateService();
+  const deactivateServiceMutation = useDeactivateService();
+
+  const currentPlan = subscription?.plan || "free";
+  const serviceLimit =
+    PLAN_LIMITS[currentPlan as keyof typeof PLAN_LIMITS] || 1;
+  const hasReachedServiceLimit = myServices.length >= serviceLimit;
   const canAddService = !hasReachedServiceLimit;
+  const activeServicesCount = myServices.filter(
+    (service) => service.isActive
+  ).length;
 
   const handleOpenAddModal = () => {
     if (!canAddService) {
+      const planName =
+        currentPlan === "free" ? "gratuito" : currentPlan.toUpperCase();
       toast.warning(
-        `Você atingiu o limite de ${FREE_PLAN_SERVICE_LIMIT} serviços gratuitos. Assine um plano para adicionar mais!`,
+        `Você atingiu o limite de ${serviceLimit} serviço(s) do plano ${planName}. ${
+          currentPlan === "free"
+            ? "Assine um plano para adicionar mais!"
+            : "Faça upgrade para cadastrar mais serviços!"
+        }`,
         { autoClose: 3000 }
       );
       return;
@@ -83,7 +112,15 @@ export default function Home() {
     });
   }
 
-  if (!user || isLoading) {
+  const handleActiveService = (service: Service) => {
+    if (service.isActive) {
+      deactivateServiceMutation.mutate(service.id);
+    } else {
+      activateServiceMutation.mutate(service.id);
+    }
+  };
+
+  if (!user || isLoading || isLoadingSubscription) {
     return (
       <section className="grid gap-4 py-4 text-black dark:text-gray-200">
         <p>Carregando...</p>
@@ -123,10 +160,20 @@ export default function Home() {
                     Serviços Ativos
                   </p>
                   <span aria-label="Quantidade de serviços ativos">
-                    {myServices.length}
+                    {activeServicesCount} de {serviceLimit}
                   </span>
                 </div>
               </section>
+
+              {/* NOVO: Badge do plano */}
+              <div className="mt-2">
+                <span className="text-xs bg-black/20 dark:bg-black/30 px-3 py-1 rounded-full text-black dark:text-black-200">
+                  Plano:{" "}
+                  {currentPlan === "free"
+                    ? "Gratuito"
+                    : currentPlan.toUpperCase()}
+                </span>
+              </div>
             </>
           )}
         </div>
@@ -151,13 +198,18 @@ export default function Home() {
                 href="/plans"
                 className="text-xs text-black/70 dark:text-black-100 md:text-center max-w-xs"
               >
-                Limite de {FREE_PLAN_SERVICE_LIMIT} serviços atingido. Assine um
-                plano!
+                Limite de {serviceLimit} serviço(s) atingido.{" "}
+                <span className="underline">
+                  {currentPlan === "free"
+                    ? "Assine um plano!"
+                    : "Faça upgrade!"}
+                </span>
               </Link>
             )}
           </div>
         )}
       </header>
+
       {user.role === "provider" && (
         <section
           className="p-4 md:p-8 text-black dark:text-gray-200"
@@ -174,7 +226,11 @@ export default function Home() {
             <ul className="grid grid-cols-1 md:grid-cols-2 mt-6 gap-4">
               {myServices.map((service) => (
                 <li key={service.id}>
-                  <article className="p-6 bg-white dark:bg-black-200 rounded-2xl shadow-sm h-full border border-gray-200 dark:border-gray-700">
+                  <article
+                    className={`${
+                      !service.isActive ? "opacity-60" : ""
+                    } p-6 bg-white dark:bg-black-200 rounded-2xl shadow-sm h-full border border-gray-200 dark:border-gray-700`}
+                  >
                     <header className="flex items-center justify-between">
                       <div>
                         <h3 className="font-bold text-lg dark:text-white">
@@ -186,6 +242,26 @@ export default function Home() {
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
+                        <button
+                          className={`${
+                            service.isActive
+                              ? "bg-gray-400 dark:bg-gray-700 text-gray-100 dark:text-gray-300"
+                              : "bg-green-100 dark:bg-green-800"
+                          } rounded-lg p-2 w-fit`}
+                          aria-label={`Ativar serviço ${service.title}`}
+                          onClick={() => handleActiveService(service)}
+                        >
+                          {service.isActive && (
+                            <span title="Desativar serviço">
+                              <EyeSlashIcon size={18} aria-hidden="true" />
+                            </span>
+                          )}
+                          {!service.isActive && (
+                            <span title="Ativar serviço">
+                              <EyeIcon size={18} aria-hidden="true" />
+                            </span>
+                          )}
+                        </button>
                         <button
                           className="bg-gray-200 dark:bg-gray-700 rounded-lg p-2 w-fit"
                           aria-label={`Editar serviço ${service.title}`}
@@ -229,6 +305,7 @@ export default function Home() {
           )}
         </section>
       )}
+
       <Modal open={modalIsOpen} onClose={handleCloseModal}>
         <div
           className="h-dvh pt-1 pb-4 overflow-y-auto"
@@ -243,6 +320,7 @@ export default function Home() {
           </div>
         </div>
       </Modal>
+
       <ModalExclusion
         open={deleteModalIsOpen}
         onClose={handleCloseDeleteModal}

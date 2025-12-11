@@ -36,6 +36,7 @@ export const metadata: Metadata = {
   authors: [{ name: "ProLocal" }],
   creator: "ProLocal",
   publisher: "ProLocal",
+
   openGraph: {
     type: "website",
     locale: "pt_BR",
@@ -53,6 +54,17 @@ export const metadata: Metadata = {
       },
     ],
   },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
+    description:
+      "Conecte-se com profissionais qualificados na sua região. Encontre prestadores de serviços de confiança para reformas, reparos, manutenção e muito mais.",
+    images: ["/antevisao.png"],
+    creator: "@siteprolocal",
+    site: "@siteprolocal",
+  },
+
   alternates: {
     canonical: "/",
   },

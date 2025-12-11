@@ -35,7 +35,7 @@ const highlightColorMap = {
     border: "border-amber-300 dark:border-amber-700",
     badge: "bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300",
   },
-  pro: {
+  plus: {
     bg: "bg-lime-50 dark:bg-lime-950/30",
     border: "border-lime-300 dark:border-lime-700",
     badge: "bg-lime-100 dark:bg-lime-900 text-lime-700 dark:text-lime-300",

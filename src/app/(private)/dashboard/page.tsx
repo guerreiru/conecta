@@ -29,7 +29,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 const PLAN_LIMITS = {
-  free: 1,
+  free: 2,
   plus: 5,
   premium: 15,
   enterprise: 50,
@@ -55,7 +55,12 @@ export default function Home() {
   const activateServiceMutation = useActivateService();
   const deactivateServiceMutation = useDeactivateService();
 
-  const currentPlan = subscription?.plan || "free";
+  // Se não tiver subscription ou estiver vencida/cancelada, usa plano free com 2 serviços
+  const isSubscriptionActive =
+    subscription?.status === "active" || subscription?.status === "trialing";
+  const currentPlan = isSubscriptionActive
+    ? subscription?.plan || "free"
+    : "free";
   const serviceLimit =
     PLAN_LIMITS[currentPlan as keyof typeof PLAN_LIMITS] || 2;
   const hasReachedServiceLimit = myServices.length >= serviceLimit;

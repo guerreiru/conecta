@@ -8,6 +8,7 @@ export type Service = {
   price: string;
   typeOfChange: string;
   category: Category;
+  isActive?: boolean;
   user: User;
   isHighlighted?: boolean;
   highlightLevel?: "pro" | "premium" | "enterprise";

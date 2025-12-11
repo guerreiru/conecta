@@ -24,7 +24,6 @@ import {
   SuitcaseIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -198,7 +197,7 @@ export default function Home() {
               <PlusIcon size={18} aria-hidden="true" />
               <span>Adicionar Serviço</span>
             </button>
-            {!canAddService && (
+            {/* {!canAddService && (
               <Link
                 href="/plans"
                 className="text-xs text-black/70 dark:text-black-100 md:text-center max-w-xs"
@@ -210,7 +209,7 @@ export default function Home() {
                     : "Faça upgrade!"}
                 </span>
               </Link>
-            )}
+            )} */}
           </div>
         )}
       </header>

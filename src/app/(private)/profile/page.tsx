@@ -1,71 +1,61 @@
 "use client";
 
-import { useState } from "react";
-import { toast } from "react-toastify";
 import { ChangeEmailForm } from "@/components/forms/changeEmailForm";
 import { ChangePasswordForm } from "@/components/forms/changePasswordForm";
 import { ClientForm } from "@/components/forms/clientForm";
 import { ProviderForm } from "@/components/forms/providerForm";
-import { ServiceForm } from "@/components/forms/serviceForm";
 import { Modal } from "@/components/modal";
 import { ModalExclusion } from "@/components/modalExclusion";
 import { ModalLogout } from "@/components/modalLogout";
 import { ProfileInfoCard } from "@/components/profile/profileInfoCard";
-import { ProfileServicesCard } from "@/components/profile/profileServicesCard";
 import { ProfileModal } from "@/components/profile/profileModal";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loading";
-import { FREE_PLAN_SERVICE_LIMIT } from "@/constants";
 import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { useAuth } from "@/hooks/useAuth";
-import {
-  useProviderServices,
-  useDeleteService,
-} from "@/hooks/useServiceQueries";
-import { Service } from "@/types/Service";
+import { useDeleteService } from "@/hooks/useServiceQueries";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Profile() {
-  const { logout: authLogout, user } = useAuth();
+  const { logout: authLogout, user, loading } = useAuth();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(
     null
   );
-  const [modalNewServiceIsOpen, setModalNewServiceIsOpen] = useState(false);
-  const [serviceToEdit, setServiceToEdit] = useState<Service | null>(null);
+  // const [modalNewServiceIsOpen, setModalNewServiceIsOpen] = useState(false);
+  // const [serviceToEdit] = useState<Service | null>(null);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
     useState(false);
 
-  const { data: myServices = [], isLoading } = useProviderServices(
-    user?.role === "provider" ? user?.id : undefined
-  );
   const deleteServiceMutation = useDeleteService();
 
-  const hasReachedServiceLimit = myServices.length >= FREE_PLAN_SERVICE_LIMIT;
+  // const hasReachedServiceLimit = myServices.length >= FREE_PLAN_SERVICE_LIMIT;
 
-  const handleOpenAddModalNewService = () => {
-    if (hasReachedServiceLimit) {
-      toast.warning(
-        `Você atingiu o limite de ${FREE_PLAN_SERVICE_LIMIT} serviços gratuitos. Assine um plano para adicionar mais!`,
-        { autoClose: 3000 }
-      );
-      return;
-    }
-    setServiceToEdit(null);
-    setModalNewServiceIsOpen(true);
-  };
+  // const handleOpenAddModalNewService = () => {
+  //   if (hasReachedServiceLimit) {
+  //     toast.warning(
+  //       `Você atingiu o limite de ${FREE_PLAN_SERVICE_LIMIT} serviços gratuitos. Assine um plano para adicionar mais!`,
+  //       { autoClose: 3000 }
+  //     );
+  //     return;
+  //   }
+  //   setServiceToEdit(null);
+  //   setModalNewServiceIsOpen(true);
+  // };
 
-  const handleOpenEditModal = (service: Service) => {
-    setServiceToEdit(service);
-    setModalNewServiceIsOpen(true);
-  };
+  // const handleOpenEditModal = (service: Service) => {
+  //   setServiceToEdit(service);
+  //   setModalNewServiceIsOpen(true);
+  // };
 
-  const handleOpenDeleteModal = (serviceId: string) => {
-    setServiceToDeleteId(serviceId);
-    setDeleteModalIsOpen(true);
-  };
+  // const handleOpenDeleteModal = (serviceId: string) => {
+  //   setServiceToDeleteId(serviceId);
+  //   setDeleteModalIsOpen(true);
+  // };
 
   const handleCloseDeleteModal = () => {
     setServiceToDeleteId(null);
@@ -94,7 +84,7 @@ export default function Profile() {
         <h1 className="text-white text-3xl text-center">Meu perfil</h1>
       </header>
 
-      {!isLoading && !user && <Loading />}
+      {!user && loading && <Loading />}
 
       {user && (
         <div className="px-4">
@@ -105,7 +95,7 @@ export default function Profile() {
             onChangePassword={() => setIsChangePasswordModalOpen(true)}
           />
 
-          {user.role === "provider" && (
+          {/* {user.role === "provider" && (
             <ProfileServicesCard
               user={user}
               services={myServices}
@@ -114,7 +104,7 @@ export default function Profile() {
               onDelete={handleOpenDeleteModal}
               onAddService={handleOpenAddModalNewService}
             />
-          )}
+          )} */}
 
           <div className="w-full max-w-2xl mx-auto grid place-items-center md:hidden mt-1">
             <Button
@@ -162,7 +152,7 @@ export default function Profile() {
         </div>
       </Modal>
 
-      <Modal
+      {/* <Modal
         open={modalNewServiceIsOpen}
         onClose={() => setModalNewServiceIsOpen(false)}
       >
@@ -178,7 +168,7 @@ export default function Profile() {
             />
           </div>
         </div>
-      </Modal>
+      </Modal> */}
 
       <ModalExclusion
         open={deleteModalIsOpen}

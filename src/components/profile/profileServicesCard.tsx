@@ -63,14 +63,14 @@ export function ProfileServicesCard({
         >
           Cadastrar serviço
         </Button>
-        {!canAddService && (
+        {/* {!canAddService && (
           <p className="text-xs text-center mt-2 text-gray-600 dark:text-gray-400">
             Limite de {FREE_PLAN_SERVICE_LIMIT} serviços atingido.{" "}
             <a href="/plans" className="text-lime-500 underline font-medium">
               Assine um plano!
             </a>
           </p>
-        )}
+        )} */}
       </div>
     </>
   );

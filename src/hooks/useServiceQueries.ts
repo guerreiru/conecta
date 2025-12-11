@@ -26,7 +26,10 @@ export function useProviderServices(userId?: string) {
       if (!userId) return [];
 
       const response = await api.get(`/services/provider/${userId}`);
-      return response.data as Service[];
+      const services = response.data as Service[];
+
+      // Ordenar por título alfabeticamente para manter ordem consistente
+      return services.sort((a, b) => a.title.localeCompare(b.title));
     },
     enabled: !!userId,
   });
@@ -156,6 +159,50 @@ export function useUpdateService() {
         return;
       }
       toast.error(ERROR_MESSAGES.SERVICE_UPDATE_ERROR);
+    },
+  });
+}
+
+export function useActivateService() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (serviceId: string) =>
+      api.patch(`/services/${serviceId}/activate`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: serviceKeys.all });
+      toast.success("Serviço ativado com sucesso!");
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        const message =
+          error.response?.data?.message || "Erro ao ativar serviço";
+        toast.error(message);
+        return;
+      }
+      toast.error("Erro ao ativar serviço");
+    },
+  });
+}
+
+export function useDeactivateService() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (serviceId: string) =>
+      api.patch(`/services/${serviceId}/deactivate`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: serviceKeys.all });
+      toast.success("Serviço desativado com sucesso!");
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        const message =
+          error.response?.data?.message || "Erro ao desativar serviço";
+        toast.error(message);
+        return;
+      }
+      toast.error("Erro ao desativar serviço");
     },
   });
 }

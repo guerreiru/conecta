@@ -14,7 +14,7 @@ export default function UnauthorizedPage() {
           </p>
         </div>
         <Button>
-          <Link href="/home">Início</Link>
+          <Link href="/">Início</Link>
         </Button>
       </div>
     </main>

@@ -57,7 +57,7 @@ export default function Home() {
 
   const currentPlan = subscription?.plan || "free";
   const serviceLimit =
-    PLAN_LIMITS[currentPlan as keyof typeof PLAN_LIMITS] || 1;
+    PLAN_LIMITS[currentPlan as keyof typeof PLAN_LIMITS] || 2;
   const hasReachedServiceLimit = myServices.length >= serviceLimit;
   const canAddService = !hasReachedServiceLimit;
   const activeServicesCount = myServices.filter(

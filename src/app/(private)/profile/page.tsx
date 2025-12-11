@@ -116,7 +116,7 @@ export default function Profile() {
             />
           )}
 
-          <div className="w-full max-w-2xl mx-auto hidden place-items-center md:grid mt-1">
+          <div className="w-full max-w-2xl mx-auto grid place-items-center md:hidden mt-1">
             <Button
               className="w-full bg-black-200 text-white dark:bg-white dark:text-black-200"
               onClick={() => setIsLogoutModalOpen(true)}

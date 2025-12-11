@@ -1,6 +1,4 @@
 import Logo from "@/assets/imgs/logo.svg";
-import ProLocal from "@/assets/imgs/prolocal.svg";
-import WhiteLogo from "@/assets/imgs/white-logo.svg";
 import WhiteProLocal from "@/assets/imgs/white-prolocal.svg";
 import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
@@ -13,7 +11,7 @@ export default function About() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2">
             <Image src={Logo} alt="Logo ProLocal" unoptimized />
-            <Image src={ProLocal} alt="ProLocal" unoptimized />
+            <Image src={WhiteProLocal} alt="ProLocal" unoptimized />
           </div>
           <p className="text-xl md:text-2xl text-black-200 font-medium">
             Conectando Profissionais à Comunidade

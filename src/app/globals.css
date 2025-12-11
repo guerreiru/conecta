@@ -20,6 +20,7 @@
   --color-blue-500: oklch(0.6181 0.164 262.33);
   --color-green-600: oklch(0.632 0.185972 147.3695);
   --color-stone-500: oklch(0.5386 0.0107 113.35);
+  --color-sky-900: oklch(0.365 0.0712 228.69);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-anton: "Anton", sans-serif;

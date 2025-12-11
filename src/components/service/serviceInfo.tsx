@@ -34,7 +34,7 @@ export function ServiceInfo({ service }: ServiceInfoProps) {
           </div>
         )}
 
-        {service.user.address && (
+        {service.user.address && service.user.address.cityName && (
           <div className="flex items-start gap-3">
             <MapPinIcon
               size={20}

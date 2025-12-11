@@ -66,7 +66,7 @@ export function Header() {
   }
 
   return (
-    <header className="bg-white dark:bg-black-200 grid grid-cols-2 md:flex lg:grid-cols-3 items-center justify-between py-3 px-4 md:px-6 border-b border-gray-200 dark:border-zinc-700">
+    <header className="bg-white dark:bg-black-200 grid grid-cols-2 md:flex lg:grid lg:grid-cols-3 items-center justify-between py-3 px-4 md:px-6 border-b border-gray-200 dark:border-zinc-700">
       <div className="flex items-center">
         <Link href="/" aria-label="Ir para página inicial">
           <div className="flex items-center gap-2">

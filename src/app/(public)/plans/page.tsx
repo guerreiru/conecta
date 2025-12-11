@@ -1,8 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   CheckIcon,
   CrownSimpleIcon,
-  LightningIcon,
   SparkleIcon,
 } from "@phosphor-icons/react/dist/ssr";
 
@@ -40,19 +41,19 @@ export default function PlansPage() {
                   <SparkleIcon size={24} className="text-stone-500" />
                 </span>
                 <h3 id="basic-plan-title" className="dark:text-black-200">
-                  Básico
+                  Grátis
                 </h3>
               </div>
             </header>
 
             <p className="font-bold text-4xl mt-4 dark:text-black-200">
-              R$ 11,90/mês
+              R$ 0,00/mês
             </p>
             <p className="text-stone-500 mt-2 mb-4">
-              Perfeito para começar a encontrar profissionais
+              Ideal para quem quer testar a plataforma
             </p>
             <Button variant="black" className="w-full ">
-              Assinar Básico
+              Começar
             </Button>
 
             <ul className="mt-4 text-stone-600 grid gap-3">
@@ -60,7 +61,7 @@ export default function PlansPage() {
                 <span className="rounded-full p-1 bg-lime-400">
                   <CheckIcon weight="bold" size={20} />
                 </span>{" "}
-                Busca de profissionais na sua região
+                Cadastrar 2 serviços
               </li>
 
               <li className="flex items-center gap-3">
@@ -69,67 +70,44 @@ export default function PlansPage() {
                 </span>{" "}
                 Visualização de avaliações
               </li>
-              <li className="flex items-center gap-3">
-                <span className="rounded-full p-1 bg-lime-400">
-                  <CheckIcon weight="bold" size={20} />
-                </span>{" "}
-                Suporte prioritário
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="rounded-full p-1 bg-gray-200">
-                  <CheckIcon weight="bold" size={20} />
-                </span>{" "}
-                Destaque nos resultados
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="rounded-full p-1 bg-gray-200">
-                  <CheckIcon weight="bold" size={20} />
-                </span>{" "}
-                Análise de propostas
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="rounded-full p-1 bg-gray-200">
-                  <CheckIcon weight="bold" size={20} />
-                </span>{" "}
-                Atendimento prioritário
-              </li>
             </ul>
           </article>
 
           <article
-            className="border-2 border-lime-400 p-8 bg-white rounded-3xl relative"
-            aria-labelledby="basic-plan-title"
+            className="border-2 border-gray-200 p-8 bg-white dark:bg-black-200 rounded-3xl relative overflow-hidden"
+            aria-labelledby="enterprise-plan-title"
           >
-            <p className="absolute -top-4 bg-lime-400 py-1 px-6 rounded-lg font-bold dark:text-black-200">
-              Mais popular
-            </p>
             <header>
               <div className="flex items-center gap-3">
-                <span className="p-3 bg-lime-400 rounded-2xl dark:text-black-200">
-                  <LightningIcon size={24} />
+                <span className="p-3 bg-gray-100 dark:bg-black rounded-2xl">
+                  <CrownSimpleIcon
+                    size={24}
+                    className="text-stone-500 dark:text-gray-400"
+                  />
                 </span>
-                <h3 id="basic-plan-title" className="dark:text-black-200">
-                  Premium
+                <h3 id="enterprise-plan-title" className="dark:text-white">
+                  Plus
                 </h3>
               </div>
             </header>
 
-            <p className="font-bold text-4xl mt-4 dark:text-black-200">
+            <p className="font-bold text-4xl mt-4 dark:text-white">
               R$ 14,90/mês
             </p>
-            <p className="text-stone-500 mt-2 mb-4">
+            <p className="text-stone-500 dark:text-gray-400 mt-2 mb-4">
               Ideal para quem precisa de mais recursos
             </p>
-            <Button className="w-full">Assinar Premium</Button>
+            <Button variant="black" className="w-full" disabled>
+              Assinar Plus
+            </Button>
 
             <ul className="mt-4 text-stone-600 grid gap-3">
               <li className="flex items-center gap-3">
                 <span className="rounded-full p-1 bg-lime-400">
                   <CheckIcon weight="bold" size={20} />
                 </span>{" "}
-                Busca de profissionais na sua região
+                Cadastrar até 5 serviços
               </li>
-
               <li className="flex items-center gap-3">
                 <span className="rounded-full p-1 bg-lime-400">
                   <CheckIcon weight="bold" size={20} />
@@ -140,145 +118,128 @@ export default function PlansPage() {
                 <span className="rounded-full p-1 bg-lime-400">
                   <CheckIcon weight="bold" size={20} />
                 </span>{" "}
-                Suporte prioritário 24/7
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="rounded-full p-1 bg-lime-400">
-                  <CheckIcon weight="bold" size={20} />
-                </span>{" "}
                 Destaque nos resultados
               </li>
-              <li className="flex items-center gap-3">
-                <span className="rounded-full p-1 bg-lime-400">
-                  <CheckIcon weight="bold" size={20} />
-                </span>{" "}
-                Análise de propostas
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="rounded-full p-1 bg-gray-200">
-                  <CheckIcon weight="bold" size={20} />
-                </span>{" "}
-                Atendimento prioritário
-              </li>
             </ul>
+
+            <div className="absolute inset-0 flex items-center justify-center backdrop-blur-md bg-white/80 dark:bg-black-200/90">
+              <div className="text-center space-y-3 px-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-lime-400 to-lime-500 dark:from-lime-500 dark:to-lime-600 mb-2">
+                  <CrownSimpleIcon
+                    size={32}
+                    weight="fill"
+                    className="text-black-200"
+                  />
+                </div>
+                <p className="text-3xl font-bold bg-gradient-to-r from-lime-500 to-lime-600 dark:from-lime-400 dark:to-lime-500 bg-clip-text text-transparent">
+                  Em Breve
+                </p>
+                <p className="text-sm text-stone-600 dark:text-gray-400 max-w-xs">
+                  Estamos preparando algo especial
+                </p>
+              </div>
+            </div>
           </article>
 
           <article
-            className="border-2 border-gray-200 p-8 bg-white rounded-3xl"
-            aria-labelledby="basic-plan-title"
+            className="border-2 border-gray-200 p-8 bg-white dark:bg-black-200 rounded-3xl relative overflow-hidden"
+            aria-labelledby="enterprise-plan-title"
           >
             <header>
               <div className="flex items-center gap-3">
-                <span className="p-3 bg-gray-100 rounded-2xl">
-                  <CrownSimpleIcon size={24} className="text-stone-500" />
+                <span className="p-3 bg-gray-100 dark:bg-black rounded-2xl">
+                  <CrownSimpleIcon
+                    size={24}
+                    className="text-stone-500 dark:text-gray-400"
+                  />
                 </span>
-                <h3 id="basic-plan-title" className="dark:text-black-200">
+                <h3 id="enterprise-plan-title" className="dark:text-white">
                   Enterprise
                 </h3>
               </div>
             </header>
 
-            <p className="font-bold text-4xl mt-4 dark:text-black-200">
+            <p className="font-bold text-4xl mt-4 dark:text-white">
               R$ 19,90/mês
             </p>
-            <p className="text-stone-500 mt-2 mb-4">
+            <p className="text-stone-500 dark:text-gray-400 mt-2 mb-4">
               Para empresas e uso profissional intensivo
             </p>
-            <Button variant="black" className="w-full">
+            <Button variant="black" className="w-full" disabled>
               Assinar Enterprise
             </Button>
 
-            <ul className="mt-4 text-stone-600 grid gap-3">
+            <ul className="mt-4 text-stone-600 dark:text-gray-400 grid gap-3">
               <li className="flex items-center gap-3">
                 <span className="rounded-full p-1 bg-lime-400">
-                  <CheckIcon weight="bold" size={20} />
+                  <CheckIcon
+                    weight="bold"
+                    size={20}
+                    className="dark:text-black-200"
+                  />
                 </span>{" "}
-                Busca de profissionais na sua região
+                Cadastrar até 15 serviços
               </li>
-
               <li className="flex items-center gap-3">
                 <span className="rounded-full p-1 bg-lime-400">
-                  <CheckIcon weight="bold" size={20} />
+                  <CheckIcon
+                    weight="bold"
+                    size={20}
+                    className="dark:text-black-200"
+                  />
                 </span>{" "}
                 Visualização de avaliações
               </li>
               <li className="flex items-center gap-3">
                 <span className="rounded-full p-1 bg-lime-400">
-                  <CheckIcon weight="bold" size={20} />
+                  <CheckIcon
+                    weight="bold"
+                    size={20}
+                    className="dark:text-black-200"
+                  />
                 </span>{" "}
-                Suporte por email
+                Maior destaque nos resultados
               </li>
               <li className="flex items-center gap-3">
                 <span className="rounded-full p-1 bg-lime-400">
-                  <CheckIcon weight="bold" size={20} />
+                  <CheckIcon
+                    weight="bold"
+                    size={20}
+                    className="dark:text-black-200"
+                  />
                 </span>{" "}
-                Destaque nos resultados
+                Suporte prioritário
               </li>
               <li className="flex items-center gap-3">
                 <span className="rounded-full p-1 bg-lime-400">
-                  <CheckIcon weight="bold" size={20} />
+                  <CheckIcon
+                    weight="bold"
+                    size={20}
+                    className="dark:text-black-200"
+                  />
                 </span>{" "}
-                Análise de propostas
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="rounded-full p-1 bg-lime-400">
-                  <CheckIcon weight="bold" size={20} />
-                </span>{" "}
-                Atendimento prioritário
+                Acesso a recursos exclusivos
               </li>
             </ul>
+
+            <div className="absolute inset-0 flex items-center justify-center backdrop-blur-md bg-white/80 dark:bg-black-200/90">
+              <div className="text-center space-y-3 px-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-lime-400 to-lime-500 dark:from-lime-500 dark:to-lime-600 mb-2">
+                  <CrownSimpleIcon
+                    size={32}
+                    weight="fill"
+                    className="text-black-200"
+                  />
+                </div>
+                <p className="text-3xl font-bold bg-gradient-to-r from-lime-500 to-lime-600 dark:from-lime-400 dark:to-lime-500 bg-clip-text text-transparent">
+                  Em Breve
+                </p>
+                <p className="text-sm text-stone-600 dark:text-gray-400 max-w-xs">
+                  Estamos preparando algo especial
+                </p>
+              </div>
+            </div>
           </article>
-        </section>
-
-        <section
-          aria-labelledby="faq-heading"
-          className="p-8 rounded-3xl bg-white border border-gray-200 max-w-5xl mx-auto"
-        >
-          <h2 id="faq-heading" className="mb-6 text-center dark:text-black-200">
-            Perguntas Frequentes
-          </h2>
-
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <dt className="font-medium text-gray-800 mb-2">
-                Posso cancelar a qualquer momento?
-              </dt>
-              <dd className="text-stone-600">
-                Sim, você pode cancelar seu plano a qualquer momento sem multas
-                ou taxas adicionais.
-              </dd>
-            </div>
-
-            <div>
-              <dt className="font-medium text-gray-800 mb-2">
-                Como funciona o período de teste?
-              </dt>
-              <dd className="text-stone-600">
-                Todos os planos pagos têm 7 dias de garantia. Se não ficar
-                satisfeito, devolvemos seu dinheiro.
-              </dd>
-            </div>
-
-            <div>
-              <dt className="font-medium text-gray-800 mb-2">
-                Posso mudar de plano depois?
-              </dt>
-              <dd className="text-stone-600">
-                Claro! Você pode fazer upgrade ou downgrade do seu plano a
-                qualquer momento.
-              </dd>
-            </div>
-
-            <div>
-              <dt className="font-medium text-gray-800 mb-2">
-                Quais são as formas de pagamento?
-              </dt>
-              <dd className="text-stone-600">
-                Aceitamos cartão de crédito, PIX e boleto bancário para sua
-                comodidade.
-              </dd>
-            </div>
-          </dl>
         </section>
       </section>
     </main>

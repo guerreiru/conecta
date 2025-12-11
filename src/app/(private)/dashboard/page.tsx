@@ -230,8 +230,21 @@ export default function Home() {
                   <article
                     className={`${
                       !service.isActive ? "opacity-60" : ""
-                    } p-6 bg-white dark:bg-black-200 rounded-2xl shadow-sm h-full border border-gray-200 dark:border-gray-700`}
+                    } px-4 py-6 md:px-6 bg-white dark:bg-black-200 rounded-2xl shadow-sm h-full border border-gray-200 dark:border-gray-700 relative overflow-hidden`}
                   >
+                    <div className="absolute -top-0.5 right-0">
+                      {!service.isActive && (
+                        <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-tr-xl">
+                          Inativo
+                        </span>
+                      )}
+                      {service.isActive && (
+                        <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-tr-xl">
+                          Ativo
+                        </span>
+                      )}
+                    </div>
+
                     <header className="flex items-center justify-between flex-wrap gap-2">
                       <div>
                         <h3 className="font-bold text-lg dark:text-white">

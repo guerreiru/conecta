@@ -18,6 +18,7 @@ import {
   MagnifyingGlassIcon,
   MapPinIcon,
   SuitcaseIcon,
+  ArrowUpIcon,
 } from "@phosphor-icons/react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -26,13 +27,21 @@ export default function Start() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const [selectedState, setSelectedState] = useLocalStorage(
     "selectedState",
     ""
   );
   const [selectedCity, setSelectedCity] = useLocalStorage("selectedCity", "");
-  const { services, fetchServices } = useServices();
+  const {
+    services,
+    fetchServices,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    totalServices,
+  } = useServices();
   const { cities } = useCitiesByState(selectedState);
   const [cityName, setCityName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,6 +81,7 @@ export default function Start() {
 
   useEffect(() => {
     handleSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, selectedCity]);
 
   useEffect(() => {
@@ -84,8 +94,21 @@ export default function Start() {
     }
   }, [cities, selectedCity]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   function handleChangeLocation() {
     setIsModalOpen(true);
+  }
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   const handleFetchWithOverrides = useCallback(
@@ -286,14 +309,34 @@ export default function Start() {
         </div>
 
         {services.length > 0 ? (
-          <div className="grid gap-2.5 w-full max-w-2xl mx-auto">
-            {services.map((service) => (
-              <ServiceCard
-                key={service.id}
-                service={service}
-                owner={service.user}
-              />
-            ))}
+          <div className="grid gap-4 w-full max-w-2xl mx-auto">
+            <div className="grid gap-2.5">
+              {services.map((service) => (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  owner={service.user}
+                />
+              ))}
+            </div>
+
+            {/* Informações de paginação e botão "Ver mais" */}
+            <div className="text-center space-y-3">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Mostrando {services.length} de {totalServices} resultados
+              </p>
+
+              {hasNextPage && (
+                <Button
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                  variant="accent"
+                  className="w-full max-w-xs"
+                >
+                  {isFetchingNextPage ? "Carregando..." : "Ver mais"}
+                </Button>
+              )}
+            </div>
           </div>
         ) : (
           <div className="w-full max-w-2xl mx-auto text-center">
@@ -333,6 +376,17 @@ export default function Start() {
         setSelectedCity={setSelectedCity}
         setSelectedState={setSelectedState}
       />
+
+      {/* Botão Voltar ao Topo */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-20 right-4 bg-lime-400 hover:bg-lime-500 text-black dark:text-black-200 p-4 rounded-full shadow-lg transition-all hover:scale-110 z-50"
+          aria-label="Voltar ao topo"
+        >
+          <ArrowUpIcon size={24} weight="bold" />
+        </button>
+      )}
     </>
   );
 }

@@ -11,8 +11,14 @@ type ModalExclusion = {
 export function ModalLogout({ open, onClose, onConfirm }: ModalExclusion) {
   return (
     <Modal open={open} onClose={onClose}>
-      <div className="px-4">
-        <div className="max-w-fit mx-auto bg-gray-200 dark:bg-black rounded-3xl">
+      <div
+        className="px-4 h-[calc(100vh-32px)] grid place-items-center"
+        onClick={onClose}
+      >
+        <div
+          className="max-w-fit mx-auto bg-gray-200 dark:bg-black rounded-3xl"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="p-6 text-center">
             <InfoIcon
               size={48}

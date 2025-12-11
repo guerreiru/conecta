@@ -11,6 +11,6 @@ export type Service = {
   isActive?: boolean;
   user: User;
   isHighlighted?: boolean;
-  highlightLevel?: "pro" | "premium" | "enterprise";
+  highlightLevel?: "plus" | "premium" | "enterprise";
   serviceType: "all" | "in_person" | "online";
 };

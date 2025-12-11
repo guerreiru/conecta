@@ -62,7 +62,6 @@ export function ProviderForm({
     try {
       if (mode === "create") {
         await api.post("/users", providerData);
-        toast.success("Profissional cadastrado com sucesso!");
         const loginResult = await login(data.email, data.password);
         if (loginResult.success) {
           reset();

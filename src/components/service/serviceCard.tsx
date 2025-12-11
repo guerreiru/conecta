@@ -21,6 +21,7 @@ type ServiceCardProps = {
   owner: User;
   onEditAction?: (service: Service) => void;
   onDeleteAction?: (serviceId: string) => void;
+  onActiveAction?: (service: Service) => void;
 };
 
 const highlightColorMap = {
@@ -46,6 +47,7 @@ export function ServiceCard({
   owner,
   onEditAction: onEdit,
   onDeleteAction: onDelete,
+  onActiveAction: onActive,
 }: ServiceCardProps) {
   const {
     title,
@@ -99,6 +101,15 @@ export function ServiceCard({
           </h3>
         </Link>
         <div className="flex items-center gap-2">
+          {onActive && (
+            <button
+              className="bg-gray-100 dark:bg-gray-800 rounded-lg p-2 text-black dark:text-white"
+              aria-label={`Editar serviço ${service.title}`}
+              onClick={() => onActive(service)}
+            >
+              <PencilIcon aria-hidden="true" role="img" focusable="false" />
+            </button>
+          )}
           {onEdit && (
             <button
               className="bg-gray-100 dark:bg-gray-800 rounded-lg p-2 text-black dark:text-white"

@@ -72,12 +72,22 @@ export function ServiceCard({
   return (
     <article
       className={`p-4 rounded-xl grid gap-3 border shadow-md transition-all ${baseBg} ${baseBorder}`}
+      aria-labelledby={`service-title-${id}`}
+      aria-describedby={description ? `service-desc-${id}` : undefined}
     >
       {isHighlighted && highlightLevel && (
         <div
           className={`flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg w-fit ${highlightColors?.badge}`}
+          role="status"
+          aria-label={`Serviço em destaque: ${
+            highlightLevel === "enterprise"
+              ? "Premium"
+              : highlightLevel === "premium"
+              ? "Plus"
+              : "Básico"
+          }`}
         >
-          <StarIcon size={14} weight="fill" />
+          <StarIcon size={14} weight="fill" aria-hidden="true" />
           <span className="capitalize">
             {highlightLevel === "enterprise"
               ? "Destaque Premium"
@@ -92,87 +102,124 @@ export function ServiceCard({
         <Link
           href={`/service/${id}`}
           className="flex-1 hover:opacity-75 transition"
+          aria-label={`Ver detalhes do serviço ${title} oferecido por ${owner.name}`}
         >
           <span className="text-xs text-gray-500 dark:text-gray-400">
             {owner.name}
           </span>
-          <h3 className="font-semibold text-black dark:text-white leading-snug">
+          <h3
+            id={`service-title-${id}`}
+            className="font-bold text-black dark:text-white leading-snug text-2xl"
+          >
             {title}
           </h3>
         </Link>
-        <div className="flex items-center gap-2">
-          {onActive && (
-            <button
-              className="bg-gray-100 dark:bg-gray-800 rounded-lg p-2 text-black dark:text-white"
-              aria-label={`Editar serviço ${service.title}`}
-              onClick={() => onActive(service)}
-            >
-              <PencilIcon aria-hidden="true" role="img" focusable="false" />
-            </button>
-          )}
-          {onEdit && (
-            <button
-              className="bg-gray-100 dark:bg-gray-800 rounded-lg p-2 text-black dark:text-white"
-              aria-label={`Editar serviço ${service.title}`}
-              onClick={() => onEdit(service)}
-            >
-              <PencilIcon aria-hidden="true" role="img" focusable="false" />
-            </button>
-          )}
+        {(onActive || onEdit || onDelete) && (
+          <div
+            className="flex items-center gap-2"
+            role="group"
+            aria-label="Ações do serviço"
+          >
+            {onActive && (
+              <button
+                className="bg-gray-100 dark:bg-gray-800 rounded-lg p-2 text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                aria-label={`Ativar ou desativar serviço ${title}`}
+                onClick={() => onActive(service)}
+                type="button"
+              >
+                <PencilIcon size={18} aria-hidden="true" />
+              </button>
+            )}
+            {onEdit && (
+              <button
+                className="bg-gray-100 dark:bg-gray-800 rounded-lg p-2 text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                aria-label={`Editar serviço ${title}`}
+                onClick={() => onEdit(service)}
+                type="button"
+              >
+                <PencilIcon size={18} aria-hidden="true" />
+              </button>
+            )}
 
-          {onDelete && (
-            <button
-              className="bg-red-100 dark:bg-red-900 rounded-lg p-2 text-red-600 dark:text-red-300"
-              aria-label={`Excluir serviço ${service.title}`}
-              onClick={() => onDelete(service.id)}
-            >
-              <TrashIcon aria-hidden="true" role="img" focusable="false" />
-            </button>
-          )}
-        </div>
+            {onDelete && (
+              <button
+                className="bg-red-100 dark:bg-red-900 rounded-lg p-2 text-red-600 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 transition"
+                aria-label={`Excluir serviço ${title}`}
+                onClick={() => onDelete(service.id)}
+                type="button"
+              >
+                <TrashIcon size={18} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+        )}
       </header>
 
       {description && (
-        <p className="text-sm text-gray-600 dark:text-gray-300">
+        <p
+          id={`service-desc-${id}`}
+          className="text-sm text-gray-600 dark:text-gray-300 font-semibold"
+        >
           {description}
         </p>
       )}
 
       <footer className="flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-2 flex-wrap">
-          <p className="font-bold text-black dark:text-white">
+        <section className="grid gap-2" aria-label="Informações do serviço">
+          <p
+            className="font-bold text-black dark:text-white text-lg"
+            aria-label={`Preço: ${formatToBRL(price)}${
+              typeOfChange ? ` por ${typeOfChange}` : ""
+            }`}
+          >
             {formatToBRL(price)}
             {typeOfChange ? `/${typeOfChange}` : ""}
           </p>
           {service.serviceType && (
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+            <span
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-1.5"
+              role="status"
+              aria-label={`Tipo de atendimento: ${
+                service.serviceType === "in_person"
+                  ? "Presencial"
+                  : service.serviceType === "online"
+                  ? "Online"
+                  : "Presencial e Online"
+              }`}
+            >
               {service.serviceType === "in_person" && (
                 <>
-                  <BuildingIcon size={16} />
+                  <BuildingIcon size={16} aria-hidden="true" />
                   <span>Presencial</span>
                 </>
               )}
               {service.serviceType === "online" && (
                 <>
-                  <LaptopIcon size={16} />
+                  <LaptopIcon size={16} aria-hidden="true" />
                   <span>Online</span>
                 </>
               )}
               {service.serviceType === "all" && (
                 <>
-                  <ArrowsCounterClockwiseIcon size={16} />
+                  <ArrowsCounterClockwiseIcon size={16} aria-hidden="true" />
                   <span>Presencial + Online</span>
                 </>
               )}
             </span>
           )}
-        </div>
+          {owner?.address?.cityName && (
+            <address className="text-xs text-gray-500 dark:text-gray-400 not-italic">
+              {owner.address.cityName}, {owner.address.stateName}
+            </address>
+          )}
+        </section>
 
-        <div className="flex items-center gap-2">
+        <nav className="flex items-center gap-2" aria-label="Ações disponíveis">
           {id && showSeeProfile && pathname !== `/provider/${owner.id}` && (
             <Link
               href={`/provider/${owner.id}`}
-              className="px-3 py-2 rounded-lg bg-gray-100 text-black hover:brightness-95"
+              className="px-3 py-2 rounded-lg bg-sky-900 dark:bg-white text-white dark:text-black hover:brightness-95 font-semibold transition focus:outline-none focus:ring-2 focus:ring-sky-700"
+              aria-label={`Ver perfil completo de ${owner.name}`}
             >
               Ver perfil
             </Link>
@@ -187,12 +234,13 @@ export function ServiceCard({
               })}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-2 rounded-lg bg-lime-400 text-black dark:text-black hover:brightness-95"
+              className="px-3 py-2 rounded-lg bg-lime-400 text-black dark:text-black hover:brightness-95 font-semibold transition focus:outline-none focus:ring-2 focus:ring-lime-500"
+              aria-label={`Solicitar serviço ${title} via WhatsApp com ${owner.name}`}
             >
               Solicitar
             </Link>
           )}
-        </div>
+        </nav>
       </footer>
     </article>
   );

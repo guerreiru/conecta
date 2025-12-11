@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ModalExclusion } from "@/components/modalExclusion";
 import { useAuth } from "@/hooks/useAuth";
 import {
   useCreateReview,
@@ -44,6 +45,7 @@ export function ReviewForm({
   const deleteReview = useDeleteReview(serviceId);
   const [hoverRating, setHoverRating] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
   const {
     register,
@@ -100,12 +102,22 @@ export function ReviewForm({
   }
 
   async function handleDelete() {
-    if (
-      userReview &&
-      window.confirm("Tem certeza que deseja remover sua avaliação?")
-    ) {
-      deleteReview.mutate(userReview.id);
-    }
+    if (!userReview) return;
+
+    deleteReview.mutate(userReview.id, {
+      onSuccess: () => {
+        setDeleteModalIsOpen(false);
+        reset({ rating: 0, comment: "" });
+      },
+    });
+  }
+
+  function handleOpenDeleteModal() {
+    setDeleteModalIsOpen(true);
+  }
+
+  function handleCloseDeleteModal() {
+    setDeleteModalIsOpen(false);
   }
 
   return (
@@ -144,7 +156,7 @@ export function ReviewForm({
                 <PencilIcon size={18} />
               </button>
               <button
-                onClick={handleDelete}
+                onClick={handleOpenDeleteModal}
                 className="p-2 hover:bg-red-100 dark:hover:bg-red-900 rounded transition text-red-600 dark:text-red-400"
                 title="Deletar"
               >
@@ -238,6 +250,13 @@ export function ReviewForm({
           </div>
         </form>
       )}
+
+      <ModalExclusion
+        open={deleteModalIsOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleDelete}
+        message="Você tem certeza que deseja excluir sua avaliação?"
+      />
     </div>
   );
 }

@@ -236,7 +236,7 @@ export default function Home() {
                       !service.isActive ? "opacity-60" : ""
                     } p-6 bg-white dark:bg-black-200 rounded-2xl shadow-sm h-full border border-gray-200 dark:border-gray-700`}
                   >
-                    <header className="flex items-center justify-between">
+                    <header className="flex items-center justify-between flex-wrap gap-2">
                       <div>
                         <h3 className="font-bold text-lg dark:text-white">
                           {service.title}

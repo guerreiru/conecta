@@ -6,9 +6,18 @@ import { UserIcon, SuitcaseIcon, CheckCircleIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { WelcomeSection } from "@/components/welcomeSection";
+import { useSearchParams } from "next/navigation";
 
 const Register: React.FC = () => {
   const [role, setRole] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type");
+
+  React.useEffect(() => {
+    if (type && (type === "client" || type === "professional")) {
+      setRole(type);
+    }
+  }, [type]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 px-6 md:px-12 py-7 md:min-h-[calc(100vh-65px)] gap-8">

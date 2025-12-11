@@ -197,19 +197,16 @@ export default function Home() {
               <PlusIcon size={18} aria-hidden="true" />
               <span>Adicionar Serviço</span>
             </button>
-            {/* {!canAddService && (
-              <Link
-                href="/plans"
-                className="text-xs text-black/70 dark:text-black-100 md:text-center max-w-xs"
-              >
+            {!canAddService && (
+              <p className="text-xs text-black/70 dark:text-black-100 md:text-center max-w-xs">
                 Limite de {serviceLimit} serviço(s) atingido.{" "}
-                <span className="underline">
+                {/* <span className="underline">
                   {currentPlan === "free"
                     ? "Assine um plano!"
                     : "Faça upgrade!"}
-                </span>
-              </Link>
-            )} */}
+                </span> */}
+              </p>
+            )}
           </div>
         )}
       </header>

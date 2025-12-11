@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import { api } from "@/services/api";
 import { deleteService } from "@/services/servicesService";
 import { Service } from "@/types/Service";
@@ -66,6 +71,7 @@ export interface SearchServicesParams {
   minRating?: number;
   sortBy?: string;
   serviceType?: string;
+  page?: number;
 }
 
 export function useSearchServices(params: SearchServicesParams) {
@@ -85,6 +91,7 @@ export function useSearchServices(params: SearchServicesParams) {
     }),
     sortBy: params.sortBy || "relevance",
     ...(params.serviceType && { serviceType: params.serviceType }),
+    ...(params.page && { page: params.page.toString() }),
   });
 
   return useQuery({
@@ -98,15 +105,56 @@ export function useSearchServices(params: SearchServicesParams) {
       minRating: params.minRating?.toString() || "",
       sortBy: params.sortBy || "relevance",
       serviceType: params.serviceType || "",
+      page: params.page?.toString() || "1",
     }),
     queryFn: async () => {
       const response = await api.get(
         `/services/search?${queryParams.toString()}`
       );
-      const services: Service[] = response.data?.data ?? response.data ?? [];
-      return services;
+      return response.data;
     },
     enabled: true,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useInfiniteSearchServices(
+  params: Omit<SearchServicesParams, "page">
+) {
+  return useInfiniteQuery({
+    queryKey: ["services", "infinite", params],
+    queryFn: async ({ pageParam = 1 }) => {
+      const queryParams = new URLSearchParams({
+        ...(params.stateId && { stateId: params.stateId }),
+        ...(params.cityId && { cityId: params.cityId }),
+        searchTerm: params.searchTerm || "",
+        categoryId: params.categoryId || "",
+        ...(params.priceMin !== undefined && {
+          priceMin: params.priceMin.toString(),
+        }),
+        ...(params.priceMax !== undefined && {
+          priceMax: params.priceMax.toString(),
+        }),
+        ...(params.minRating !== undefined && {
+          minRating: params.minRating.toString(),
+        }),
+        sortBy: params.sortBy || "relevance",
+        ...(params.serviceType && { serviceType: params.serviceType }),
+        page: pageParam.toString(),
+      });
+
+      const response = await api.get(
+        `/services/search?${queryParams.toString()}`
+      );
+      return response.data;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.lastPage) {
+        return lastPage.page + 1;
+      }
+      return undefined;
+    },
     staleTime: 1000 * 60 * 5,
   });
 }

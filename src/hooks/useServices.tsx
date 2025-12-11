@@ -1,8 +1,13 @@
-import { useState } from "react";
-import { useSearchServices, SearchServicesParams } from "./useServiceQueries";
+import { useState, useMemo } from "react";
+import {
+  useInfiniteSearchServices,
+  SearchServicesParams,
+} from "./useServiceQueries";
 
 export function useServices() {
-  const [searchParams, setSearchParams] = useState<SearchServicesParams>({
+  const [searchParams, setSearchParams] = useState<
+    Omit<SearchServicesParams, "page">
+  >({
     stateId: undefined,
     cityId: undefined,
     searchTerm: "",
@@ -15,12 +20,23 @@ export function useServices() {
   });
 
   const {
-    data: services = [],
+    data,
     isLoading,
     isError,
-  } = useSearchServices(searchParams);
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteSearchServices(searchParams);
 
-  const fetchServices = (params: SearchServicesParams) => {
+  const services = useMemo(() => {
+    return data?.pages.flatMap((page) => page.data) ?? [];
+  }, [data]);
+
+  const totalServices = data?.pages[0]?.total ?? 0;
+  const currentPage = data?.pages[data.pages.length - 1]?.page ?? 1;
+  const lastPage = data?.pages[0]?.lastPage ?? 1;
+
+  const fetchServices = (params: Omit<SearchServicesParams, "page">) => {
     setSearchParams(params);
   };
 
@@ -29,5 +45,11 @@ export function useServices() {
     fetchServices,
     isLoading,
     isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    totalServices,
+    currentPage,
+    lastPage,
   };
 }

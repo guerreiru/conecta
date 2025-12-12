@@ -1,6 +1,22 @@
 import Logo from "@/assets/imgs/logo.svg";
 import WhiteProLocal from "@/assets/imgs/white-prolocal.svg";
-import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
+import {
+  AddressBookTabsIcon,
+  CheckIcon,
+  DeviceMobileIcon,
+  HeartIcon,
+  MagnifyingGlassIcon,
+  MapPinIcon,
+  MedalIcon,
+  MoneyIcon,
+  PencilRulerIcon,
+  SparkleIcon,
+  StarIcon,
+  SuitcaseIcon,
+  TargetIcon,
+  TipJarIcon,
+  UserIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -36,9 +52,14 @@ export default function About() {
       <section className="py-12 px-4 md:px-6 bg-gray-50 dark:bg-black-100">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              👤 Para Clientes
-            </h2>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <UserIcon
+                size={36}
+                weight="duotone"
+                className="dark:text-lime-400"
+              />
+              <h2 className="text-3xl md:text-4xl font-bold">Para Clientes</h2>
+            </div>
             <p className="text-xl text-gray-700 dark:text-gray-300">
               Encontre o Profissional Ideal Perto de Você
             </p>
@@ -52,32 +73,32 @@ export default function About() {
 
           <div className="grid md:grid-cols-2 gap-6 mb-10">
             <FeatureCard
-              icon="🔍"
+              icon={<MagnifyingGlassIcon size={32} weight="duotone" />}
               title="Busca Inteligente"
               description="Encontre serviços por categoria, localização ou busca por nome"
             />
             <FeatureCard
-              icon="📍"
+              icon={<MapPinIcon size={32} weight="duotone" />}
               title="Filtro por Localização"
               description="Veja apenas profissionais que atendem na sua região"
             />
             <FeatureCard
-              icon="⭐"
+              icon={<StarIcon size={32} weight="duotone" />}
               title="Avaliações"
               description="Leia avaliações de outros clientes antes de contratar"
             />
             <FeatureCard
-              icon="💰"
+              icon={<TipJarIcon size={32} weight="duotone" />}
               title="Comparação de Preços"
               description="Veja valores e tipos de cobrança (por hora, por projeto, etc.)"
             />
             <FeatureCard
-              icon="📱"
+              icon={<DeviceMobileIcon size={32} weight="duotone" />}
               title="Contato Direto"
               description="Entre em contato com profissionais via WhatsApp"
             />
             <FeatureCard
-              icon="🎖️"
+              icon={<MedalIcon size={32} weight="duotone" />}
               title="Profissionais em Destaque"
               description="Veja os melhores profissionais primeiro nas buscas"
             />
@@ -110,12 +131,20 @@ export default function About() {
         </div>
       </section>
 
-      <section className="py-12 px-4 md:px-6">
+      <section className="py-12 px-4 md:px-6 dark:bg-black-100">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              💼 Para Profissionais e Empresas
-            </h2>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <SuitcaseIcon
+                size={36}
+                weight="duotone"
+                className="dark:text-lime-400"
+              />
+              <h2 className="text-3xl md:text-4xl font-bold">
+                Para Profissionais e Empresas
+              </h2>
+            </div>
+
             <p className="text-xl text-gray-700 dark:text-gray-300">
               Alcance Mais Clientes e Cresça Seu Negócio
             </p>
@@ -129,17 +158,17 @@ export default function About() {
 
           <div className="grid md:grid-cols-2 gap-6 mb-10">
             <FeatureCard
-              icon="📝"
+              icon={<AddressBookTabsIcon size={32} weight="duotone" />}
               title="Perfil Profissional Completo"
               description="Crie um perfil detalhado com seus dados, experiência e portfólio"
             />
             <FeatureCard
-              icon="🛠️"
+              icon={<PencilRulerIcon size={32} weight="duotone" />}
               title="Gestão de Serviços"
               description="Cadastre e gerencie todos os serviços que você oferece"
             />
             <FeatureCard
-              icon="💵"
+              icon={<MoneyIcon size={32} weight="duotone" />}
               title="Definição de Preços"
               description="Configure valores e tipos de cobrança personalizados"
             />
@@ -149,17 +178,17 @@ export default function About() {
               description="Visualize e gerencie tudo em um só lugar"
             /> */}
             <FeatureCard
-              icon="⭐"
+              icon={<StarIcon size={32} weight="duotone" />}
               title="Sistema de Avaliações"
               description="Receba avaliações e construa sua reputação"
             />
             <FeatureCard
-              icon="🎯"
+              icon={<TargetIcon size={32} weight="duotone" />}
               title="Destaque nos Resultados"
               description="Apareça primeiro nas buscas com planos premium"
             />
             <FeatureCard
-              icon="📍"
+              icon={<MapPinIcon size={32} weight="duotone" />}
               title="Visibilidade Local"
               description="Seus serviços aparecem para clientes da sua região"
             />
@@ -197,13 +226,26 @@ export default function About() {
 
       <section className="py-12 px-4 md:px-6 bg-gray-50 dark:bg-black-100">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center">
-            🌟 Diferenciais do ProLocal
-          </h2>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <SparkleIcon
+              size={36}
+              weight="duotone"
+              className="dark:text-lime-400"
+            />
+            <h2 className="text-3xl md:text-4xl font-bold">
+              Diferenciais do ProLocal
+            </h2>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <DifferentialCard
-              icon="📍"
+              icon={
+                <MapPinIcon
+                  size={32}
+                  weight="duotone"
+                  className="dark:text-lime-400"
+                />
+              }
               title="Foco em Serviços Locais"
               items={[
                 "Busca por estado e cidade",
@@ -212,7 +254,13 @@ export default function About() {
               ]}
             />
             <DifferentialCard
-              icon="💚"
+              icon={
+                <HeartIcon
+                  size={32}
+                  weight="duotone"
+                  className="dark:text-lime-400"
+                />
+              }
               title="Gratuito para Começar"
               items={[
                 "Cadastro gratuito para todos",
@@ -221,7 +269,13 @@ export default function About() {
               ]}
             />
             <DifferentialCard
-              icon="🎯"
+              icon={
+                <TargetIcon
+                  size={32}
+                  weight="duotone"
+                  className="dark:text-lime-400"
+                />
+              }
               title="Interface Simples"
               items={[
                 "Design moderno e responsivo",
@@ -268,13 +322,13 @@ function FeatureCard({
   title,
   description,
 }: {
-  icon: string;
+  icon: React.ReactNode;
   title: string;
   description: string;
 }) {
   return (
     <div className="bg-white dark:bg-black-200 rounded-xl p-6 shadow-md hover:shadow-lg transition">
-      <div className="text-3xl mb-3">{icon}</div>
+      <div className="text-3xl mb-3 dark:dark:text-lime-400">{icon}</div>
       <h3 className="text-lg font-bold mb-2">{title}</h3>
       <p className="text-gray-600 dark:text-gray-400">{description}</p>
     </div>
@@ -297,7 +351,7 @@ function DifferentialCard({
   title,
   items,
 }: {
-  icon: string;
+  icon: React.ReactNode;
   title: string;
   items: string[];
 }) {

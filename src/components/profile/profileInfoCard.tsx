@@ -18,7 +18,7 @@ export function ProfileInfoCard({
   onChangePassword,
 }: ProfileInfoCardProps) {
   return (
-    <div className="shadow border border-gray-200 dark:border-black rounded-3xl relative -top-4 p-6 bg-white dark:bg-black-200 w-full max-w-2xl mx-auto">
+    <div className="shadow border border-gray-200 dark:border-black rounded-3xl mt-2 p-6 bg-white dark:bg-black-200 w-full max-w-2xl mx-auto">
       <div className="flex items-center justify-between">
         <p className="font-semibold text-xl">Informações da Conta</p>
         <button onClick={onEdit}>

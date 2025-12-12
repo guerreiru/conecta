@@ -161,6 +161,7 @@ export function Header() {
             href="/about"
             isActive={isActive("/about")}
             title="Sobre nós"
+            className="hidden md:block"
           />
 
           <button

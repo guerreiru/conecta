@@ -19,7 +19,6 @@ export function ServiceOwnerProfile({ owner }: Props) {
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
       <article className="grid gap-4">
-        {/* HEADER */}
         <header className="bg-white dark:bg-black-100 rounded-3xl p-4">
           <section className="flex items-center gap-x-3">
             <div className="grid gap-1">
@@ -61,7 +60,6 @@ export function ServiceOwnerProfile({ owner }: Props) {
           </section>
         </header>
 
-        {/* SOBRE */}
         {owner.bio && (
           <Card title="Sobre" className="bg-white dark:bg-black-100">
             <p className="font-medium text-sm text-zinc-500 dark:text-gray-300">
@@ -70,7 +68,6 @@ export function ServiceOwnerProfile({ owner }: Props) {
           </Card>
         )}
 
-        {/* SERVIÇOS OFERECIDOS */}
         <Card
           title="Serviços oferecidos"
           className="bg-lime-400 dark:bg-lime-600"
@@ -84,9 +81,7 @@ export function ServiceOwnerProfile({ owner }: Props) {
           )}
         </Card>
 
-        {/* CONTATO */}
         <Card title="Contato" className="bg-white dark:bg-black-100">
-          {/* Telefone */}
           <div className="flex items-center gap-4 border text-black dark:text-gray-100 border-slate-200 dark:border-gray-700 p-2 px-3 rounded-xl">
             <PhoneIcon size={18} />
             <div>
@@ -100,7 +95,6 @@ export function ServiceOwnerProfile({ owner }: Props) {
             </div>
           </div>
 
-          {/* WhatsApp */}
           <div className="flex items-center gap-4 border border-green-200 dark:border-green-700 bg-green-50 dark:bg-green-900/30 p-2 px-3 rounded-xl text-green-700 dark:text-green-300">
             <WhatsappLogoIcon size={18} />
             <div>

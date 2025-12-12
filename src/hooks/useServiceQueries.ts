@@ -33,8 +33,7 @@ export function useProviderServices(userId?: string) {
       const response = await api.get(`/services/provider/${userId}`);
       const services = response.data as Service[];
 
-      // Ordenar por título alfabeticamente para manter ordem consistente
-      return services.sort((a, b) => a.title.localeCompare(b.title));
+      return services;
     },
     enabled: !!userId,
   });

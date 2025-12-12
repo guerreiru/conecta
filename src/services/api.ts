@@ -1,7 +1,40 @@
-import axios from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+
+/**
+ * Extensão da config do Axios para permitir _retry
+ */
+interface AxiosRequestConfigWithRetry extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+const AUTH_ROUTES = {
+  login: "/auth/login",
+  refresh: "/auth/refresh",
+  me: "/auth/me",
+};
+
+const PUBLIC_PATHS = ["/", "/service", "/provider", "/about", "/plans"];
+
+const isClient = () => typeof window !== "undefined";
+
+const isPublicPage = () =>
+  isClient() &&
+  PUBLIC_PATHS.some((path) => window.location.pathname.startsWith(path));
+
+const redirectToLogin = () => {
+  if (!isClient()) return;
+
+  const { pathname } = window.location;
+
+  if (!pathname.startsWith("/login") && !pathname.startsWith("/register")) {
+    window.location.href = "/login";
+  }
+};
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
+  baseURL: BASE_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -10,45 +43,61 @@ export const api = axios.create({
 
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError<any>) => {
+    const originalRequest = error.config as AxiosRequestConfigWithRetry;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      const isTokenExpired = error.response?.data?.code === "TOKEN_EXPIRED";
-      const isAuthEndpoint = originalRequest.url?.includes("/auth/");
-      const isRefreshEndpoint = originalRequest.url?.includes("/auth/refresh");
-      const isLoginEndpoint = originalRequest.url?.includes("/auth/login");
+    const status = error.response?.status;
+    const errorCode = error.response?.data?.code;
+    const requestUrl = originalRequest?.url ?? "";
 
-      if (isRefreshEndpoint || isLoginEndpoint) {
-        // Não redireciona se já estiver na página de login/register
-        if (
-          typeof window !== "undefined" &&
-          !window.location.pathname.startsWith("/login") &&
-          !window.location.pathname.startsWith("/register")
-        ) {
-          window.location.href = "/login";
-        }
+    const isUnauthorized = status === 401;
+    const isTokenExpired = errorCode === "TOKEN_EXPIRED";
+
+    const isLoginEndpoint = requestUrl.includes(AUTH_ROUTES.login);
+    const isRefreshEndpoint = requestUrl.includes(AUTH_ROUTES.refresh);
+    const isMeEndpoint = requestUrl.includes(AUTH_ROUTES.me);
+    const isAuthEndpoint = requestUrl.includes("/auth/");
+
+    /**
+     * 1️⃣ Se não for 401 ou já tentou retry, rejeita
+     */
+    if (!isUnauthorized || originalRequest?._retry) {
+      return Promise.reject(error);
+    }
+
+    /**
+     * 2️⃣ Página pública:
+     * - permite falha no /auth/me
+     * - não tenta refresh
+     */
+    if (isPublicPage()) {
+      if (isMeEndpoint) {
         return Promise.reject(error);
       }
 
-      if (isTokenExpired || !isAuthEndpoint) {
-        originalRequest._retry = true;
+      return Promise.reject(error);
+    }
 
-        try {
-          await api.post("/auth/refresh");
+    /**
+     * 3️⃣ Se falhou no login ou refresh → redireciona
+     */
+    if (isLoginEndpoint || isRefreshEndpoint) {
+      redirectToLogin();
+      return Promise.reject(error);
+    }
 
-          return api(originalRequest);
-        } catch (refreshError) {
-          // Não redireciona se já estiver na página de login/register
-          if (
-            typeof window !== "undefined" &&
-            !window.location.pathname.startsWith("/login") &&
-            !window.location.pathname.startsWith("/register")
-          ) {
-            window.location.href = "/login";
-          }
-          return Promise.reject(refreshError);
-        }
+    /**
+     * 4️⃣ Token expirado → tenta refresh
+     */
+    if (isTokenExpired || !isAuthEndpoint) {
+      originalRequest._retry = true;
+
+      try {
+        await api.post(AUTH_ROUTES.refresh);
+        return api(originalRequest);
+      } catch (refreshError) {
+        redirectToLogin();
+        return Promise.reject(refreshError);
       }
     }
 

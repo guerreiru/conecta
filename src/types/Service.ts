@@ -13,4 +13,6 @@ export type Service = {
   isHighlighted?: boolean;
   highlightLevel?: "plus" | "premium" | "enterprise";
   serviceType: "all" | "in_person" | "online";
+  averageRating: number;
+  reviewCount: number;
 };

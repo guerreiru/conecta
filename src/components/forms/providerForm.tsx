@@ -18,17 +18,30 @@ import { useRouter } from "next/navigation";
 const providerSchemaCreate = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
   email: z.email("E-mail inválido"),
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+  password: z
+    .string()
+    .min(6, "A senha deve ter pelo menos 6 caracteres")
+    .optional(),
   specialty: z.string().optional(),
   bio: z.string().optional(),
   address: addressSchema,
 });
 
-type ProviderFormData = z.infer<typeof providerSchemaCreate>;
+const providerSchemaEdit = z.object({
+  name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
+  email: z.string(),
+  specialty: z.string().optional(),
+  bio: z.string().optional(),
+  password: z.string().optional(),
+  address: addressSchema,
+});
+
+type ProviderFormCreateData = z.infer<typeof providerSchemaCreate>;
+type ProviderFormEditData = z.infer<typeof providerSchemaEdit>;
 
 type ProviderFormProps = {
   mode: "create" | "edit";
-  defaultValues?: Partial<ProviderFormData> & { id?: string };
+  defaultValues?: Partial<ProviderFormCreateData> & { id?: string };
   onCancel?: () => void;
 };
 
@@ -37,38 +50,62 @@ export function ProviderForm({
   defaultValues,
   onCancel,
 }: ProviderFormProps) {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<ProviderFormData>({
+  const createForm = useForm<ProviderFormCreateData>({
     resolver: zodResolver(providerSchemaCreate),
     defaultValues,
   });
+
+  const editForm = useForm<ProviderFormEditData>({
+    resolver: zodResolver(providerSchemaEdit),
+    defaultValues,
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+    setValue,
+    setError,
+    reset,
+  } = mode === "create" ? createForm : editForm;
+
   const { updateUser, login } = useAuth();
   const router = useRouter();
   const { addressEditable } = useCepLookup(watch, setValue);
   const [showPassword, setShowPassword] = useState(false);
 
-  async function onSubmit(data: ProviderFormData) {
+  console.log(errors);
+
+  async function onSubmit(data: ProviderFormCreateData | ProviderFormEditData) {
     const providerData = {
       ...data,
       role: "provider",
     };
 
     try {
-      if (mode === "create") {
+      if (mode === "create" && data.email && data.password) {
         await api.post("/users", providerData);
         const loginResult = await login(data.email, data.password);
         if (loginResult.success) {
           reset();
           router.push("/");
         }
-      } else {
-        const res = await api.put(`/users/${defaultValues?.id}`, providerData);
+      } else if (mode === "create" && !data.password) {
+        setError("password", {
+          type: "manual",
+          message: "Senha é obrigatória para cadastro",
+        });
+        return;
+      }
+
+      if (mode === "edit" && defaultValues?.id) {
+        const res = await api.put(`/users/${defaultValues?.id}`, {
+          name: data.name,
+          specialty: data.specialty,
+          bio: data.bio,
+          address: data.address,
+        });
 
         const updatedUser = res.data;
 
@@ -160,7 +197,11 @@ export function ProviderForm({
 
       <div className="flex items-center justify-between gap-4 flex-wrap md:flex-nowrap">
         {mode === "edit" && (
-          <Button onClick={onCancel} variant="border" className="w-full">
+          <Button
+            onClick={onCancel}
+            variant="unstyled"
+            className="w-full bg-black text-white dark:bg-white dark:text-black"
+          >
             Cancelar
           </Button>
         )}

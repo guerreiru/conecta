@@ -12,7 +12,7 @@ import { Select } from "../ui/select";
 export type AddressFormData = {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   specialty?: string;
   bio?: string;
   address: z.infer<typeof addressSchema>;

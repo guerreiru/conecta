@@ -1,4 +1,4 @@
-export const FREE_PLAN_SERVICE_LIMIT = 1;
+export const FREE_PLAN_SERVICE_LIMIT = 2;
 
 export const serviceTypes = [
   { label: "Todos", value: "all" },

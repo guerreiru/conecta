@@ -90,7 +90,7 @@ export const metadata: Metadata = {
 
   other: {
     "msapplication-TileColor": "#beee02",
-    "theme-color": "#ffffff",
+    "theme-color": "#beee02",
   },
 };
 

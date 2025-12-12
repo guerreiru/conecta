@@ -5,6 +5,7 @@ import {
   CheckIcon,
   DeviceMobileIcon,
   HeartIcon,
+  InstagramLogoIcon,
   MagnifyingGlassIcon,
   MapPinIcon,
   MedalIcon,
@@ -16,28 +17,76 @@ import {
   TargetIcon,
   TipJarIcon,
   UserIcon,
+  XLogoIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-white dark:bg-black-200">
-      <section className="bg-gradient-to-br from-lime-600 to-lime-500 dark:from-lime-600 dark:to-lime-700 py-16 px-4 md:px-6">
+    <main className="min-h-screen bg-white dark:bg-black-200">
+      <section
+        className="bg-gradient-to-br from-lime-600 to-lime-500 dark:from-lime-600 dark:to-lime-700 py-16 px-4 md:px-6"
+        aria-labelledby="hero-heading"
+      >
         <div className="max-w-4xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2">
-            <Image src={Logo} alt="Logo ProLocal" unoptimized />
-            <Image src={WhiteProLocal} alt="ProLocal" unoptimized />
-          </div>
-          <p className="text-xl md:text-2xl text-black-200 font-medium">
+          <header className="flex items-center justify-center gap-2">
+            <Image
+              src={Logo}
+              alt="Logo ProLocal"
+              unoptimized
+              aria-hidden="true"
+            />
+            <Image
+              src={WhiteProLocal}
+              alt="ProLocal"
+              unoptimized
+              aria-hidden="true"
+            />
+          </header>
+          <h1
+            id="hero-heading"
+            className="text-xl md:text-2xl text-black-200 font-medium"
+          >
             Conectando Profissionais à Comunidade
+          </h1>
+
+          <p className="mt-2 mb-1 text-sm font-medium text-black-200 italic">
+            Siga-nos nas redes sociais:
           </p>
+
+          <nav
+            className="flex items-center justify-center gap-2"
+            aria-label="Redes sociais"
+          >
+            <a
+              href="https://www.instagram.com/prolocal.site/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-black-200 underline hover:text-black font-medium"
+              aria-label="Visite nosso Instagram"
+            >
+              <InstagramLogoIcon size={30} aria-hidden="true" />
+            </a>
+            <a
+              href="https://x.com/siteprolocal"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-black-200 underline hover:text-black font-medium"
+              aria-label="Visite nosso perfil no X (Twitter)"
+            >
+              <XLogoIcon size={30} aria-hidden="true" />
+            </a>
+          </nav>
         </div>
       </section>
 
-      <section className="py-12 px-4 md:px-6">
+      <section className="py-12 px-4 md:px-6" aria-labelledby="about-heading">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center">
+          <h2
+            id="about-heading"
+            className="text-3xl md:text-4xl font-bold mb-6 text-center"
+          >
             O que é o ProLocal?
           </h2>
           <p className="text-lg text-gray-700 dark:text-gray-300 text-center max-w-3xl mx-auto">
@@ -49,21 +98,30 @@ export default function About() {
         </div>
       </section>
 
-      <section className="py-12 px-4 md:px-6 bg-gray-50 dark:bg-black-100">
+      <section
+        className="py-12 px-4 md:px-6 bg-gray-50 dark:bg-black-100"
+        aria-labelledby="clients-heading"
+      >
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-10">
+          <header className="text-center mb-10">
             <div className="flex items-center justify-center gap-2 mb-4">
               <UserIcon
                 size={36}
                 weight="duotone"
                 className="dark:text-lime-400"
+                aria-hidden="true"
               />
-              <h2 className="text-3xl md:text-4xl font-bold">Para Clientes</h2>
+              <h2
+                id="clients-heading"
+                className="text-3xl md:text-4xl font-bold"
+              >
+                Para Clientes
+              </h2>
             </div>
             <p className="text-xl text-gray-700 dark:text-gray-300">
               Encontre o Profissional Ideal Perto de Você
             </p>
-          </div>
+          </header>
 
           <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 text-center">
             Precisa de um eletricista? Encanador? Professor particular?
@@ -71,7 +129,7 @@ export default function About() {
             sua cidade com apenas alguns cliques.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-10">
+          <div className="grid md:grid-cols-2 gap-6 mb-10" role="list">
             <FeatureCard
               icon={<MagnifyingGlassIcon size={32} weight="duotone" />}
               title="Busca Inteligente"
@@ -104,7 +162,7 @@ export default function About() {
             />
           </div>
 
-          <div className="bg-white dark:bg-black-200 rounded-2xl p-8 shadow-lg">
+          <article className="bg-white dark:bg-black-200 rounded-2xl p-8 shadow-lg">
             <h3 className="text-2xl font-bold mb-6 text-center">
               Como Funciona
             </h3>
@@ -127,20 +185,27 @@ export default function About() {
                 text="Entre em contato direto com o profissional escolhido"
               />
             </ol>
-          </div>
+          </article>
         </div>
       </section>
 
-      <section className="py-12 px-4 md:px-6 dark:bg-black-100">
+      <section
+        className="py-12 px-4 md:px-6 dark:bg-black-100"
+        aria-labelledby="professionals-heading"
+      >
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-10">
+          <header className="text-center mb-10">
             <div className="flex items-center justify-center gap-2 mb-4">
               <SuitcaseIcon
                 size={36}
                 weight="duotone"
                 className="dark:text-lime-400"
+                aria-hidden="true"
               />
-              <h2 className="text-3xl md:text-4xl font-bold">
+              <h2
+                id="professionals-heading"
+                className="text-3xl md:text-4xl font-bold"
+              >
                 Para Profissionais e Empresas
               </h2>
             </div>
@@ -148,7 +213,7 @@ export default function About() {
             <p className="text-xl text-gray-700 dark:text-gray-300">
               Alcance Mais Clientes e Cresça Seu Negócio
             </p>
-          </div>
+          </header>
 
           <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 text-center">
             Você é profissional autônomo, prestador de serviços ou possui uma
@@ -156,7 +221,7 @@ export default function About() {
             conquistar novos clientes na sua região.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-10">
+          <div className="grid md:grid-cols-2 gap-6 mb-10" role="list">
             <FeatureCard
               icon={<AddressBookTabsIcon size={32} weight="duotone" />}
               title="Perfil Profissional Completo"
@@ -313,7 +378,7 @@ export default function About() {
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }
 

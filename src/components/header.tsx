@@ -129,20 +129,19 @@ export function Header() {
             href="/about"
             isActive={isActive("/about")}
             title="Sobre nós"
+            className="hidden md:block"
           />
 
           <ListItem
             href="/login"
             isActive={isActive("/login")}
             title="Entrar"
-            className="hidden md:block"
           />
           <ListItem
             href="/register"
             isActive={isActive("/register")}
             title="Cadastrar-se"
             variant="highlighted"
-            className="hidden md:block"
           />
         </nav>
       )}
@@ -156,18 +155,17 @@ export function Header() {
             href="/profile"
             isActive={isActive("/profile")}
             title="Perfil"
-            className="hidden md:block"
           />
 
-          <ListItem
+          {/* <ListItem
             href="/about"
             isActive={isActive("/about")}
             title="Sobre nós"
-          />
+          /> */}
 
           <button
             onClick={() => setIsLogoutModalOpen(true)}
-            className="px-4 md:px-6 py-2 font-medium rounded-xl hover:brightness-90 bg-black-200 text-white dark:bg-white dark:text-black-200 hidden md:block"
+            className="px-4 md:px-6 py-2 font-medium rounded-xl hover:brightness-90 bg-black-200 text-white dark:bg-white dark:text-black-200"
             aria-label="Sair da conta"
           >
             Sair

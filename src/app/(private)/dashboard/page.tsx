@@ -5,6 +5,8 @@ import { ServiceForm } from "@/components/forms/serviceForm";
 import { Modal } from "@/components/modal";
 import { ModalExclusion } from "@/components/modalExclusion";
 import { PlanBadge } from "@/components/planBadge";
+import { ServiceSkeletonList } from "@/components/skeletons/serviceSkeletonList";
+import { UserSkeleton } from "@/components/skeletons/userSkeleton";
 import { FREE_PLAN_SERVICE_LIMIT } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -25,18 +27,13 @@ import {
   PencilIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-// const PLAN_LIMITS = {
-//   free: 2,
-//   plus: 5,
-//   premium: 15,
-//   enterprise: 50,
-// };
-
 export default function Home() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const router = useRouter();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(
@@ -48,27 +45,19 @@ export default function Home() {
     user?.role === "provider" ? user.id : undefined
   );
 
-  //const { data: subscription, isLoading: isLoadingSubscription } = useSubscription();
-
   const deleteServiceMutation = useDeleteService();
   const activateServiceMutation = useActivateService();
   const deactivateServiceMutation = useDeactivateService();
 
-  // Se não tiver subscription ou estiver vencida/cancelada, usa plano free com 2 serviços
-  // const isSubscriptionActive = subscription?.status === "active" || subscription?.status === "trialing";
-  // const currentPlan = isSubscriptionActive ? subscription?.plan || "free" : "free";
   const currentPlan = "free";
-  // const serviceLimit = PLAN_LIMITS[currentPlan as keyof typeof PLAN_LIMITS] || 2;
 
   const hasReachedServiceLimit = myServices.length >= FREE_PLAN_SERVICE_LIMIT;
   const canAddService = !hasReachedServiceLimit;
 
-  // Filtra apenas serviços que possuem pelo menos uma avaliação
   const servicesWithReviews = myServices.filter(
     (service) => service.reviewCount && service.reviewCount > 0
   );
 
-  // Calcula a média apenas dos serviços com avaliações
   const totalRating = servicesWithReviews.reduce(
     (acc, service) => acc + (Number(service.averageRating) || 0),
     0
@@ -79,7 +68,6 @@ export default function Home() {
       ? totalRating / servicesWithReviews.length
       : 0;
 
-  // Total de avaliações recebidas em todos os serviços
   const totalReviews = myServices.reduce((acc, service) => {
     if (service.reviewCount) {
       return acc + service.reviewCount;
@@ -143,20 +131,17 @@ export default function Home() {
     }
   };
 
-  if (!user || isLoading) {
-    return (
-      <section className="grid gap-4 py-4 text-black dark:text-gray-200">
-        <p>Carregando...</p>
-      </section>
-    );
-  }
+  useEffect(() => {
+    if (!loading && !user) {
+      toast.error("Sessão expirada. Faça login novamente.", {
+        autoClose: 3000,
+      });
+      router.push("/login");
+    }
+  }, [loading, user, router]);
 
-  if (!user.id) {
-    return (
-      <section className="grid gap-4 py-4 text-black dark:text-gray-200">
-        <p>Erro: Usuário não autenticado ou ID de usuário ausente.</p>
-      </section>
-    );
+  if (loading || !user) {
+    return <UserSkeleton />;
   }
 
   return (
@@ -194,11 +179,6 @@ export default function Home() {
             {!canAddService && (
               <p className="text-xs text-black/70 dark:text-white md:text-center">
                 Limite de {FREE_PLAN_SERVICE_LIMIT} serviço(s) atingido.{" "}
-                {/* <span className="underline">
-                  {currentPlan === "free"
-                    ? "Assine um plano!"
-                    : "Faça upgrade!"}
-                </span> */}
               </p>
             )}
           </section>
@@ -207,134 +187,146 @@ export default function Home() {
 
       {user.role === "provider" && (
         <>
-          <section className="grid grid-cols-3 gap-2 flex-wrap">
-            <DashboardCard
-              title="Serviços"
-              value={String(myServices.length)}
-              icon={<LightningIcon size={16} />}
-            />
-            <DashboardCard
-              title="Nota média"
-              value={
-                servicesAverageRating > 0
-                  ? servicesAverageRating.toFixed(1)
-                  : "N/A"
-              }
-              icon={<LightningIcon size={16} />}
-            />
-            <DashboardCard
-              title="Avaliações"
-              value={totalReviews > 0 ? totalReviews.toString() : "N/A"}
-              icon={<LightningIcon size={16} />}
-            />
-          </section>
+          {isLoading ? (
+            <ServiceSkeletonList />
+          ) : (
+            <>
+              <section className="grid grid-cols-3 gap-2 flex-wrap">
+                <DashboardCard
+                  title="Serviços"
+                  value={String(myServices.length)}
+                  icon={<LightningIcon size={16} />}
+                />
+                <DashboardCard
+                  title="Nota média"
+                  value={
+                    servicesAverageRating > 0
+                      ? servicesAverageRating.toFixed(1)
+                      : "N/A"
+                  }
+                  icon={<LightningIcon size={16} />}
+                />
+                <DashboardCard
+                  title="Avaliações"
+                  value={totalReviews > 0 ? totalReviews.toString() : "N/A"}
+                  icon={<LightningIcon size={16} />}
+                />
+              </section>
 
-          <section
-            className="py-4 text-black dark:text-gray-200"
-            aria-labelledby="meus-servicos"
-          >
-            <h2
-              id="meus-servicos"
-              className="text-2xl mt-5 font-semibold dark:text-white text-center"
-            >
-              Serviços
-            </h2>
+              <section
+                className="py-4 text-black dark:text-gray-200"
+                aria-labelledby="meus-servicos"
+              >
+                <h2
+                  id="meus-servicos"
+                  className="text-2xl mt-5 font-semibold dark:text-white text-center"
+                >
+                  Serviços
+                </h2>
 
-            {myServices.length > 0 ? (
-              <ul className="grid mt-6 gap-4">
-                {myServices.map((service) => (
-                  <li key={service.id}>
-                    <article
-                      className={`${
-                        !service.isActive ? "opacity-60" : ""
-                      } px-4 py-6 md:px-6 bg-white dark:bg-black-200 rounded-2xl shadow-sm h-full border border-gray-200 dark:border-gray-700 relative overflow-hidden`}
-                    >
-                      <div className="absolute -top-0.5 right-0">
-                        {!service.isActive && (
-                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-tr-xl">
-                            Inativo
-                          </span>
-                        )}
-                        {service.isActive && (
-                          <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-tr-xl">
-                            Ativo
-                          </span>
-                        )}
-                      </div>
-
-                      <header className="flex items-center justify-between flex-wrap gap-2">
-                        <div>
-                          <h3 className="font-bold text-lg dark:text-white">
-                            {service.title}
-                          </h3>
-                          <p className="mt-3 font-medium text-sm bg-lime-400/10 dark:bg-lime-500/20 px-2 py-0.5 rounded-lg w-fit text-black dark:text-white">
-                            {service.category.name &&
-                              capitalizeFirstLetter(service.category.name)}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            className={`${
-                              service.isActive
-                                ? "bg-gray-400 dark:bg-gray-700 text-gray-100 dark:text-gray-300"
-                                : "bg-green-100 dark:bg-green-800"
-                            } rounded-lg p-2 w-fit`}
-                            aria-label={`Ativar serviço ${service.title}`}
-                            onClick={() => handleActiveService(service)}
-                          >
-                            {service.isActive && (
-                              <span title="Desativar serviço">
-                                <EyeSlashIcon size={18} aria-hidden="true" />
-                              </span>
-                            )}
+                {myServices.length > 0 ? (
+                  <ul className="grid mt-6 gap-4">
+                    {myServices.map((service) => (
+                      <li key={service.id}>
+                        <article
+                          className={`${
+                            !service.isActive ? "opacity-60" : ""
+                          } px-4 py-6 md:px-6 bg-white dark:bg-black-200 rounded-2xl shadow-sm h-full border border-gray-200 dark:border-gray-700 relative overflow-hidden`}
+                        >
+                          <div className="absolute -top-0.5 right-0">
                             {!service.isActive && (
-                              <span title="Ativar serviço">
-                                <EyeIcon size={18} aria-hidden="true" />
+                              <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-tr-xl">
+                                Inativo
                               </span>
                             )}
-                          </button>
-                          <button
-                            className="bg-gray-200 dark:bg-gray-700 rounded-lg p-2 w-fit"
-                            aria-label={`Editar serviço ${service.title}`}
-                            onClick={() => handleOpenEditModal(service)}
-                          >
-                            <PencilIcon size={18} aria-hidden="true" />
-                          </button>
-                          <button
-                            className="bg-red-50 dark:bg-red-900 rounded-lg p-2 w-fit text-red-600 dark:text-red-300"
-                            aria-label={`Excluir serviço ${service.title}`}
-                            onClick={() => handleOpenDeleteModal(service.id)}
-                          >
-                            <TrashIcon size={18} aria-hidden="true" />
-                          </button>
-                        </div>
-                      </header>
+                            {service.isActive && (
+                              <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-tr-xl">
+                                Ativo
+                              </span>
+                            )}
+                          </div>
 
-                      <p className="text-stone-500 dark:text-gray-400 my-4">
-                        {service.description}
-                      </p>
+                          <header className="flex items-center justify-between flex-wrap gap-2">
+                            <div>
+                              <h3 className="font-bold text-lg dark:text-white">
+                                {service.title}
+                              </h3>
+                              <p className="mt-3 font-medium text-sm bg-lime-400/10 dark:bg-lime-500/20 px-2 py-0.5 rounded-lg w-fit text-black dark:text-white">
+                                {service.category.name &&
+                                  capitalizeFirstLetter(service.category.name)}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button
+                                className={`${
+                                  service.isActive
+                                    ? "bg-gray-400 dark:bg-gray-700 text-gray-100 dark:text-gray-300"
+                                    : "bg-green-100 dark:bg-green-800"
+                                } rounded-lg p-2 w-fit`}
+                                aria-label={`Ativar serviço ${service.title}`}
+                                onClick={() => handleActiveService(service)}
+                              >
+                                {service.isActive && (
+                                  <span title="Desativar serviço">
+                                    <EyeSlashIcon
+                                      size={18}
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                )}
+                                {!service.isActive && (
+                                  <span title="Ativar serviço">
+                                    <EyeIcon size={18} aria-hidden="true" />
+                                  </span>
+                                )}
+                              </button>
+                              <button
+                                className="bg-gray-200 dark:bg-gray-700 rounded-lg p-2 w-fit"
+                                aria-label={`Editar serviço ${service.title}`}
+                                onClick={() => handleOpenEditModal(service)}
+                              >
+                                <PencilIcon size={18} aria-hidden="true" />
+                              </button>
+                              <button
+                                className="bg-red-50 dark:bg-red-900 rounded-lg p-2 w-fit text-red-600 dark:text-red-300"
+                                aria-label={`Excluir serviço ${service.title}`}
+                                onClick={() =>
+                                  handleOpenDeleteModal(service.id)
+                                }
+                              >
+                                <TrashIcon size={18} aria-hidden="true" />
+                              </button>
+                            </div>
+                          </header>
 
-                      <p className="text-stone-500 dark:text-gray-300 text-sm flex items-center gap-1">
-                        <CurrencyDollarIcon size={14} aria-hidden="true" />
-                        {formatToBRL(service.price)} / {service.typeOfChange}
-                      </p>
+                          <p className="text-stone-500 dark:text-gray-400 my-4">
+                            {service.description}
+                          </p>
 
-                      {user.address && (
-                        <p className="text-stone-500 dark:text-gray-300 text-sm flex items-center gap-1 mt-1">
-                          <MapPinIcon size={14} aria-hidden="true" />
-                          {user.address.cityName}, {user.address.stateName}
-                        </p>
-                      )}
-                    </article>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-4 text-stone-500 dark:text-gray-400">
-                Você ainda não cadastrou serviços.
-              </p>
-            )}
-          </section>
+                          <p className="text-stone-500 dark:text-gray-300 text-sm flex items-center gap-1">
+                            <CurrencyDollarIcon size={14} aria-hidden="true" />
+                            {formatToBRL(service.price)} /{" "}
+                            {service.typeOfChange}
+                          </p>
+
+                          {user.address && (
+                            <p className="text-stone-500 dark:text-gray-300 text-sm flex items-center gap-1 mt-1">
+                              <MapPinIcon size={14} aria-hidden="true" />
+                              {user.address.cityName}, {user.address.stateName}
+                            </p>
+                          )}
+                        </article>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-4 text-stone-500 dark:text-gray-400">
+                    Você ainda não cadastrou serviços.
+                  </p>
+                )}
+              </section>
+            </>
+          )}
         </>
       )}
 

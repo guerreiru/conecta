@@ -151,7 +151,7 @@ export function ClientForm({ mode, defaultValues, onCancel }: ClientFormProps) {
               : "Salvando..."
             : mode === "create"
             ? "Cadastrar"
-            : "Salvar alterações"}
+            : "Salvar"}
         </Button>
       </div>
     </form>

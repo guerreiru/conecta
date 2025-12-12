@@ -72,12 +72,12 @@ export default function Home() {
 
   const servicesAverageRating = totalRating / (myServices.length || 1);
 
-  const totalReviews = myServices.reduce(
-    (acc, service) => acc + (service.reviewCount || 0),
-    0
-  );
-
-  const servicesAverageReviews = totalReviews / (myServices.length || 1);
+  const totalReviews = myServices.reduce((acc, service) => {
+    if (service.reviewCount) {
+      return acc + service.reviewCount;
+    }
+    return acc;
+  }, 0);
 
   const handleOpenAddModal = () => {
     if (!canAddService) {
@@ -216,11 +216,7 @@ export default function Home() {
             />
             <DashboardCard
               title="Avaliações"
-              value={
-                servicesAverageReviews > 0
-                  ? servicesAverageReviews.toString()
-                  : "N/A"
-              }
+              value={totalReviews > 0 ? totalReviews.toString() : "N/A"}
               icon={<LightningIcon size={16} />}
             />
           </section>

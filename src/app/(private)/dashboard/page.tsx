@@ -66,7 +66,7 @@ export default function Home() {
   //   (service) => service.isActive
   // ).length;
   const totalRating = myServices.reduce(
-    (acc, service) => acc + (service.averageRating || 0),
+    (acc, service) => acc + (Number(service.averageRating) || 0),
     0
   );
 

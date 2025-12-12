@@ -140,7 +140,7 @@ export function Header() {
           <ListItem
             href="/register"
             isActive={isActive("/register")}
-            title="Cadastrar-se"
+            title="Cadastro"
             variant="highlighted"
           />
         </nav>

@@ -172,7 +172,7 @@ export function ServiceCard({
         </p>
       )}
 
-      <footer className="flex items-center justify-between flex-wrap gap-2">
+      <footer className="flex flex-col md:flex-row items-center justify-between flex-wrap gap-2">
         <section className="grid gap-2" aria-label="Informações do serviço">
           <p
             className="font-bold text-black dark:text-white text-lg"

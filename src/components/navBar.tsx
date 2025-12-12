@@ -4,6 +4,8 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   CaretLeftIcon,
   HouseIcon,
+  InfinityIcon,
+  InfoIcon,
   MagnifyingGlassIcon,
   SignOutIcon,
   UserIcon,
@@ -29,22 +31,16 @@ export function NavBar() {
       showFor: ["provider"],
     },
     {
-      href: "/profile",
-      icon: <UserIcon size={20} />,
-      label: "Profile",
-      showFor: ["client", "provider"],
-    },
-    {
       href: "/",
       icon: <MagnifyingGlassIcon size={20} />,
       label: "Search",
       showFor: ["guest", "client", "provider"],
     },
     {
-      href: "/login",
-      icon: <UserIcon size={20} />,
-      label: "Login",
-      showFor: ["guest"],
+      href: "/about",
+      icon: <InfoIcon size={20} />,
+      label: "Sobre",
+      showFor: ["guest", "client", "provider"],
     },
   ];
 
@@ -89,18 +85,6 @@ export function NavBar() {
             </li>
           );
         })}
-
-        {user && (
-          <li>
-            <button
-              onClick={() => setIsLogoutModalOpen(true)}
-              aria-label="Logout"
-              className="text-black dark:text-white transition-colors hover:text-lime-400 p-2 rounded-full"
-            >
-              <SignOutIcon size={18} />
-            </button>
-          </li>
-        )}
       </ul>
 
       <ModalLogout

@@ -54,7 +54,7 @@ export function ServiceReviewSection({
       {!currentUserId && (
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <p className="text-blue-900 dark:text-blue-200">
-            <Link href="/login" className="font-semibold hover:underline">
+            <Link href="/login" className="font-semibold underline">
               Faça login
             </Link>{" "}
             para deixar uma avaliação

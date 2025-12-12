@@ -11,15 +11,18 @@ type Props = {
 };
 
 export function ServiceOwnerProfile({ owner }: Props) {
+  const ownerHasServices = owner.services && owner.services.length > 0;
+  const activeServices = ownerHasServices
+    ? owner.services!.filter((service) => service.isActive)
+    : [];
+
   return (
-    <main className="w-full max-w-2xl mx-auto px-4">
+    <div className="w-full max-w-2xl mx-auto p-4">
       <article className="grid gap-4">
         {/* HEADER */}
-        <header className="bg-white dark:bg-black-100 rounded-3xl pb-4 shadow relative">
-          <div className="bg-black-200 dark:bg-black-300 h-20 rounded-t-3xl" />
-
-          <section className="flex mx-2.5 items-center gap-x-3 py-2 relative -top-4">
-            <div className="grid gap-1 mt-4">
+        <header className="bg-white dark:bg-black-100 rounded-3xl p-4">
+          <section className="flex items-center gap-x-3">
+            <div className="grid gap-1">
               <h1 className="font-bold text-xl text-black dark:text-gray-100">
                 {owner.name}
               </h1>
@@ -32,7 +35,7 @@ export function ServiceOwnerProfile({ owner }: Props) {
             </div>
           </section>
 
-          <section className="flex justify-between mx-3 mt-3">
+          <section className="flex justify-between">
             {owner.services &&
               owner.services.length > 0 &&
               (() => {
@@ -72,9 +75,9 @@ export function ServiceOwnerProfile({ owner }: Props) {
           title="Serviços oferecidos"
           className="bg-lime-400 dark:bg-lime-600"
         >
-          {owner.services && owner.services.length > 0 && (
+          {activeServices && (
             <div className="grid gap-3 py-2">
-              {owner.services.map((service) => (
+              {activeServices.map((service) => (
                 <ServiceCard key={service.id} service={service} owner={owner} />
               ))}
             </div>
@@ -114,7 +117,7 @@ export function ServiceOwnerProfile({ owner }: Props) {
           </div>
         </Card>
       </article>
-    </main>
+    </div>
   );
 }
 

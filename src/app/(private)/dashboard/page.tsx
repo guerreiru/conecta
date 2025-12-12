@@ -156,8 +156,8 @@ export default function Home() {
       <header className="py-5 md:py-10 flex md:items-center justify-between gap-x-2 gap-y-4 flex-col md:flex-row">
         <section>
           <div className="flex items-center gap-5">
-            <h1 className="font-extrabold text-2xl md:text-3xl lg:text-4xl text-black dark:text-white">
-              Bem-vindo, {user.name}
+            <h1 className="font-extrabold text-2xl md:text-3xl text-black dark:text-white">
+              Olá, {user.name}
             </h1>
             <PlanBadge title="Gratuito" variant="free" />
           </div>

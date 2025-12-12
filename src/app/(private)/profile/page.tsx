@@ -32,6 +32,18 @@ export default function Profile() {
   }
 
   useEffect(() => {
+    if (modalIsOpen || isChangeEmailModalOpen || isChangePasswordModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [modalIsOpen, isChangeEmailModalOpen, isChangePasswordModalOpen]);
+
+  useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
     }

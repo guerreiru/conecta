@@ -7,6 +7,14 @@ interface AxiosRequestConfigWithRetry extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
+/**
+ * Tipo para a resposta de erro da API
+ */
+interface ApiErrorResponse {
+  code?: string;
+  message?: string;
+}
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 const AUTH_ROUTES = {
@@ -43,7 +51,7 @@ export const api = axios.create({
 
 api.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError<any>) => {
+  async (error: AxiosError<ApiErrorResponse>) => {
     const originalRequest = error.config as AxiosRequestConfigWithRetry;
 
     const status = error.response?.status;

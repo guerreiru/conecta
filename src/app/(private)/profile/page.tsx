@@ -9,12 +9,12 @@ import { ModalExclusion } from "@/components/modalExclusion";
 import { ModalLogout } from "@/components/modalLogout";
 import { ProfileInfoCard } from "@/components/profile/profileInfoCard";
 import { ProfileModal } from "@/components/profile/profileModal";
+import { ProfileInfoCardSkeleton } from "@/components/skeletons/profileInfoCardSkeleton";
 import { Button } from "@/components/ui/button";
-import { Loading } from "@/components/ui/loading";
 import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { useAuth } from "@/hooks/useAuth";
 import { useDeleteService } from "@/hooks/useServiceQueries";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Profile() {
@@ -24,38 +24,12 @@ export default function Profile() {
   const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(
     null
   );
-  // const [modalNewServiceIsOpen, setModalNewServiceIsOpen] = useState(false);
-  // const [serviceToEdit] = useState<Service | null>(null);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
     useState(false);
 
   const deleteServiceMutation = useDeleteService();
-
-  // const hasReachedServiceLimit = myServices.length >= FREE_PLAN_SERVICE_LIMIT;
-
-  // const handleOpenAddModalNewService = () => {
-  //   if (hasReachedServiceLimit) {
-  //     toast.warning(
-  //       `Você atingiu o limite de ${FREE_PLAN_SERVICE_LIMIT} serviços gratuitos. Assine um plano para adicionar mais!`,
-  //       { autoClose: 3000 }
-  //     );
-  //     return;
-  //   }
-  //   setServiceToEdit(null);
-  //   setModalNewServiceIsOpen(true);
-  // };
-
-  // const handleOpenEditModal = (service: Service) => {
-  //   setServiceToEdit(service);
-  //   setModalNewServiceIsOpen(true);
-  // };
-
-  // const handleOpenDeleteModal = (serviceId: string) => {
-  //   setServiceToDeleteId(serviceId);
-  //   setDeleteModalIsOpen(true);
-  // };
 
   const handleCloseDeleteModal = () => {
     setServiceToDeleteId(null);
@@ -78,9 +52,17 @@ export default function Profile() {
     await authLogout();
   }
 
+  useEffect(() => {
+    if (!loading && !user) {
+      toast.error("Sessão expirada. Faça login novamente.", {
+        autoClose: 3000,
+      });
+    }
+  }, [loading, user]);
+
   return (
     <main className="relative">
-      {!user && loading && <Loading />}
+      {!user && loading && <ProfileInfoCardSkeleton />}
 
       {user && (
         <div className="px-4">
@@ -91,18 +73,7 @@ export default function Profile() {
             onChangePassword={() => setIsChangePasswordModalOpen(true)}
           />
 
-          {/* {user.role === "provider" && (
-            <ProfileServicesCard
-              user={user}
-              services={myServices}
-              isLoading={isLoading}
-              onEdit={handleOpenEditModal}
-              onDelete={handleOpenDeleteModal}
-              onAddService={handleOpenAddModalNewService}
-            />
-          )} */}
-
-          <div className="w-full max-w-2xl mx-auto grid place-items-center md:hidden mt-1">
+          <div className="w-full max-w-2xl mx-auto grid place-items-center md:hidden mt-2">
             <Button
               className="w-full bg-black-200 text-white dark:bg-white dark:text-black-200"
               onClick={() => setIsLogoutModalOpen(true)}
@@ -114,7 +85,6 @@ export default function Profile() {
         </div>
       )}
 
-      {/* Modals */}
       <ModalLogout
         open={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
@@ -147,24 +117,6 @@ export default function Profile() {
           </div>
         </div>
       </Modal>
-
-      {/* <Modal
-        open={modalNewServiceIsOpen}
-        onClose={() => setModalNewServiceIsOpen(false)}
-      >
-        <div
-          className="h-dvh pt-1 pb-4 overflow-y-auto"
-          onClick={() => setModalNewServiceIsOpen(false)}
-        >
-          <div onClick={(e) => e.stopPropagation()} className="w-fit mx-auto">
-            <ServiceForm
-              onCancelAction={() => setModalNewServiceIsOpen(false)}
-              onServiceAddedAction={() => setModalNewServiceIsOpen(false)}
-              serviceToEdit={serviceToEdit}
-            />
-          </div>
-        </div>
-      </Modal> */}
 
       <ModalExclusion
         open={deleteModalIsOpen}

@@ -109,8 +109,8 @@ export function ServiceForm({
   return (
     <div className="px-4">
       <div className="w-full max-w-xl mx-auto bg-gray-200 dark:bg-black rounded-3xl">
-        <header className="bg-linear-to-b from-lime-400 to-lime-500 py-8 px-6 w-full rounded-t-3xl text-center">
-          <p className="font-bold text-2xl mb-2 dark:text-black-200">
+        <header className="bg-linear-to-b from-lime-400 to-lime-500 py-2 md:py-6 lg:py-8 px-6 w-full rounded-t-3xl text-center">
+          <p className="font-bold text-xl md:text-2xl md:mb-2 dark:text-black-200">
             {isEditing ? "Editar Serviço" : "Adicionar Novo Serviço"}
           </p>
           <p className="dark:text-black-200 text-sm">
@@ -175,7 +175,7 @@ export function ServiceForm({
           <div className="grid grid-cols-2 gap-4">
             <Button
               disabled={isLoading}
-              variant="border"
+              variant="danger"
               onClick={handleOnCancel}
             >
               Cancelar

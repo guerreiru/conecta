@@ -1,21 +1,18 @@
 "use client";
 
+import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { useAuth } from "@/hooks/useAuth";
 import {
   CaretLeftIcon,
   HouseIcon,
-  InfinityIcon,
   InfoIcon,
   MagnifyingGlassIcon,
-  SignOutIcon,
-  UserIcon,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { ModalLogout } from "./modalLogout";
-import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { toast } from "react-toastify";
+import { ModalLogout } from "./modalLogout";
 
 export function NavBar() {
   const pathname = usePathname();

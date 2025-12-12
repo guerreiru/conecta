@@ -15,6 +15,7 @@ import {
   BuildingIcon,
   ArrowsCounterClockwiseIcon,
 } from "@phosphor-icons/react";
+import { capitalizeFirstLetter } from "@/utils/capitalizeFirstLetter";
 
 type ServiceCardProps = {
   service: Service;
@@ -104,15 +105,22 @@ export function ServiceCard({
           className="flex-1 hover:opacity-75 transition"
           aria-label={`Ver detalhes do serviço ${title} oferecido por ${owner.name}`}
         >
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            {owner.name}
-          </span>
           <h3
             id={`service-title-${id}`}
-            className="font-bold text-black dark:text-white leading-snug text-2xl"
+            className="font-bold text-black dark:text-white leading-none text-2xl"
           >
             {title}
           </h3>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            {owner.name}
+          </span>
+
+          {service.category.name && (
+            <p className="mt-3 font-medium text-sm bg-lime-400/10 dark:bg-lime-500/20 px-2 py-0.5 rounded-lg w-fit text-black dark:text-white">
+              {service?.category.name &&
+                capitalizeFirstLetter(service.category.name)}
+            </p>
+          )}
         </Link>
         {(onActive || onEdit || onDelete) && (
           <div
@@ -177,7 +185,7 @@ export function ServiceCard({
           </p>
           {service.serviceType && (
             <span
-              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-1.5"
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-1.5"
               role="status"
               aria-label={`Tipo de atendimento: ${
                 service.serviceType === "in_person"
@@ -218,7 +226,7 @@ export function ServiceCard({
           {id && showSeeProfile && pathname !== `/provider/${owner.id}` && (
             <Link
               href={`/provider/${owner.id}`}
-              className="px-3 py-2 rounded-lg bg-sky-900 dark:bg-white text-white dark:text-black hover:brightness-95 font-semibold transition focus:outline-none focus:ring-2 focus:ring-sky-700"
+              className="px-3 py-2 rounded-lg bg-black dark:bg-white text-white dark:text-black hover:brightness-95 font-semibold transition focus:outline-none focus:ring-2 focus:ring-lime-400"
               aria-label={`Ver perfil completo de ${owner.name}`}
             >
               Ver perfil

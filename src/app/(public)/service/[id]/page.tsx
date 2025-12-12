@@ -33,7 +33,7 @@ export default function ServiceDetailPage() {
 
   const { data: reviews, isLoading: reviewsLoading } =
     useServiceReviews(serviceId);
-  const { data: userReview } = useUserReview(serviceId);
+  const { data: userReview } = useUserReview(serviceId, currentUser?.id);
   const { data: stats, isLoading: statsLoading } = useServiceStats(serviceId);
 
   useEffect(() => {

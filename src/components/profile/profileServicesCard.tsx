@@ -5,6 +5,7 @@ import { User } from "@/types/User";
 import { ServiceCard } from "@/components/service/serviceCard";
 import { Button } from "@/components/ui/button";
 import { FREE_PLAN_SERVICE_LIMIT } from "@/constants";
+import { ServiceSkeleton } from "../skeletons/serviceSkeleton";
 
 interface ProfileServicesCardProps {
   user: User;
@@ -34,8 +35,10 @@ export function ProfileServicesCard({
         </div>
 
         {isLoading && (
-          <div className="mt-6">
-            <p>Carregando serviços...</p>
+          <div className="mt-3">
+            {[1, 2].map((n) => (
+              <ServiceSkeleton key={n} />
+            ))}
           </div>
         )}
 

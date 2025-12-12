@@ -75,8 +75,6 @@ export function ProviderForm({
   const { addressEditable } = useCepLookup(watch, setValue);
   const [showPassword, setShowPassword] = useState(false);
 
-  console.log(errors);
-
   async function onSubmit(data: ProviderFormCreateData | ProviderFormEditData) {
     const providerData = {
       ...data,
@@ -213,7 +211,7 @@ export function ProviderForm({
               : "Salvando..."
             : mode === "create"
             ? "Cadastrar"
-            : "Salvar alterações"}
+            : "Salvar"}
         </Button>
       </div>
     </form>

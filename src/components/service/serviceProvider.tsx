@@ -40,7 +40,7 @@ export function ServiceProvider({
           href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-semibold"
         >
           <PhoneIcon size={20} />
           Contatar via WhatsApp

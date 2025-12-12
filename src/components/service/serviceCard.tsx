@@ -172,7 +172,7 @@ export function ServiceCard({
         </p>
       )}
 
-      <footer className="flex flex-col md:flex-row items-center justify-between flex-wrap gap-2">
+      <footer className="flex items-center justify-between flex-wrap gap-2">
         <section className="grid gap-2" aria-label="Informações do serviço">
           <p
             className="font-bold text-black dark:text-white text-lg"
@@ -185,7 +185,7 @@ export function ServiceCard({
           </p>
           {service.serviceType && (
             <span
-              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-1.5 w-fit"
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-1.5"
               role="status"
               aria-label={`Tipo de atendimento: ${
                 service.serviceType === "in_person"

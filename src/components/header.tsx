@@ -157,11 +157,11 @@ export function Header() {
             title="Perfil"
           />
 
-          {/* <ListItem
+          <ListItem
             href="/about"
             isActive={isActive("/about")}
             title="Sobre nós"
-          /> */}
+          />
 
           <button
             onClick={() => setIsLogoutModalOpen(true)}

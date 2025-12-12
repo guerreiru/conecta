@@ -6,6 +6,7 @@ import { CategoryItem } from "@/components/categoryItem";
 import { HowItWorksCard } from "@/components/howItWorksCard";
 import { LocationModal } from "@/components/locationModal";
 import { ServiceCard } from "@/components/service/serviceCard";
+import { ServiceSkeleton } from "@/components/skeletons/serviceSkeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
@@ -41,6 +42,7 @@ export default function Start() {
     hasNextPage,
     isFetchingNextPage,
     totalServices,
+    isLoading,
   } = useServices();
   const { cities } = useCitiesByState(selectedState);
   const [cityName, setCityName] = useState("");
@@ -308,6 +310,16 @@ export default function Start() {
           </div>
         </div>
 
+        {isLoading && (
+          <div className="grid gap-4 w-full max-w-2xl mx-auto">
+            <div className="grid gap-2.5">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <ServiceSkeleton key={n} />
+              ))}
+            </div>
+          </div>
+        )}
+
         {services.length > 0 ? (
           <div className="grid gap-4 w-full max-w-2xl mx-auto">
             <div className="grid gap-2.5">
@@ -320,7 +332,6 @@ export default function Start() {
               ))}
             </div>
 
-            {/* Informações de paginação e botão "Ver mais" */}
             <div className="text-center space-y-3">
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Mostrando {services.length} de {totalServices} resultados
@@ -377,7 +388,6 @@ export default function Start() {
         setSelectedState={setSelectedState}
       />
 
-      {/* Botão Voltar ao Topo */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}

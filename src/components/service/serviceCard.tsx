@@ -185,7 +185,7 @@ export function ServiceCard({
           </p>
           {service.serviceType && (
             <span
-              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-1.5"
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-1.5 w-fit"
               role="status"
               aria-label={`Tipo de atendimento: ${
                 service.serviceType === "in_person"

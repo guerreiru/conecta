@@ -137,6 +137,18 @@ export default function Home() {
     }
   }, [loading, user, router]);
 
+  useEffect(() => {
+    if (modalIsOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [modalIsOpen]);
+
   if (loading || !user) {
     return <UserSkeleton />;
   }

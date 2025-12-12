@@ -62,16 +62,24 @@ export default function Home() {
 
   const hasReachedServiceLimit = myServices.length >= FREE_PLAN_SERVICE_LIMIT;
   const canAddService = !hasReachedServiceLimit;
-  // const activeServicesCount = myServices.filter(
-  //   (service) => service.isActive
-  // ).length;
-  const totalRating = myServices.reduce(
+
+  // Filtra apenas serviços que possuem pelo menos uma avaliação
+  const servicesWithReviews = myServices.filter(
+    (service) => service.reviewCount && service.reviewCount > 0
+  );
+
+  // Calcula a média apenas dos serviços com avaliações
+  const totalRating = servicesWithReviews.reduce(
     (acc, service) => acc + (Number(service.averageRating) || 0),
     0
   );
 
-  const servicesAverageRating = totalRating / (myServices.length || 1);
+  const servicesAverageRating =
+    servicesWithReviews.length > 0
+      ? totalRating / servicesWithReviews.length
+      : 0;
 
+  // Total de avaliações recebidas em todos os serviços
   const totalReviews = myServices.reduce((acc, service) => {
     if (service.reviewCount) {
       return acc + service.reviewCount;

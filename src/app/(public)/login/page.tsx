@@ -19,7 +19,7 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-const Login: React.FC = () => {
+export default function Login() {
   const {
     register,
     handleSubmit,
@@ -122,6 +122,4 @@ const Login: React.FC = () => {
       </section>
     </div>
   );
-};
-
-export default Login;
+}

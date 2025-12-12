@@ -80,10 +80,6 @@ export default function Profile() {
 
   return (
     <main className="relative">
-      <header className="pt-6 pb-8 bg-black dark:bg-black-200">
-        <h1 className="text-white text-3xl text-center">Meu perfil</h1>
-      </header>
-
       {!user && loading && <Loading />}
 
       {user && (

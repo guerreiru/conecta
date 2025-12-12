@@ -51,8 +51,8 @@ export function ServiceForm({
 
   const isEditing = !!serviceToEdit;
   const submitButtonText = isEditing
-    ? "Salvar Alterações"
-    : "Cadastrar Serviço";
+    ? "Salvar alterações"
+    : "Cadastrar serviço";
   const isLoading =
     createServiceMutation.isPending || updateServiceMutation.isPending;
 

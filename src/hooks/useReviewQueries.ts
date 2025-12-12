@@ -31,11 +31,11 @@ export function useServiceReviews(serviceId: string) {
   });
 }
 
-export function useUserReview(serviceId: string) {
+export function useUserReview(serviceId: string, userId?: string) {
   return useQuery({
     queryKey: reviewKeys.myReview(serviceId),
     queryFn: () => getUserReview(serviceId),
-    enabled: !!serviceId,
+    enabled: !!serviceId && !!userId, // Só executa se tiver serviceId E userId
     staleTime: 30000, // 30 segundos
   });
 }

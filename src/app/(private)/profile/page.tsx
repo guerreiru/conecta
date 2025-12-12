@@ -5,7 +5,6 @@ import { ChangePasswordForm } from "@/components/forms/changePasswordForm";
 import { ClientForm } from "@/components/forms/clientForm";
 import { ProviderForm } from "@/components/forms/providerForm";
 import { Modal } from "@/components/modal";
-import { ModalExclusion } from "@/components/modalExclusion";
 import { ModalLogout } from "@/components/modalLogout";
 import { ProfileInfoCard } from "@/components/profile/profileInfoCard";
 import { ProfileModal } from "@/components/profile/profileModal";
@@ -13,38 +12,18 @@ import { ProfileInfoCardSkeleton } from "@/components/skeletons/profileInfoCardS
 import { Button } from "@/components/ui/button";
 import { SUCCESS_MESSAGES } from "@/constants/messages";
 import { useAuth } from "@/hooks/useAuth";
-import { useDeleteService } from "@/hooks/useServiceQueries";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Profile() {
+  const router = useRouter();
   const { logout: authLogout, user, loading } = useAuth();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
-  const [serviceToDeleteId, setServiceToDeleteId] = useState<string | null>(
-    null
-  );
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
     useState(false);
-
-  const deleteServiceMutation = useDeleteService();
-
-  const handleCloseDeleteModal = () => {
-    setServiceToDeleteId(null);
-    setDeleteModalIsOpen(false);
-  };
-
-  function handleDeleteService() {
-    if (!serviceToDeleteId) return;
-
-    deleteServiceMutation.mutate(serviceToDeleteId, {
-      onSuccess: () => {
-        handleCloseDeleteModal();
-      },
-    });
-  }
 
   async function handleLogout() {
     setIsLogoutModalOpen(false);
@@ -54,9 +33,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (!loading && !user) {
-      toast.error("Sessão expirada. Faça login novamente.", {
-        autoClose: 3000,
-      });
+      router.push("/login");
     }
   }, [loading, user]);
 
@@ -117,12 +94,6 @@ export default function Profile() {
           </div>
         </div>
       </Modal>
-
-      <ModalExclusion
-        open={deleteModalIsOpen}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleDeleteService}
-      />
 
       <ProfileModal
         open={isChangeEmailModalOpen}

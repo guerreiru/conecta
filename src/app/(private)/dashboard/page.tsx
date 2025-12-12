@@ -133,9 +133,6 @@ export default function Home() {
 
   useEffect(() => {
     if (!loading && !user) {
-      toast.error("Sessão expirada. Faça login novamente.", {
-        autoClose: 3000,
-      });
       router.push("/login");
     }
   }, [loading, user, router]);

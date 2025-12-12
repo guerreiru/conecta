@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   ),
   title: {
     default: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
-    template: "%s | ProLocal",
+    template: "ProLocal - %s",
   },
   description:
     "Conecte-se com profissionais qualificados na sua região. Encontre prestadores de serviços de confiança para reformas, reparos, manutenção e muito mais. Rápido, fácil e sem complicações.",

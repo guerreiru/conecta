@@ -140,7 +140,7 @@ export function ClientForm({ mode, defaultValues, onCancel }: ClientFormProps) {
 
       <div className="flex items-center justify-between gap-4 flex-wrap md:flex-nowrap">
         {mode === "edit" && (
-          <Button onClick={onCancel} variant="border" className="w-full">
+          <Button onClick={onCancel} variant="danger" className="w-full">
             Cancelar
           </Button>
         )}

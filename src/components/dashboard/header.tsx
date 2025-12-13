@@ -14,7 +14,7 @@ export function Header({
   openAddModalAction,
 }: HeaderProps) {
   return (
-    <header className="py-5 md:py-10 flex md:items-center justify-between gap-x-2 gap-y-4 flex-col md:flex-row flex-wrap">
+    <header className="pb-5 md:pb-10 flex md:items-center justify-between gap-x-2 gap-y-4 flex-col md:flex-row flex-wrap">
       <section>
         <div className="flex items-center gap-5">
           <h1 className="font-extrabold text-2xl md:text-3xl text-black dark:text-white">

@@ -27,8 +27,8 @@ export function Register() {
         className="grid place-items-center"
         aria-labelledby="login-heading"
       >
-        <div className="flex items-center justify-center">
-          <div className="w-full max-w-lg px-6 py-6 md:py-8 bg-white dark:bg-black-200 rounded-3xl shadow-xl">
+        <div className="flex items-center justify-center w-full">
+          <div className="w-full max-w-md px-6 py-8 bg-white dark:bg-black-200 rounded-3xl shadow-xl">
             <h1 className="text-2xl md:text-3xl font-bold text-center">
               Cadastro
             </h1>

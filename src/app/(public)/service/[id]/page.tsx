@@ -1,22 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { ArrowLeftIcon } from "@phosphor-icons/react";
-import { api } from "@/services/api";
-import { Service } from "@/types/Service";
-import { User } from "@/types/User";
+import { ServiceInfo } from "@/components/service/serviceInfo";
+import { ServiceProvider } from "@/components/service/serviceProvider";
+import { ServiceReviewSection } from "@/components/service/serviceReviewSection";
+import { ServiceSidebar } from "@/components/service/serviceSidebar";
 import { useAuth } from "@/hooks/useAuth";
 import {
   useServiceReviews,
-  useUserReview,
   useServiceStats,
+  useUserReview,
 } from "@/hooks/useReviewQueries";
-import { Button } from "@/components/ui/button";
-import { ServiceInfo } from "@/components/service/serviceInfo";
-import { ServiceProvider } from "@/components/service/serviceProvider";
-import { ServiceSidebar } from "@/components/service/serviceSidebar";
-import { ServiceReviewSection } from "@/components/service/serviceReviewSection";
+import { api } from "@/services/api";
+import { Service } from "@/types/Service";
+import { User } from "@/types/User";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface ServiceDetail extends Service {
   user: User;

@@ -45,9 +45,8 @@ export default function Home() {
 
       {user.role === "provider" && (
         <>
-          {isLoading ? (
-            <ServiceSkeletonList />
-          ) : (
+          {isLoading && <ServiceSkeletonList />}
+          {!isLoading && (
             <>
               <DashboardStats
                 servicesCount={myServices.length}

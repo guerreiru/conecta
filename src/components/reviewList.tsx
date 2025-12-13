@@ -24,7 +24,7 @@ export function ReviewList({ reviews, isLoading }: ReviewListProps) {
 
   if (!reviews || reviews.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+      <div className="text-center p3-8 text-gray-500 dark:text-gray-400">
         <p>Nenhuma avaliação ainda. Seja o primeiro a avaliar!</p>
       </div>
     );

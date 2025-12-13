@@ -62,7 +62,7 @@ export default function Profile() {
             onChangePassword={() => setIsChangePasswordModalOpen(true)}
           />
 
-          <div className="w-full max-w-2xl mx-auto grid place-items-center md:hidden mt-2">
+          <div className="w-full max-w-2xl mx-auto grid place-items-center mt-2">
             <Button
               className="w-full bg-black-200 text-white dark:bg-white dark:text-black-200"
               onClick={() => setIsLogoutModalOpen(true)}

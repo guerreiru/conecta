@@ -2,6 +2,7 @@
 
 import { User } from "@/types/User";
 import { PhoneIcon } from "@phosphor-icons/react";
+import Link from "next/link";
 
 interface ServiceProviderProps {
   user: User;
@@ -35,17 +36,29 @@ export function ServiceProvider({
         </div>
       </div>
 
-      {whatsappNumber && !isOwnService && (
-        <a
-          href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-semibold"
-        >
-          <PhoneIcon size={20} />
-          Contatar via WhatsApp
-        </a>
-      )}
+      <div className="flex items-center gap-3 flex-wrap">
+        {whatsappNumber && !isOwnService && (
+          <a
+            href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-bold"
+          >
+            <PhoneIcon size={20} />
+            Contatar via WhatsApp
+          </a>
+        )}
+
+        {user.id && (
+          <Link
+            href={`/provider/${user.id}`}
+            className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-zinc-700 text-white rounded-lg transition font-bold"
+            aria-label={`Ver perfil completo de ${user.name}`}
+          >
+            Ver perfil
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

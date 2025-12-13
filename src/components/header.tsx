@@ -155,6 +155,7 @@ export function Header() {
             href="/profile"
             isActive={isActive("/profile")}
             title="Perfil"
+            className="hidden md:block"
           />
 
           <ListItem
@@ -163,14 +164,6 @@ export function Header() {
             title="Sobre nós"
             className="hidden md:block"
           />
-
-          <button
-            onClick={() => setIsLogoutModalOpen(true)}
-            className="px-4 md:px-6 py-2 font-medium rounded-xl hover:brightness-90 bg-black-200 text-white dark:bg-white dark:text-black-200"
-            aria-label="Sair da conta"
-          >
-            Sair
-          </button>
         </nav>
       )}
 

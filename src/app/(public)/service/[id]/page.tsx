@@ -13,7 +13,7 @@ import {
 import { api } from "@/services/api";
 import { Service } from "@/types/Service";
 import { User } from "@/types/User";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface ServiceDetail extends Service {
@@ -22,7 +22,6 @@ interface ServiceDetail extends Service {
 
 export default function ServiceDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const serviceId = params.id as string;
   const { user: currentUser } = useAuth();
 

@@ -1,13 +1,14 @@
+import { BodyWrapper } from "@/components/bodyWrapper";
+import { ErrorBoundary } from "@/components/errorBoundary";
 import { Header } from "@/components/header";
 import { NavBar } from "@/components/navBar";
-import { ErrorBoundary } from "@/components/errorBoundary";
 import { AuthProvider } from "@/providers/authProvider";
 import { CategoriesProvider } from "@/providers/categoriesProvider";
 import { QueryProvider } from "@/providers/queryProvider";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import { ToastContainer } from "react-toastify";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -172,7 +173,7 @@ export default async function RootLayout({
             <AuthProvider>
               <CategoriesProvider>
                 <Header />
-                <main>{children}</main>
+                <BodyWrapper>{children}</BodyWrapper>
                 <ToastContainer autoClose={500} />
                 <NavBar />
                 <Analytics />

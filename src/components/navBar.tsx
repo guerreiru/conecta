@@ -9,7 +9,7 @@ import {
   UserIcon,
 } from "@phosphor-icons/react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { ModalLogout } from "./modalLogout";
@@ -18,7 +18,6 @@ export function NavBar() {
   const pathname = usePathname();
   const { logout, user } = useAuth();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  const router = useRouter();
 
   const navigationLinks = [
     {

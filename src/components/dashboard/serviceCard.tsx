@@ -55,11 +55,7 @@ export function ServiceCard({
         </div>
         <div className="flex items-center gap-2">
           <button
-            className={`${
-              service.isActive
-                ? "bg-gray-400 dark:bg-gray-700 text-gray-100 dark:text-gray-300"
-                : "bg-green-100 dark:bg-green-800"
-            } rounded-lg p-2 w-fit`}
+            className="rounded-lg p-2 w-fit"
             aria-label={`Ativar serviço ${service.title}`}
             onClick={() => onActiveAction && onActiveAction(service)}
           >
@@ -75,14 +71,14 @@ export function ServiceCard({
             )}
           </button>
           <button
-            className="bg-gray-200 dark:bg-gray-700 rounded-lg p-2 w-fit"
+            className="rounded-lg p-2 w-fit"
             aria-label={`Editar serviço ${service.title}`}
             onClick={() => onEditAction && onEditAction(service)}
           >
             <PencilIcon size={18} aria-hidden="true" />
           </button>
           <button
-            className="bg-red-50 dark:bg-red-900 rounded-lg p-2 w-fit text-red-600 dark:text-red-300"
+            className="rounded-lg p-2 w-fit text-red-600 dark:text-red-300"
             aria-label={`Excluir serviço ${service.title}`}
             onClick={() => onDeleteAction && onDeleteAction(service.id)}
           >

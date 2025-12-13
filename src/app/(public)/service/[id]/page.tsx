@@ -65,12 +65,6 @@ export default function ServiceDetailPage() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-black-100">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <Button onClick={() => router.back()} className="mb-4">
-            <span className="flex items-center gap-2">
-              <ArrowLeftIcon size={20} />
-              Voltar
-            </span>
-          </Button>
           <div className="text-center py-12">
             <p className="text-gray-500 dark:text-gray-400">
               Serviço não encontrado
@@ -84,15 +78,8 @@ export default function ServiceDetailPage() {
   const isOwnService = currentUser?.id === service.user.id;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-black-100">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <Button onClick={() => router.back()} className="mb-8">
-          <span className="flex items-center gap-2">
-            <ArrowLeftIcon size={20} />
-            Voltar
-          </span>
-        </Button>
-
+    <div className="min-h-screen">
+      <div className="max-w-4xl mx-auto p-4">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Coluna principal */}
           <div className="md:col-span-2 space-y-8">
@@ -118,7 +105,7 @@ export default function ServiceDetailPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 hidden md:block">
             <ServiceSidebar
               price={service.price}
               stats={stats}

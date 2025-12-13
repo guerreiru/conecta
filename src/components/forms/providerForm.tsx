@@ -195,11 +195,7 @@ export function ProviderForm({
 
       <div className="flex items-center justify-between gap-4 flex-wrap md:flex-nowrap">
         {mode === "edit" && (
-          <Button
-            onClick={onCancel}
-            variant="unstyled"
-            className="w-full bg-black text-white dark:bg-white dark:text-black"
-          >
+          <Button onClick={onCancel} variant="danger" className="w-full">
             Cancelar
           </Button>
         )}

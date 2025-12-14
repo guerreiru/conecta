@@ -1,4 +1,3 @@
-import { BodyWrapper } from "@/components/bodyWrapper";
 import { ErrorBoundary } from "@/components/errorBoundary";
 import { Header } from "@/components/header";
 import { NavBar } from "@/components/navBar";
@@ -173,7 +172,7 @@ export default async function RootLayout({
             <AuthProvider>
               <CategoriesProvider>
                 <Header />
-                <BodyWrapper>{children}</BodyWrapper>
+                <main>{children}</main>
                 <ToastContainer autoClose={500} />
                 <NavBar />
                 <Analytics />

@@ -83,6 +83,10 @@ export function AddressFields({
             setSelectedState(e.target.value);
             setSelectedCity("");
             setValue("address.stateId", e.target.value);
+            setValue(
+              "address.stateName",
+              states.find((state) => state.id === e.target.value)?.name || ""
+            );
           }}
           defaultValue="Selecione o estado"
           options={states.map((state) => ({
@@ -106,6 +110,10 @@ export function AddressFields({
           onChange={(e) => {
             setSelectedCity(e.target.value);
             setValue("address.cityId", e.target.value);
+            setValue(
+              "address.cityName",
+              cities.find((city) => city.id === e.target.value)?.name || ""
+            );
           }}
           disabled={!selectedState || citiesLoading}
           defaultValue={

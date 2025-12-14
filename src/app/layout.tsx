@@ -10,16 +10,20 @@ import { Manrope } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_APP_URL || "https://www.prolocal.com.br";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "https://www.prolocal.com.br"
-  ),
+  metadataBase: new URL(baseUrl),
+
   title: {
     default: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
     template: "ProLocal - %s",
   },
+
   description:
     "Conecte-se com profissionais qualificados na sua região. Encontre prestadores de serviços de confiança para reformas, reparos, manutenção e muito mais. Rápido, fácil e sem complicações.",
+
   keywords: [
     "contratar serviços",
     "reformas",
@@ -37,17 +41,21 @@ export const metadata: Metadata = {
   creator: "ProLocal",
   publisher: "ProLocal",
 
+  alternates: {
+    canonical: baseUrl,
+  },
+
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "/",
+    url: baseUrl,
     siteName: "ProLocal",
     title: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
     description:
       "Conecte-se com profissionais qualificados na sua região. Encontre prestadores de serviços de confiança para reformas, reparos, manutenção e muito mais.",
     images: [
       {
-        url: "/antevisao.png",
+        url: `${baseUrl}/antevisao.png`,
         width: 1200,
         height: 630,
         alt: "ProLocal - Marketplace de Serviços Locais",
@@ -60,13 +68,9 @@ export const metadata: Metadata = {
     title: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
     description:
       "Conecte-se com profissionais qualificados na sua região. Encontre prestadores de serviços de confiança para reformas, reparos, manutenção e muito mais.",
-    images: ["/antevisao.png"],
+    images: [`${baseUrl}/antevisao.png`],
     creator: "@siteprolocal",
     site: "@siteprolocal",
-  },
-
-  alternates: {
-    canonical: "/",
   },
 
   other: {
@@ -82,9 +86,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://www.prolocal.com.br";
-
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -97,7 +98,11 @@ export default async function RootLayout({
     "@context": "https://schema.org",
     "@type": "Service",
     name: "Marketplace de serviços locais",
-    provider: { "@type": "Organization", name: "ProLocal", url: baseUrl },
+    provider: {
+      "@type": "Organization",
+      name: "ProLocal",
+      url: baseUrl,
+    },
   };
 
   const searchSchema = {
@@ -130,19 +135,27 @@ export default async function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(webAppSchema),
+          }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(serviceSchema),
+          }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(searchSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(searchSchema),
+          }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbSchema),
+          }}
         />
         <meta name="apple-mobile-web-app-title" content="ProLocal" />
       </head>

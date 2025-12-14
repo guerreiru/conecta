@@ -43,12 +43,14 @@ type ProviderFormProps = {
   mode: "create" | "edit";
   defaultValues?: Partial<ProviderFormCreateData> & { id?: string };
   onCancel?: () => void;
+  onDataSubmit?: () => void;
 };
 
 export function ProviderForm({
   mode,
   defaultValues,
   onCancel,
+  onDataSubmit,
 }: ProviderFormProps) {
   const createForm = useForm<ProviderFormCreateData>({
     resolver: zodResolver(providerSchemaCreate),
@@ -110,6 +112,8 @@ export function ProviderForm({
         if (updatedUser.id) {
           updateUser(updatedUser);
         }
+
+        onDataSubmit && onDataSubmit();
 
         toast.success("Profissional atualizado com sucesso!");
       }

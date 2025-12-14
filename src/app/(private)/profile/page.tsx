@@ -94,6 +94,7 @@ export default function Profile() {
                 mode="edit"
                 defaultValues={user}
                 onCancel={() => setModalIsOpen(false)}
+                onDataSubmit={() => setModalIsOpen(false)}
               />
             )}
             {user?.role === "client" && (

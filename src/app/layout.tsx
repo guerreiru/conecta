@@ -12,7 +12,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001"
+    process.env.NEXT_PUBLIC_APP_URL || "https://www.prolocal.com.br/"
   ),
   title: {
     default: "ProLocal - Encontre Profissionais Qualificados Perto de Você",
@@ -82,7 +82,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://www.prolocal.com.br/";
 
   const webAppSchema = {
     "@context": "https://schema.org",

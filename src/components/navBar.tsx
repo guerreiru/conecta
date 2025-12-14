@@ -36,7 +36,7 @@ export function NavBar() {
       href: "/profile",
       icon: <UserIcon size={24} />,
       label: "Perfil",
-      showFor: ["provider"],
+      showFor: ["provider", "client"],
     },
     {
       href: "/about",

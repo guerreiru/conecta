@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/services/api";
 import Link from "next/link";
@@ -7,7 +8,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function AdminDashboard() {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
+
   const [usersCount, setUsersCount] = useState(0);
   const [isFetching, setIsFetching] = useState(true);
 
@@ -38,6 +40,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="grid place-items-center h-[calc(100vh_-_65px)]">
+      <Button onClick={() => logout()}>Sair</Button>
       <div className="bg-white dark:bg-black-200 shadow p-4 rounded-md">
         <Link href="/pote-vermelho/users">Usuários {usersCount}</Link>
       </div>

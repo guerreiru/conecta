@@ -9,9 +9,9 @@ export default function UnauthorizedPage() {
         <div>
           <p>Você não tem permissão para acessar essa área!!!!!!!</p>
         </div>
-        <Button>
-          <Link href="/">Início</Link>
-        </Button>
+        <Link href="/">
+          <Button>Início</Button>
+        </Link>
       </div>
     </main>
   );

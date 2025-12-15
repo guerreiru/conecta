@@ -2,10 +2,10 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, ReactNode } from "react";
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  children: ReactNode;
   allowedRoles?: string[];
 }
 
@@ -16,29 +16,32 @@ export function ProtectedRoute({
   const { user, loading } = useAuth();
   const router = useRouter();
 
+  const isAuthenticated = !!user;
+  const isAuthorized =
+    !allowedRoles || (user && allowedRoles.includes(user.role));
+
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.push("/login");
-      } else if (allowedRoles && !allowedRoles.includes(user.role)) {
-        router.push("/unauthorized");
-      }
+    if (loading) return;
+
+    if (!isAuthenticated) {
+      router.replace("/login");
+      return;
     }
-  }, [user, loading, router, allowedRoles]);
+
+    if (!isAuthorized) {
+      router.replace("/unauthorized");
+    }
+  }, [loading, isAuthenticated, isAuthorized, router]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center h-[calc(100vh_-_65px)]">
         <p className="text-lg">Carregando...</p>
       </div>
     );
   }
 
-  if (!user) {
-    return null;
-  }
-
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
+  if (!isAuthenticated || !isAuthorized) {
     return null;
   }
 

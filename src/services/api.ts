@@ -15,8 +15,8 @@ interface ApiErrorResponse {
   message?: string;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-// const BASE_URL = "http://localhost:3001";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333";
+// const BASE_URL = "http://localhost:3333";
 
 const AUTH_ROUTES = {
   login: "/auth/login",
@@ -111,5 +111,5 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );

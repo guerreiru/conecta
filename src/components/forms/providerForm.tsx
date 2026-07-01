@@ -23,7 +23,10 @@ const providerSchemaCreate = z.object({
     .min(6, "A senha deve ter pelo menos 6 caracteres")
     .optional(),
   specialty: z.string().optional(),
-  bio: z.string().optional(),
+  bio: z
+    .string()
+    .max(255, "A bio deve ter no máximo 255 caracteres")
+    .optional(),
   address: addressSchema,
 });
 
@@ -31,7 +34,10 @@ const providerSchemaEdit = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
   email: z.string(),
   specialty: z.string().optional(),
-  bio: z.string().optional(),
+  bio: z
+    .string()
+    .max(255, "A bio deve ter no máximo 255 caracteres")
+    .optional(),
   password: z.string().optional(),
   address: addressSchema,
 });
@@ -188,6 +194,7 @@ export function ProviderForm({
         {...register("bio")}
         error={errors.bio?.message}
         rows={4}
+        placeholder="Fale um pouco sobre você, sua experiência e especialidades (máx. 255 caracteres)"
       />
 
       <AddressFields
@@ -210,8 +217,8 @@ export function ProviderForm({
               ? "Cadastrando..."
               : "Salvando..."
             : mode === "create"
-            ? "Cadastrar"
-            : "Salvar"}
+              ? "Cadastrar"
+              : "Salvar"}
         </Button>
       </div>
     </form>
